@@ -8,6 +8,7 @@ def record_and_convert():
     with sr.Microphone() as source:
         print("Listening... Speak now.")
         # Capture the audio from the microphone
+        recognizer.adjust_for_ambient_noise(source)
         audio = recognizer.listen(source)
         print("HI")
     try:
