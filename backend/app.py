@@ -9,6 +9,31 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+@app.route('/rec')
+def fun():
+    return render_template('rec.html')
+
+@app.route("/text-upload", methods=['POST'])
+def text_upload():
+    # Step 1: Get the 'output' field from the form submission
+    user_feedback = request.form.get('output')
+    # print(user_feedback)
+
+    if not user_feedback:
+        return render_template('index.html', error="No feedback text found. Please try again.")
+
+    # Step 2: Load manager's requirements
+    with open('manager_requirements.txt', 'r') as f:
+        manager_requirements = f.read().splitlines()
+
+    # Step 3: Compare feedback with requirements
+    is_covered, missing_points = compare_feedback(user_feedback, manager_requirements)
+    if is_covered:
+        summary = generate_bullet_summary(user_feedback, manager_requirements)
+        return render_template('result.html', summary=summary)
+    else:
+        return render_template('index.html', missing_points=missing_points)
+
 @app.route('/upload', methods=['POST'])
 def upload():
     if 'file' not in request.files:
