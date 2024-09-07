@@ -1,16 +1,25 @@
-import speech_recognition as sr
+import speech_recognition as sr # type: ignore
 
 def record_and_convert():
     # Initialize the recognizer
     recognizer = sr.Recognizer()
 
-    # Use the default microphone as the audio source
-    with sr.Microphone() as source:
-        print("Listening... Speak now.")
-        # Capture the audio from the microphone
-        recognizer.adjust_for_ambient_noise(source)
-        audio = recognizer.listen(source)
-        print("HI")
+    # audio from mic
+
+    # with sr.Microphone() as source:
+    #     print("Listening... Speak now.")
+    #     # Capture the audio from the microphone
+    #     recognizer.adjust_for_ambient_noise(source)
+    #     audio = recognizer.listen(source)
+    #     print("HI")
+
+    # audio file to do the analysis
+
+    audio_file = 'C:\\Users\\saiha\\OneDrive\\Desktop\\leocodeio\\echofeedai\\backend\dataset\\OSR_us_000_0010_8k.wav'
+    with sr.AudioFile(audio_file) as source:
+        print("Loading audio file...")
+        audio = recognizer.record(source)
+
     try:
         # Convert the captured audio to text using Google Web Speech API
         print("Recognizing speech...")
