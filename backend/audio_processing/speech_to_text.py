@@ -18,3 +18,6 @@ def convert_audio_to_text(audio_file):
         print(f"Could not request results from the service; {e}")
 
     return text
+
+text = convert_audio_to_text('../dataset/OSR_us_000_0010_8k.wav')
+print(text)
