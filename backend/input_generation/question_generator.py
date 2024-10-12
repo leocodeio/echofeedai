@@ -1,10 +1,4 @@
-import os
-from dotenv import load_dotenv
-load_dotenv()
-import google.generativeai as genai
-
-genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-model = genai.GenerativeModel('gemini-1.5-flash')
+from shared.gemini_ai_model import model
 
 def generate_questions(topics):
     questions = []
@@ -13,7 +7,3 @@ def generate_questions(topics):
         response = model.generate_content(prompt)
         questions.append(response.text)
     return questions
-
-# topics = ["work environment", "salary", "timings","play time","peer pressure"]
-# questions = generate_questions(topics)
-# [print(x) for x in questions]
