@@ -14,6 +14,6 @@ def generate_questions(topics):
         questions.append(response.text)
     return questions
 
-topics = ["work environment", "salary", "timings","play time","peer pressure"]
-questions = generate_questions(topics)
-[print(x) for x in questions]
+# topics = ["work environment", "salary", "timings","play time","peer pressure"]
+# questions = generate_questions(topics)
+# [print(x) for x in questions]
