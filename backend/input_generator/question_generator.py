@@ -6,7 +6,6 @@ import google.generativeai as genai
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 model = genai.GenerativeModel('gemini-1.5-flash')
 
-
 def generate_questions(topics):
     questions = []
     for topic in topics:
@@ -15,7 +14,6 @@ def generate_questions(topics):
         questions.append(response.text)
     return questions
 
-number_of_topics = 5
 topics = ["work environment", "salary", "timings","play time","peer pressure"]
 questions = generate_questions(topics)
 [print(x) for x in questions]
