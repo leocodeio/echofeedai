@@ -96,7 +96,6 @@ if __name__ == "__main__":
 
     # Output results
     for question, res in result.items():
-        print(f"Question: {question}")
         print(f"Feedback: {res['feedback']}")
         print(f"Aspects: {res['aspects']}")
         print(f"Threshold: {res['threshold']}")
