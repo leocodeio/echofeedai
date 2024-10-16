@@ -1,20 +1,15 @@
 from transformers import pipeline
 from textblob import TextBlob
 
-# Step 1: Define aspect extraction model (replace NER with a true aspect extraction model)
+# Step 1: Define sentiment analysis model
 sentiment_classification_model = pipeline("sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english")
 
-# If you have a custom ATE model fine-tuned for Aspect Term Extraction, load it here:
-aspect_extraction_model = pipeline("ner", model="dslim/bert-base-NER")  # Replace with appropriate ATE model
+# Define an aspect extraction model (NER or any advanced aspect extraction model can be used)
+aspect_extraction_model = pipeline("ner", model="dslim/bert-base-NER")
 
 # Gemini-based AI Aspect and Threshold Adjuster
 def gemini_adjustment(aspects, threshold):
-    """
-    Simulates a Gemini AI model that adjusts the aspect terms and thresholds.
-    Here, you would integrate with the actual Gemini API or model.
-    """
     adjusted_threshold = threshold  # Adjust the threshold based on Gemini AI's logic
-    # If Gemini modifies aspects, adjust here
     return aspects, adjusted_threshold
 
 def assign_threshold(sentiment_score):
@@ -29,46 +24,32 @@ def assign_threshold(sentiment_score):
     else:
         return 5  # excellent
 
-def extract_aspects(feedback_text):
-    """
-    Extract aspects from feedback text using aspect extraction model.
+def extract_aspects_from_question(question):
+    # Extracts key terms from the questions themselves as aspects
+    # Example: "What do you think about the work environment?" -> aspect: ["work environment"]
     
-    Parameters:
-    - feedback_text: A string containing feedback.
+    # Simplistic keyword-based approach based on common terms
+    keywords = ["work environment", "salary", "timings", "play time", "peer pressure"]
     
-    Returns:
-    - A list of aspect terms extracted from the feedback text.
-    """
-    aspects = aspect_extraction_model(feedback_text)
+    # Filter aspects based on keywords found in the question
+    aspects = [keyword for keyword in keywords if keyword in question.lower()]
     
-    # Print the raw output of the aspect extraction model to inspect the entities
-    print("Aspect Extraction Model Output:", aspects)
-
-    # Modify the entity if needed based on the ATE model's output
-    # Check for appropriate entity types (e.g., 'B-MISC', 'B-ORG', etc.)
-    aspect_terms = [aspect['word'] for aspect in aspects if 'ORG' in aspect['entity']]  # Adjust 'ORG' to relevant entity
-    return aspect_terms
+    # If no specific aspect is found, return "general" as fallback
+    if not aspects:
+        aspects = ["general"]
+    
+    return aspects
 
 def process_feedback(questions, feedback_text):
-    """
-    Process feedback text and assign a threshold to each question using Transformer models.
-    
-    Parameters:
-    - questions: A list of feedback questions.
-    - feedback_text: A dictionary with question keys and feedback text values.
-    
-    Returns:
-    - A dictionary with questions, their respective aspect terms, and thresholds.
-    """
     feedback_results = {}
 
     for question in questions:
         feedback = feedback_text.get(question, "")
         
-        # Step 1: Extract aspects
-        aspects = extract_aspects(feedback)
+        # Step 1: Extract aspects dynamically from the question
+        aspects = extract_aspects_from_question(question)
         
-        # Step 2: Analyze sentiment for the entire feedback text
+        # Step 2: Analyze sentiment for the feedback text
         sentiment_results = sentiment_classification_model(feedback)
         
         # Get the sentiment label and score
@@ -87,8 +68,35 @@ def process_feedback(questions, feedback_text):
 
         # Step 6: Store results, including aspects and thresholds
         feedback_results[question] = {
+            'feedback': feedback,
             'aspects': adjusted_aspects,
-            'threshold': adjusted_threshold
+            'threshold': adjusted_threshold,
+            'sentiment_score': combined_sentiment_score
         }
     
     return feedback_results
+
+# Example usage
+if __name__ == "__main__":
+    from input_generation.question_generator import generate_questions
+    from utils.generate_feedback_map import generate_feedback_text
+
+    # Generate questions based on topics
+    topics = ["work environment", "salary", "timings", "play time", "peer pressure"]
+    questions = generate_questions(topics)
+
+    # Employee feedback
+    text = "I am very happy with the work environment and the salary is good but the timings are not good and the peer pressure is high but the play time is good."
+
+    # Generate feedback text based on the questions
+    feedback_text = generate_feedback_text(questions, text)
+
+    # Process feedback
+    result = process_feedback(questions, feedback_text)
+
+    # Output results
+    for question, res in result.items():
+        print(f"Feedback: {res['feedback']}")
+        print(f"Aspects: {res['aspects']}")
+        print(f"Threshold: {res['threshold']}")
+        print(f"Sentiment Score: {res['sentiment_score']:.2f}\n")
