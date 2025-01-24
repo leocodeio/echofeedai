@@ -1,17 +1,32 @@
-# manager
-from input_generation.question_generator import generate_questions
-topics = ["work environment", "salary", "timings", "play time", "peer pressure"]
-questions = generate_questions(topics)
+from core.content_generation.generation import Generation
+from core.output_generation.threshold_generator import process_feedback
 
-# employee
-from input_generation.speech_text_processing import speech_to_text_conversion
-text = "I am very happy with the work environment and the salary is good but the timings are not good and the peer pressure is high but the play time is good."
+def main():
+    # Initialize the generation model
+    generator = Generation()
+    
+    # Define topics
+    topics = ["work environment", "salary", "timings", "play time", "peer pressure"]
+    
+    # Generate questions using the Generation class
+    questions = generator.generate_questions(topics)
+    
+    # Sample employee feedback text (in production, this would come from speech-to-text)
+    text = "I am very happy with the work environment and the salary is good but the timings are not good and the peer pressure is high but the play time is good."
+    
+    # Generate feedback map using the Generation class
+    feedback_text = generator.generate_feedback_map(questions, text)
+    
+    # Process feedback and generate results
+    result = process_feedback(questions, feedback_text)
+    
+    # Print results
+    for question, res in result.items():
+        print(f"\nQuestion: {question}")
+        print(f"Feedback: {res['feedback']}")
+        print(f"Aspects: {res['aspects']}")
+        print(f"Threshold: {res['threshold']}")
+        print(f"Sentiment Score: {res['sentiment_score']:.2f}")
 
-# generate feedback text
-from utils.generate_feedback_map import generate_feedback_text
-feedback_text = generate_feedback_text(questions, text)
-
-# processing
-from output_generation.threshold_generator import process_feedback
-result = process_feedback(questions, feedback_text)
-print(result)
+if __name__ == "__main__":
+    main()
