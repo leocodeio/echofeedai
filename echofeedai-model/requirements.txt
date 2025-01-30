@@ -3,3 +3,8 @@ python-dotenv
 transformers
 transformers
 textblob
+
+fastapi
+uvicorn
+python-multipart
+pydantic

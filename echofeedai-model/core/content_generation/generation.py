@@ -16,31 +16,32 @@ class Generation:
         """
         questions = []
         for topic in topics:
-            messages = [{
+            message = [{
                 "role": "user",
                 "content": f"Generate a single feedback question which can be asked to a customer/user/employee to give the response on what he/she thinks regarding,{topic} and keep it understandable and simple with lessthan or equal to 12 words."
             }]
-            response = self.model.generate_response(messages)
+            # print("debug log 3", message)
+            response = self.model.generate_response(message)
             questions.append(response)
         return questions
-
-    def generate_feedback_map(self, questions, text):
+    
+    def generate_feedback_map(self, questions, feedback_text):
         """
-        Generates a mapping of questions to their answers based on provided text.
+        Generates a feedback map based on given questions and feedback text
         
         Args:
-            questions (list): List of questions to generate answers for
-            text (str): Text content to extract answers from
+            questions (list): List of questions to generate feedback for
+            feedback_text (str): Feedback text to be mapped to questions
             
         Returns:
-            dict: Dictionary mapping questions to their generated answers
+            dict: Feedback map
         """
-        feedback_text = {}
+        feedback_map = {}
         for question in questions:
-            messages = [{
+            EXTRACT_CONTENT_PROMPT = [{   
                 "role": "user",
-                "content": f"generate answer to this {question} from this {text} and donot use any other words"
+                "content": f'Extract the content from the feedback text : "{feedback_text}", for the query about : "{question}"'
             }]
-            response = self.model.generate_response(messages)
-            feedback_text[question] = response
-        return feedback_text
+            feedback_map[question] = self.model.generate_response(EXTRACT_CONTENT_PROMPT)
+        print("debug log 4", feedback_map)
+        return feedback_map
