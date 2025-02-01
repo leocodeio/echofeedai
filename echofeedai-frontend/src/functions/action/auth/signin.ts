@@ -2,6 +2,7 @@ import { type ActionFunctionArgs } from "react-router-dom";
 import { signin } from "@/services/auth.server";
 import { SigninPayload } from "@/types/user";
 import { getUserSession } from "@/services/sessions.server";
+import { ActionResultError, ActionResultSuccess } from "@/types/action-result";
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
@@ -13,14 +14,22 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const signinResult = await signin(signinPayload);
   if (!signinResult) {
-    return Response.json(
-      { success: false, errors: { email: ["Invalid email or password"] } },
-      { status: 400 }
-    );
+    const result: ActionResultError<SigninPayload> = {
+      success: false,
+      origin: "password",
+      message: "Invalid email or password",
+      data: signinPayload,
+    };
+    return Response.json(result, { status: 400 });
   }
 
   const session = getUserSession();
   session.setUser(signinResult.user);
 
-  return Response.json({ success: true });
+  const result: ActionResultSuccess<SigninPayload> = {
+    success: true,
+    message: "Signin successful",
+    data: signinPayload,
+  };
+  return Response.json(result);
 }
