@@ -16,6 +16,7 @@ import { action as signupAction } from "@/functions/action/auth/signup";
 // dashboard
 import Dashboard from "./routes/dashboard/DashboardIndex";
 import { loader as dashboardLoader } from "@/functions/loader/dashboard";
+import { action as logoutAction } from "@/functions/action/auth/logout";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,7 @@ const router = createBrowserRouter([
     path: "/dashboard",
     element: <Dashboard />,
     loader: dashboardLoader,
+    action: logoutAction,
     children: [],
   },
   {
