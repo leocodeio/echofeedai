@@ -2,6 +2,8 @@ import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Landing from "@/routes/Landing";
 import NotFound from "./routes/error/NotFound";
+
+// auth
 import AuthLayout from "./routes/auth/AuthLayout";
 import Signup from "./routes/auth/Signup";
 import Signin from "./routes/auth/Signin";
@@ -10,9 +12,11 @@ import { loader as signinLoader } from "@/functions/loader/auth/signin";
 import { action as signinAction } from "@/functions/action/auth/signin";
 import { loader as signupLoader } from "@/functions/loader/auth/signup";
 import { action as signupAction } from "@/functions/action/auth/signup";
+
+// dashboard
 import Dashboard from "./routes/dashboard/DashboardIndex";
 import { loader as dashboardLoader } from "@/functions/loader/dashboard";
-import { action as setLanguageAction } from "@/functions/action/set-language";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -50,10 +54,6 @@ const router = createBrowserRouter([
       throw new Response("Not found", { status: 404 });
     },
     errorElement: <NotFound />,
-  },
-  {
-    path: "/action/set-language",
-    action: setLanguageAction,
   },
 ]);
 

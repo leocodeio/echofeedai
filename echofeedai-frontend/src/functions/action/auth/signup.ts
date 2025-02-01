@@ -1,7 +1,7 @@
 import { type ActionFunctionArgs } from "react-router-dom";
 import { signup } from "@/services/auth.server";
 import { SignupPayload } from "@/types/user";
-import { userSession } from "@/services/sessions.server";
+import { getUserSession } from "@/services/sessions.server";
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
@@ -19,15 +19,8 @@ export async function action({ request }: ActionFunctionArgs) {
     );
   }
   console.log(signupResult);
-  const session = await userSession(request);
-  session.setUserSession(signupResult.user);
-  console.log(session.getUserSession());
-  return Response.json(
-    { success: true, user: signupResult.user },
-    {
-      headers: {
-        "Set-Cookie": await session.commitUserSession(),
-      },
-    }
-  );
+  const session = getUserSession();
+  session.setUser(signupResult.user);
+  console.log(session.getUser());
+  return Response.json({ success: true });
 }

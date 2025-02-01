@@ -5,7 +5,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Link, useFetcher } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -24,13 +24,7 @@ import {
 
 export default function Header() {
   const { i18n } = useTranslation();
-  const fetcher = useFetcher();
-  
   const handleLanguageChange = (value: string) => {
-    fetcher.submit(
-      { locale: value },
-      { method: "POST", action: "/action/set-language" }
-    );
     i18n.changeLanguage(value);
   };
 

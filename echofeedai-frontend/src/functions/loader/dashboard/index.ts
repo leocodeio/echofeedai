@@ -1,14 +1,12 @@
-import { redirect, type LoaderFunctionArgs } from "react-router-dom";
-import { userSession } from "@/services/sessions.server";
+import { redirect } from "react-router-dom";
+import { getUserSession } from "@/services/sessions.server";
 
 export const ROUTE_PATH = "/dashboard" as const;
 
-export async function loader({
-  request,
-}: LoaderFunctionArgs): Promise<Response | null> {
+export async function loader(): Promise<Response | null> {
   // If user is not authenticated, redirect to signin
-  const session = await userSession(request);
-  const user = session.getUserSession();
+  const session = getUserSession();
+  const user = session.getUser();
   if (!user) {
     return redirect("/auth/signin");
   }
