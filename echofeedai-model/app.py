@@ -132,41 +132,37 @@ async def process_feedback(request: FeedbackRequest):
         
         # Check topic coverage
         coverage_results = []
-        all_covered = True
-        
+        covered = []
+        not_covered = []
         for topic, question in request.question_map.items():
-            covered = False
-            match_answer = ""
-            
             # Check if topic exists in any question/answer
-            if question in feedback_map:
-                covered = True
-                match_answer = feedback_map[question]
-                    
-            coverage_results.append({
-                "topic": topic,
-                "covered": covered,
-                "matching_question": question,
-                "matching_answer": match_answer
-            })
-            
-            if not covered:
-                all_covered = False
+            if analysis_results['data'][question]['covered']:
+                covered.append({
+                    "topic": topic,
+                    "question": question,
+                    "feedback": analysis_results['data'][question]['feedback']
+                })
+            else:
+                not_covered.append({
+                    "topic": topic,
+                    "question": question,
+                    "feedback": analysis_results['data'][question]['feedback']
+                })
+
+        if len(not_covered) == 0:
+            all_covered = True
+        else:
+            all_covered = False
 
         return {
-            "analysis": analysis_results,
-            "coverage_check": {
-                "all_topics_covered": all_covered,
-                "topic_details": coverage_results,
-                "meets_threshold": all(
-                    result['threshold'] >= request.min_threshold 
-                    for result in analysis_results.get('data', {}).values()
-                )
-            }
+            "all_topics_covered": all_covered,
+            "covered": covered,
+            "not_covered": not_covered
         }
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 if __name__ == "__main__":
     import uvicorn

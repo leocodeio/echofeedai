@@ -63,7 +63,7 @@ class FeedbackProcessor:
         textblob_score = TextBlob(text).sentiment.polarity
         return textblob_score + model_score
 
-    def process_feedback(self, questions, feedback_text):
+    def process_feedback(self, questions, feedback_map):
         """
         Process feedback with sentiment analysis and aspect extraction
         
@@ -78,17 +78,19 @@ class FeedbackProcessor:
             feedback_results = {}
 
             for question in questions:
-                feedback = feedback_text.get(question, "")
+                feedback = feedback_map.get(question, "")
                 
                 # Extract aspects and analyze sentiment
                 aspects = self._extract_aspects(question)
                 sentiment_score = self._analyze_sentiment(feedback)
                 threshold = self._assign_threshold(sentiment_score)
-                
+                covered = True if feedback != "" else False
+                print("debug log 1", feedback)
                 # Store results
                 feedback_results[question] = {
-                    'feedback': feedback,
+                    'covered': covered,
                     'aspects': aspects,
+                    'feedback': feedback,
                     'threshold': threshold,
                     'sentiment_score': sentiment_score
                 }

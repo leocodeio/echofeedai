@@ -1,5 +1,5 @@
 from models.groq import GroqModel
-
+import json
 class Generation:
     def __init__(self):
         self.model = GroqModel()
@@ -40,8 +40,16 @@ class Generation:
         for question in questions:
             EXTRACT_CONTENT_PROMPT = [{   
                 "role": "user",
-                "content": f'Extract the content from the feedback text : "{feedback_text}", for the query about : "{question}"'
+                "content": f'''AGENT: you are a content extractor commanded to extract realated content for a query/question from the given text response data, 
+                TASK: Extract the content from the feedback text : "{feedback_text}", for the query about : "{question}", 
+                OUTPUT_FORMAT:
+                - If the content is not found, output json format with key as "content" and value as "" .
+                - If the content is found, output json format with key as "content" and value as the content found.
+                DOS: 
+                - Extract only the content related to the query/question from the given text response data, 
+                - Output the content in the mentioned format, 
+                '''
             }]
-            feedback_map[question] = self.model.generate_response(EXTRACT_CONTENT_PROMPT)
+            feedback_map[question] = json.loads(self.model.generate_response(EXTRACT_CONTENT_PROMPT))['content']
         print("debug log 4", feedback_map)
         return feedback_map
