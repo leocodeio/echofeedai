@@ -1,32 +1,15 @@
-import {
-  vitePlugin as remix,
-  cloudflareDevProxyVitePlugin as remixCloudflareDevProxy,
-} from "@remix-run/dev";
-import { flatRoutes } from "remix-flat-routes";
+import path from "path";
+import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
 
+// https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    remixCloudflareDevProxy(),
-    remix({
-      routes: async (defineRoutes) => {
-        return flatRoutes("routes", defineRoutes);
-      },
-      future: {
-        v3_fetcherPersist: true,
-        v3_relativeSplatPath: true,
-        v3_throwAbortReason: true,
-        v3_singleFetch: true,
-        v3_lazyRouteDiscovery: true,
-      },
-    }),
-    tsconfigPaths(),
-  ],
-  server: {
-    hmr: {
-      overlay: true,
+  plugins: [react()],
+
+  /* shadcn */
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
     },
   },
-  clearScreen: false,
 });
