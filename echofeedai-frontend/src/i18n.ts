@@ -1,10 +1,12 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-
 import enCommon from "@/locales/en/common.json";
 import esCommon from "@/locales/es/common.json";
 
-const savedLanguage = localStorage.getItem("i18nextLng") || "en";
+import { getI18nSession } from "@/services/sessions.server";
+const session = getI18nSession();
+
+const savedLanguage = session.getLanguage() || "en";
 
 const resources = {
   en: {
@@ -26,7 +28,7 @@ i18n.use(initReactI18next).init({
 });
 
 i18n.on("languageChanged", (lng) => {
-  localStorage.setItem("i18nextLng", lng);
+  session.setLanguage(lng);
 });
 
 export default i18n;

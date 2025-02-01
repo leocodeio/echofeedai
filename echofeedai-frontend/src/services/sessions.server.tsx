@@ -15,9 +15,9 @@ const cookieOptions = {
 export function getThemeSession() {
   const cookies = new Cookies();
   return {
-    getTheme: () => cookies.get("theme") || "light",
-    setTheme: (theme: string) => cookies.set("theme", theme, cookieOptions),
-    removeTheme: () => cookies.remove("theme", cookieOptions),
+    getTheme: () => cookies.get("spectral-theme") || "light",
+    setTheme: (theme: string) => cookies.set("spectral-theme", theme, cookieOptions),
+    removeTheme: () => cookies.remove("spectral-theme", cookieOptions),
   };
 }
 
@@ -25,9 +25,9 @@ export function getThemeSession() {
 export function getI18nSession() {
   const cookies = new Cookies();
   return {
-    getLocale: () => cookies.get("locale") || "en",
-    setLocale: (locale: string) => cookies.set("locale", locale, cookieOptions),
-    removeLocale: () => cookies.remove("locale", cookieOptions),
+    getLanguage: () => cookies.get("spectral-language") || "en",
+    setLanguage: (language: string) => cookies.set("spectral-language", language, cookieOptions),
+    removeLanguage: () => cookies.remove("spectral-language", cookieOptions),
   };
 }
 
