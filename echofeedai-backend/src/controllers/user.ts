@@ -19,9 +19,9 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const { email, username, password } = signupData.data;
+    const { email, password } = signupData.data;
     const user = await client.user.findFirst({
-      where: { OR: [{ username }, { email }] },
+      where: { OR: [{ email }] },
     });
 
     if (user) {
@@ -38,13 +38,11 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     const newUser = await client.user.create({
       data: {
         email,
-        username,
         password: hashedPassword,
       },
       select: {
         id: true,
         email: true,
-        username: true,
         createdAt: true,
       },
     });
@@ -106,7 +104,6 @@ export const signin = async (req: Request, res: Response): Promise<void> => {
     const token = createToken({
       id: user.id,
       email: user.email,
-      username: user.username,
     });
     createCookie(req, res, token, {
       message: "Signin successful",

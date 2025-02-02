@@ -2,7 +2,6 @@ import z from "zod";
 
 export const signupSchema = z.object({
   email: z.string().email(),
-  username: z.string(),
   password: z.string(),
 });
 
@@ -36,14 +35,12 @@ export const generateApiSchema = z.object({
 
 export type User = {
   id: string;
-  email: string;
   username: string;
 };
 
 export type TokenPayload = {
   id: string;
   email: string;
-  username: string;
 };
 
 export type ResponseData = {
