@@ -7,16 +7,43 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Form, Link } from "react-router-dom";
-import { useState } from "react";
+import { Form, Link, useActionData, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { UserInput } from "@/components/self/user-input";
+import { SigninPayload, User } from "@/types/user";
+import { ActionResult } from "@/types/action-result";
+import { toast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 export default function Signin() {
+  // state
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const [error, setError] = useState<{ type: string; message: string } | null>(
     null
   );
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+
+  // action
+  const navigate = useNavigate();
+  const actionData = useActionData<ActionResult<User | SigninPayload>>();
+  useEffect(() => {
+    if (actionData?.success) {
+      navigate("/");
+    } else if (actionData?.success === false) {
+      // origin email
+      if (actionData.origin === "email") {
+        setError({ type: "email", message: actionData.message });
+      } else if (actionData.origin === "password") {
+        setError({ type: "password", message: actionData.message });
+      } else {
+        toast({
+          title: "Signin Failed",
+          description: actionData.message,
+        });
+      }
+    }
+  }, [actionData, navigate]);
 
   return (
     <div className={cn("flex flex-col gap-6")}>

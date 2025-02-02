@@ -9,14 +9,15 @@ import Signup from "./routes/auth/Signup";
 import Signin from "./routes/auth/Signin";
 import AuthIndex from "./routes/auth/AuthIndex";
 import { loader as signinLoader } from "@/functions/loader/auth/signin";
-import { action as signinAction } from "@/functions/action/auth/signin";
+import { action as signinAction } from "@/functions/action/auth/signin.action";
 import { loader as signupLoader } from "@/functions/loader/auth/signup";
-import { action as signupAction } from "@/functions/action/auth/signup";
+import { action as signupAction } from "@/functions/action/auth/signup.action";
 
 // dashboard
 import Dashboard from "./routes/dashboard/DashboardIndex";
 import { loader as dashboardLoader } from "@/functions/loader/dashboard";
 import { action as logoutAction } from "@/functions/action/auth/logout";
+import { AuthErrorBoundary } from "./routes/auth/AuthError";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
   {
     path: "/auth",
     element: <AuthLayout />,
+    errorElement: <AuthErrorBoundary />,
     children: [
       { index: true, element: <AuthIndex /> },
       {

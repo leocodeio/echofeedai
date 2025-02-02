@@ -7,13 +7,36 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Form, Link } from "react-router-dom";
+import { Form, Link, useActionData, useNavigate } from "react-router-dom";
 import { UserInput } from "@/components/self/user-input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { SignupPayload, User } from "@/types/user";
+import { ActionResult } from "@/types/action-result";
+import { toast } from "@/hooks/use-toast";
 
 export default function Signup() {
+  // Action data from -  echofeedai-frontend/src/functions/action/auth/signup.ts
+  const navigate = useNavigate();
+  const actionData = useActionData<ActionResult<User | SignupPayload>>();
+  useEffect(() => {
+    if (actionData?.success) {
+      navigate("/auth/signin");
+    } else if (actionData?.success === false) {
+      // origin email
+      if (actionData.origin === "email") {
+        setError({ type: "email", message: actionData.message });
+      } else if (actionData.origin === "password") {
+        setError({ type: "password", message: actionData.message });
+      } else {
+        toast({
+          title: "Signup Failed",
+          description: actionData?.message,
+          variant: "destructive",
+        });
+      }
+    }
+  }, [actionData, navigate]);
+
   // State variables
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -59,7 +82,10 @@ export default function Signup() {
                   autoComplete="new-password"
                   placeholder="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setError(null);
+                  }}
                 />
               </div>
               <div className="grid gap-2">

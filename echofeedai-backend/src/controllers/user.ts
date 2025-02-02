@@ -81,7 +81,7 @@ export const signin = async (req: Request, res: Response): Promise<void> => {
     });
     console.log("debug log 1: user", user);
     if (!user) {
-      res.status(401).json({
+      res.status(404).json({
         error: "Invalid credentials",
         payload: {
           details: "No user found with the provided email",
