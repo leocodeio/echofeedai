@@ -22,7 +22,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 
-export default function Header() {
+export default function CommonHeader() {
   const { i18n } = useTranslation();
   const handleLanguageChange = (value: string) => {
     i18n.changeLanguage(value);
@@ -43,7 +43,7 @@ export default function Header() {
             Navigation menu for mobile devices
           </div>
           <Button variant="link" asChild>
-            <Link to="/">
+            <Link to="/home">
               <ShirtIcon className="h-6 w-6" />
               <span className="sr-only">ShadCN</span>
             </Link>
@@ -58,7 +58,7 @@ export default function Header() {
         </SheetContent>
       </Sheet>
       <Button variant="link" asChild>
-        <Link to="/" className="mr-6 hidden lg:flex">
+        <Link to="/home" className="mr-6 hidden lg:flex">
           <ShirtIcon className="h-6 w-6" />
           <span className="sr-only">ShadCN</span>
         </Link>
@@ -90,12 +90,6 @@ export default function Header() {
             <SelectItem value="es">Español</SelectItem>
           </SelectContent>
         </Select>
-        <Button variant="outline" asChild>
-          <Link to="/auth/signin">Sign in</Link>
-        </Button>
-        <Button asChild>
-          <Link to="/auth/signup">Sign Up</Link>
-        </Button>
       </div>
       <ModeToggle />
     </header>

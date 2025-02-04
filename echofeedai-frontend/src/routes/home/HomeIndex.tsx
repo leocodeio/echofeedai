@@ -1,12 +1,12 @@
 import { Form } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { loader as dashboardLoader } from "@/functions/loader/dashboard/index";
+import { loader as homeLoader } from "@/functions/loader/home/index";
 import { action as logoutAction } from "@/functions/action/auth/logout";
 
-export const loader = dashboardLoader;
+export const loader = homeLoader;
 export const action = logoutAction;
-export default function Dashboard() {
+export default function HomeIndex() {
   let { t } = useTranslation();
 
   return (

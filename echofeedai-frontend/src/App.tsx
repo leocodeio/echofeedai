@@ -3,6 +3,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Landing from "@/routes/Landing";
 import NotFound from "./routes/error/NotFound";
 
+// landing
+import { loader as landingLoader } from "@/functions/loader/landing.loader";
+
 // auth
 import AuthLayout from "./routes/auth/AuthLayout";
 import Signup from "./routes/auth/Signup";
@@ -13,16 +16,18 @@ import { action as signinAction } from "@/functions/action/auth/signin.action";
 import { loader as signupLoader } from "@/functions/loader/auth/signup";
 import { action as signupAction } from "@/functions/action/auth/signup.action";
 
-// dashboard
-import Dashboard from "./routes/dashboard/DashboardIndex";
-import { loader as dashboardLoader } from "@/functions/loader/dashboard";
+// home
+import { loader as homeLoader } from "@/functions/loader/home";
 import { action as logoutAction } from "@/functions/action/auth/logout";
 import { AuthErrorBoundary } from "./routes/auth/AuthError";
+import HomeLayout from "./routes/home/HomeLayout";
+import HomeIndex from "./routes/home/HomeIndex";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Landing />,
+    loader: landingLoader,
     children: [],
   },
   {
@@ -46,11 +51,16 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/dashboard",
-    element: <Dashboard />,
-    loader: dashboardLoader,
-    action: logoutAction,
-    children: [],
+    path: "/home",
+    element: <HomeLayout />,
+    loader: homeLoader,
+    children: [
+      {
+        index: true,
+        element: <HomeIndex />,
+        action: logoutAction,
+      },
+    ],
   },
   {
     path: "*",

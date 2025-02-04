@@ -8,7 +8,7 @@ export async function loader(): Promise<Response | null> {
   const session = getUserSession();
   const isAuthenticated = session.getIsAuthenticated();
   if (isAuthenticated) {
-    return redirect("/dashboard");
+    return redirect("/home");
   }
   return null;
 }

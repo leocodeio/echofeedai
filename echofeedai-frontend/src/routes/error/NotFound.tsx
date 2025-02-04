@@ -55,7 +55,7 @@ export function ErrorBoundary() {
 
               <CardFooter>
                 <Button asChild variant="default" className="w-full">
-                  <Link to="/" className="flex items-center gap-2">
+                  <Link to="/home" className="flex items-center gap-2">
                     <Home className="h-4 w-4" />
                     Back to Home
                   </Link>
