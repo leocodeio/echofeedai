@@ -6,8 +6,8 @@ export const ROUTE_PATH = "/dashboard" as const;
 export async function loader(): Promise<Response | null> {
   // If user is not authenticated, redirect to signin
   const session = getUserSession();
-  const user = session.getUser();
-  if (!user) {
+  const isAuthenticated = session.getIsAuthenticated();
+  if (!isAuthenticated) {
     return redirect("/auth/signin");
   }
   return null;

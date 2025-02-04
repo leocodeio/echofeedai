@@ -20,6 +20,11 @@ export default function Signup() {
   const actionData = useActionData<ActionResult<User | SignupPayload>>();
   useEffect(() => {
     if (actionData?.success) {
+      toast({
+        title: "Signup",
+        description: actionData?.message,
+        variant: "default",
+      });
       navigate("/auth/signin");
     } else if (actionData?.success === false) {
       // origin email

@@ -13,7 +13,6 @@ import { UserInput } from "@/components/self/user-input";
 import { SigninPayload, User } from "@/types/user";
 import { ActionResult } from "@/types/action-result";
 import { toast } from "@/hooks/use-toast";
-import { ToastAction } from "@/components/ui/toast";
 
 export default function Signin() {
   // state
@@ -29,6 +28,11 @@ export default function Signin() {
   const actionData = useActionData<ActionResult<User | SigninPayload>>();
   useEffect(() => {
     if (actionData?.success) {
+      toast({
+        title: "Signin",
+        description: actionData.message,
+        variant: "default",
+      });
       navigate("/");
     } else if (actionData?.success === false) {
       // origin email
