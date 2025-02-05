@@ -8,7 +8,13 @@ export const destroyCookie = (
 ): void => {
   res
     .status(200)
-    .clearCookie("Authorization", {
+    .clearCookie("access-token", {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/"
+    })
+    .clearCookie("refresh-token", {
       httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",

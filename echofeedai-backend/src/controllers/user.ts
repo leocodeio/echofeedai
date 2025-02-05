@@ -3,7 +3,7 @@ import client from "../db/client";
 import { compare, hash } from "../utils/crypt/mycrypt";
 import { Request, Response } from "express";
 import { createCookie } from "../utils/cookie/createCookie";
-import { createToken } from "../utils/token/createToken";
+import { createAccessToken, createRefreshToken } from "../utils/token/createToken";
 import { destroyCookie } from "../utils/cookie/destroyCookie";
 
 export const signup = async (req: Request, res: Response): Promise<void> => {
@@ -101,12 +101,18 @@ export const signin = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const token = createToken({
+    const accessToken = createAccessToken({
       id: user.id,
       email: user.email,
     });
-    createCookie(req, res, token, {
+    const refreshToken = createRefreshToken({
+      id: user.id,
+      email: user.email,
+    });
+
+    createCookie(req, res, accessToken, refreshToken, {
       message: "Signin successful",
+
       payload: {},
     });
   } catch (error: any) {

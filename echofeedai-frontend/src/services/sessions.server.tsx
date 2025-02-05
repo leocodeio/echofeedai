@@ -41,7 +41,18 @@ export function getUserSession() {
     getIsAuthenticated: () => {
       const session = getUserSession();
       const user = session.getUser();
-      return user !== null;
+      const accessToken = cookies.get("access-token");
+      const refreshToken = cookies.get("refresh-token");
+      // not only check existance but also validate token
+      // make a call to validate the token to backend
+      // if access token is valid, return true
+      // if access token is invalid, check if refresh token is valid
+      // if refresh token is valid, make a call to refresh the token
+      // if refresh token is invalid, return false
+      // if  returned false logout, destroy the token
+      return (
+        user !== null && accessToken !== undefined && refreshToken !== undefined
+      );
     },
     setUser: (user: User) =>
       cookies.set("user", user, {

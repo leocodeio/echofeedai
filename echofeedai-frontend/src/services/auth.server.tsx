@@ -37,6 +37,8 @@ export const signin = async (signinPayload: SigninPayload) => {
         "Content-Type": "application/json",
         "x-api-key": import.meta.env.VITE_APP_API_KEY,
       },
+      credentials: "include",
+      mode: "cors",
     });
     return signinResponse;
   } catch (error) {

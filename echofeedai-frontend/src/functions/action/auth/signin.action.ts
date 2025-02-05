@@ -31,6 +31,14 @@ export async function action({ request }: ActionFunctionArgs) {
 
   // signin
   const signinResult = await signin(parsedSigninPayload.data);
+
+  const cookies = document.cookie.split(";").reduce((acc, cookie) => {
+    const [key, value] = cookie.trim().split("=");
+    acc[key] = value;
+    return acc;
+  }, {} as { [key: string]: string });
+  console.log("debug log 0 - signin.action.ts", cookies);
+
   if (!signinResult.ok) {
     // 404
     if (signinResult.status === 404) {
