@@ -2,7 +2,7 @@ import { Form } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { loader as homeLoader } from "@/functions/loader/home/index";
-import { action as logoutAction } from "@/functions/action/auth/logout";
+import { action as logoutAction } from "@/functions/action/auth/logout.action";
 
 export const loader = homeLoader;
 export const action = logoutAction;

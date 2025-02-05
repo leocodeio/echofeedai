@@ -9,21 +9,22 @@ declare global {
   }
 }
 
-export const isAuthenticated = async (
+export const  isAuthenticated = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { Authorization } = req.cookies;
+  const { "access-token": accessToken, "refresh-token": refreshToken } = req.cookies;
   // console.log(Authorization);
-  if (!Authorization) {
+  if (!accessToken) {
     res.status(401).json({
+
       message: "You are not signed in",
     });
     return;
   }
 
-  const decoded = validateToken(Authorization);
+  const decoded = validateToken(accessToken);
   req.userId = decoded.id;
   next();
 };

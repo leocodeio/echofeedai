@@ -127,6 +127,7 @@ export const signin = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const signout = async (req: Request, res: Response): Promise<void> => {
+  console.log("debug log 1: signout");
   destroyCookie(req, res, {
     message: "Signout successful",
     payload: {},

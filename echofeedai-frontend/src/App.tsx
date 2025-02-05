@@ -18,7 +18,7 @@ import { action as signupAction } from "@/functions/action/auth/signup.action";
 
 // home
 import { loader as homeLoader } from "@/functions/loader/home";
-import { action as logoutAction } from "@/functions/action/auth/logout";
+import { action as logoutAction } from "@/functions/action/auth/logout.action";
 import { AuthErrorBoundary } from "./routes/auth/AuthError";
 import HomeLayout from "./routes/home/HomeLayout";
 import HomeIndex from "./routes/home/HomeIndex";
@@ -61,6 +61,10 @@ const router = createBrowserRouter([
         action: logoutAction,
       },
     ],
+  },
+  {
+    path: "/logout",
+    action: logoutAction,
   },
   {
     path: "*",
