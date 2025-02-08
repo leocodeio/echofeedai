@@ -35,8 +35,6 @@ export const isApikeyAuthenticated = async (
   next: NextFunction
 ) => {
   const apiKey = req.headers["x-api-key"];
-  console.log("debug log 0 - user.ts", apiKey);
-  console.log("debug log 1 - user.ts", process.env.X_API_KEY);
   const apiKeyAccepted = apiKey === process.env.X_API_KEY;
   if (!apiKeyAccepted) {
     res.status(403).json({

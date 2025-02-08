@@ -46,10 +46,9 @@ class TopicRequest(BaseModel):
         }
     }
 
-class FeedbackRequest(BaseModel):
+class CoverageRequest(BaseModel):
     question_map: Dict[str, str]
     employee_text: str
-    min_threshold: int = 3
     
     model_config = {
         "json_schema_extra": {
@@ -59,17 +58,10 @@ class FeedbackRequest(BaseModel):
                     "salary structure": "What are your thoughts on the current salary structure?",
                     "team collaboration": "How effective is the team collaboration in your department?"
                 },
-                "employee_text": "The work environment is great but salary could be better.",
-                "min_threshold": 3
+                "employee_text": "The work environment is great but salary could be better."
             }
         }
     }
-
-class CoverageResult(BaseModel):
-    topic: str
-    covered: bool
-    matching_question: str
-    matching_answer: str
 
 # Hello World
 @app.get("/")
@@ -109,13 +101,12 @@ async def generate_questions(request: TopicRequest):
          summary="Process Employee Feedback",
          description="Analyzes feedback text and checks topic coverage",
          response_description="Analysis results with coverage check")
-async def process_feedback(request: FeedbackRequest):
+async def process_feedback(request: CoverageRequest):
     """Process employee feedback and validate topic coverage
     
     Args:
         question_map (Dict[str, str]): Mapping of topics to their questions
         employee_text (str): Employee feedback text
-        min_threshold (int): Minimum acceptable sentiment threshold
         
     Returns:
         Dict: Analysis results and coverage status
@@ -131,7 +122,6 @@ async def process_feedback(request: FeedbackRequest):
         analysis_results = processor.process_feedback(list(request.question_map.values()), feedback_map)
         
         # Check topic coverage
-        coverage_results = []
         covered = []
         not_covered = []
         for topic, question in request.question_map.items():

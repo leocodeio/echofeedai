@@ -18,38 +18,32 @@ export const profileSchema = z.object({
   token: z.string(),
 });
 
-export const saveApiSchema = z.object({
-  userId: z.string(),
-  websiteName: z.string(),
-  websiteUrl: z.string(),
+export const topicsSchema = z.object({
+  topics: z.array(z.string()),
 });
 
-export const queryApiSchema = z.object({
-  queryText: z.string(),
-  apiKey: z.string(),
+export const coverageSchema = z.object({
+  employee_text: z.string(),
+  question_map: z.record(z.string(), z.string()),
 });
 
-export const generateApiSchema = z.object({
-  url: z.string(),
-});
+
 
 export type User = {
   id: string;
   username: string;
 };
 
+
 export type TokenPayload = {
   id: string;
   email: string;
 };
 
-export type ResponseData = {
-  message: string;
-  payload: any;
-};
+export type TopicToQuestionMap = Record<string, string>;
 
-export type SaveApiPaylod = {
-  userId: string;
-  websiteName: string;
-  websiteUrl: string;
+export type CoverageResult = {
+  all_topics_covered: boolean;
+  covered: Record<string, string>[];
+  not_covered: Record<string, string>[];
 };
