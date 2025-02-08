@@ -30,6 +30,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { language } from "@/utils/language";
 
 export default function CommonHeader() {
   const { i18n } = useTranslation();
@@ -95,8 +96,11 @@ export default function CommonHeader() {
             <SelectValue placeholder="Language" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="en">English</SelectItem>
-            <SelectItem value="es">Español</SelectItem>
+            {Object.entries(language).map(([key, value]) => (
+              <SelectItem key={key} value={key}>
+                {value}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
         <ModeToggle />

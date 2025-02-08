@@ -2,6 +2,9 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import enCommon from "@/locales/en/common.json";
 import esCommon from "@/locales/es/common.json";
+import hiCommon from "@/locales/hi/common.json";
+import jaCommon from "@/locales/ja/common.json";
+import zhCommon from "@/locales/zh-cn/common.json";
 
 import { getI18nSession } from "@/services/sessions.server";
 const session = getI18nSession();
@@ -14,6 +17,15 @@ const resources = {
   },
   es: {
     common: esCommon,
+  },
+  hi: {
+    common: hiCommon,
+  },
+  ja: {
+    common: jaCommon,
+  },
+  zh: {
+    common: zhCommon,
   },
 };
 

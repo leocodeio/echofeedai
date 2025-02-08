@@ -21,6 +21,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { language } from "@/utils/language";
 
 export default function LandingHeader() {
   const { i18n } = useTranslation();
@@ -39,8 +40,11 @@ export default function LandingHeader() {
             <SelectValue placeholder="Language" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="en">English</SelectItem>
-            <SelectItem value="es">Español</SelectItem>
+            {Object.entries(language).map(([key, value]) => (
+              <SelectItem key={key} value={key}>
+                {value}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
         <Button variant="outline" asChild>
