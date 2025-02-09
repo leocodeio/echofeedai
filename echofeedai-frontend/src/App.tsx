@@ -102,6 +102,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/thankyou",
+    loader: homeLoader,
     element: <Thankyou />,
   },
   {
