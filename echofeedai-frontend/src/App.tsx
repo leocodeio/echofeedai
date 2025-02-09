@@ -22,6 +22,7 @@ import { action as logoutAction } from "@/functions/action/auth/logout.action";
 import { AuthErrorBoundary } from "./routes/auth/AuthError";
 import HomeLayout from "./routes/home/HomeLayout";
 import HomeIndex from "./routes/home/HomeIndex";
+import Respond from "./routes/feature/respond/Respond";
 
 const router = createBrowserRouter([
   {
@@ -72,6 +73,10 @@ const router = createBrowserRouter([
       throw new Response("Not found", { status: 404 });
     },
     errorElement: <NotFound />,
+  },
+  {
+    path: "/respond",
+    element: <Respond />,
   },
 ]);
 

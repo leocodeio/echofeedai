@@ -1,18 +1,6 @@
-import {
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetTitle,
-} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import {
-  NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuLink,
-} from "@/components/ui/navigation-menu";
 import { ModeToggle } from "@/components/mode-toggle";
-import { NavLinks } from "@/models/navlinks";
 import { useTranslation } from "react-i18next";
 import {
   Select,

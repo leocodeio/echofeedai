@@ -4,7 +4,7 @@ import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-export const Hero = () => {
+export const LandingHero = () => {
   const { t } = useTranslation("common");
   return (
     <section className="container grid  place-items-center py-20 md:py-32 gap-10 w-screen">
