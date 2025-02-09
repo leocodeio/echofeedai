@@ -22,7 +22,15 @@ import { action as logoutAction } from "@/functions/action/auth/logout.action";
 import { AuthErrorBoundary } from "./routes/auth/AuthError";
 import HomeLayout from "./routes/home/HomeLayout";
 import HomeIndex from "./routes/home/HomeIndex";
-import Respond from "./routes/feature/respond/Respond";
+
+// feature
+import { loader as featureLoader } from "@/functions/loader/feature";
+import FeatureLayout from "./routes/feature/FeatureLayout";
+import FeatureIndex from "./routes/feature/FeatureIndex";
+
+// feature/generate
+import GenerateIndex from "./routes/feature/generate/GenerateIndex";
+import { action as generateAction } from "@/functions/action/feature/generate/gnerate.action";
 
 const router = createBrowserRouter([
   {
@@ -64,6 +72,22 @@ const router = createBrowserRouter([
     ],
   },
   {
+    path: "/feature",
+    element: <FeatureLayout />,
+    loader: featureLoader,
+    children: [
+      {
+        index: true,
+        element: <FeatureIndex />,
+      },
+      {
+        path: "generate",
+        action: generateAction,
+        element: <GenerateIndex />,
+      },
+    ],
+  },
+  {
     path: "/logout",
     action: logoutAction,
   },
@@ -73,11 +97,7 @@ const router = createBrowserRouter([
       throw new Response("Not found", { status: 404 });
     },
     errorElement: <NotFound />,
-  },
-  {
-    path: "/respond",
-    element: <Respond />,
-  },
+  }
 ]);
 
 function App() {
