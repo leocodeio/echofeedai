@@ -29,8 +29,15 @@ import FeatureLayout from "./routes/feature/FeatureLayout";
 import FeatureIndex from "./routes/feature/FeatureIndex";
 
 // feature/generate
-import GenerateIndex from "./routes/feature/generate/GenerateIndex";
+import Generate from "./routes/feature/generate/Generate";
 import { action as generateAction } from "@/functions/action/feature/generate/gnerate.action";
+
+// feature/respond
+import Respond from "./routes/feature/respond/Respond";
+import { action as respondAction } from "@/functions/action/feature/respond/respond.action";
+import { loader as respondLoader } from "@/functions/loader/feature/respond/respond.loader";
+// thank you
+import Thankyou from "./routes/Thankyou";
 
 const router = createBrowserRouter([
   {
@@ -83,9 +90,19 @@ const router = createBrowserRouter([
       {
         path: "generate",
         action: generateAction,
-        element: <GenerateIndex />,
+        element: <Generate />,
+      },
+      {
+        path: "respond",
+        loader: respondLoader,
+        action: respondAction,
+        element: <Respond />,
       },
     ],
+  },
+  {
+    path: "/thankyou",
+    element: <Thankyou />,
   },
   {
     path: "/logout",
@@ -97,7 +114,7 @@ const router = createBrowserRouter([
       throw new Response("Not found", { status: 404 });
     },
     errorElement: <NotFound />,
-  }
+  },
 ]);
 
 function App() {

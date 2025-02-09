@@ -1,4 +1,4 @@
-export type ORIGIN = "email" | "password" | "topics";
+export type ORIGIN = "email" | "password" | "topics" | "respond";
 
 export type ActionResultSuccess<T> = {
   success: true;

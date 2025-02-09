@@ -33,7 +33,7 @@ export const CommonHero = () => {
             <GitHubLogoIcon className="ml-2 w-5 h-5" />
           </a>
           <Button variant="default" className = "w-full md:w-1/3 mr-4 py-5 px-8 text-center">
-          <Link to="/auth/signin">Generate</Link>
+          <Link to="/feature/generate">Generate</Link>
           </Button>
         </div>
       </div>

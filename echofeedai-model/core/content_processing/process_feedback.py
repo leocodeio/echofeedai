@@ -4,14 +4,22 @@ from textblob import TextBlob
 class FeedbackProcessor:
     def __init__(self):
         """Initialize the FeedbackProcessor with required models"""
-        self.sentiment_model = pipeline(
-            "sentiment-analysis", 
-            model="distilbert-base-uncased-finetuned-sst-2-english"
-        )
-        self.aspect_model = pipeline(
-            "ner", 
-            model="dslim/bert-base-NER"
-        )
+        try:
+            self.sentiment_model = pipeline(
+                "sentiment-analysis", 
+                model="distilbert-base-uncased-finetuned-sst-2-english",
+                device=-1  # Force CPU usage
+            )
+            self.aspect_model = pipeline(
+                "ner", 
+                model="dslim/bert-base-NER",
+                device=-1  # Force CPU usage
+            )
+        except Exception as e:
+            print(f"Error initializing models: {str(e)}")
+            # Initialize with None to allow for graceful fallback
+            self.sentiment_model = None
+            self.aspect_model = None
 
     def _assign_threshold(self, sentiment_score):
         """
@@ -57,11 +65,21 @@ class FeedbackProcessor:
         Returns:
             float: Combined sentiment score
         """
-        model_result = self.sentiment_model(text)
-        model_score = 0.25 if model_result[0]['label'] == "POSITIVE" else -0.25
-        
-        textblob_score = TextBlob(text).sentiment.polarity
-        return textblob_score + model_score
+        try:
+            if not text or text.strip() == "":
+                return 0.0
+                
+            if self.sentiment_model:
+                model_result = self.sentiment_model(text)
+                model_score = 0.25 if model_result[0]['label'] == "POSITIVE" else -0.25
+            else:
+                model_score = 0
+            
+            textblob_score = TextBlob(text).sentiment.polarity
+            return textblob_score + model_score
+        except Exception as e:
+            print(f"Error in sentiment analysis: {str(e)}")
+            return 0.0
 
     def process_feedback(self, questions, feedback_map):
         """
