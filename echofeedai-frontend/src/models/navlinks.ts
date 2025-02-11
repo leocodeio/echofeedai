@@ -1,6 +1,6 @@
 export const NavLinks = [
   { name: "Home", to: "/home" },
-  { name: "Dashboard", to: "/dashboard" },
+  { name: "Respond", to: "/feature/respond" },
   { name: "Generate", to: "/feature/generate" },
   //   { name: "Services", to: "/services" },
   //   { name: "Portfolio", to: "/portfolio" },
