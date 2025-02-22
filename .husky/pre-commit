@@ -1,0 +1,10 @@
+cd backend
+
+# lint 
+# pnpm run lint
+
+# typecheck
+# pnpm run typecheck
+
+# test
+# pnpm run test
