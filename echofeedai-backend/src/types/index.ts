@@ -1,20 +1,41 @@
 import z from "zod";
 
-export const signupSchema = z.object({
+export const initiatorSignupSchema = z.object({
+  name: z.string(),
   email: z.string().email(),
   password: z.string(),
 });
 
-export const loginSchema = z.object({
+export const initiatorLoginSchema = z.object({
   email: z.string().email(),
   password: z.string(),
 });
 
-export const logoutSchema = z.object({
+export const initiatorLogoutSchema = z.object({
   token: z.string(),
 });
 
-export const profileSchema = z.object({
+export const initiatorProfileSchema = z.object({
+  token: z.string(),
+});
+
+export const participantSignupSchema = z.object({
+  name: z.string(),
+  email: z.string().email(),
+  password: z.string(),
+  sourceId: z.string(),
+});
+
+export const participantLoginSchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
+});
+
+export const participantLogoutSchema = z.object({
+  token: z.string(),
+});
+
+export const participantProfileSchema = z.object({
   token: z.string(),
 });
 
@@ -27,13 +48,10 @@ export const coverageSchema = z.object({
   question_map: z.record(z.string(), z.string()),
 });
 
-
-
 export type User = {
   id: string;
   username: string;
 };
-
 
 export type TokenPayload = {
   id: string;

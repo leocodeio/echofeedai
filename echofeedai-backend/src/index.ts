@@ -6,7 +6,8 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 dotenv.config();
 
-import userRouter from "./routes/v1/user";
+import initiatorRouter from "./routes/v1/initiator";
+import participantRouter from "./routes/v1/participant";
 import modelRouter from "./routes/v1/model";
 
 const app = express();
@@ -23,7 +24,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use("/user/v1", userRouter);
+app.use("/initiator/v1", initiatorRouter);
+app.use("/participant/v1", participantRouter);
 app.use("/model/v1", modelRouter);
 
 app.get("/", (req, res) => {

@@ -1,14 +1,23 @@
-import { loginSchema, signupSchema } from "../types/index";
+import {
+  participantLoginSchema,
+  participantSignupSchema,
+} from "../types/index";
 import client from "../db/client";
 import { compare, hash } from "../utils/crypt/mycrypt";
 import { Request, Response } from "express";
 import { createCookie } from "../utils/cookie/createCookie";
-import { createAccessToken, createRefreshToken } from "../utils/token/createToken";
+import {
+  createAccessToken,
+  createRefreshToken,
+} from "../utils/token/createToken";
 import { destroyCookie } from "../utils/cookie/destroyCookie";
 
-export const signup = async (req: Request, res: Response): Promise<void> => {
+export const participantSignup = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    const signupData = signupSchema.safeParse(req.body);
+    const signupData = participantSignupSchema.safeParse(req.body);
     if (!signupData.success) {
       res.status(400).json({
         message: "Validation failed",
@@ -19,8 +28,8 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const { email, password } = signupData.data;
-    const user = await client.user.findFirst({
+    const { email, password, name, sourceId } = signupData.data;
+    const user = await client.participant.findFirst({
       where: { OR: [{ email }] },
     });
 
@@ -35,10 +44,12 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     }
 
     const hashedPassword = await hash(password);
-    const newUser = await client.user.create({
+    const newUser = await client.participant.create({
       data: {
         email,
-        password: hashedPassword,
+        passwordHash: hashedPassword,
+        name,
+        sourceId,
       },
       select: {
         id: true,
@@ -62,9 +73,12 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const signin = async (req: Request, res: Response): Promise<void> => {
+export const participantSignin = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    const loginData = loginSchema.safeParse(req.body);
+    const loginData = participantLoginSchema.safeParse(req.body);
     if (!loginData.success) {
       res.status(400).json({
         message: "Validation failed",
@@ -76,7 +90,7 @@ export const signin = async (req: Request, res: Response): Promise<void> => {
     }
 
     const { email, password } = loginData.data;
-    const user = await client.user.findFirst({
+    const user = await client.participant.findFirst({
       where: { email },
     });
     console.log("debug log 1: user", user);
@@ -90,7 +104,7 @@ export const signin = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const isPasswordValid = await compare(password, user.password);
+    const isPasswordValid = await compare(password, user.passwordHash);
     if (!isPasswordValid) {
       res.status(401).json({
         error: "Invalid credentials",
@@ -126,7 +140,10 @@ export const signin = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const signout = async (req: Request, res: Response): Promise<void> => {
+export const participantSignout = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   console.log("debug log 1: signout");
   destroyCookie(req, res, {
     message: "Signout successful",
@@ -134,13 +151,13 @@ export const signout = async (req: Request, res: Response): Promise<void> => {
   });
 };
 
-export const getProfile = async (
+export const getParticipantProfile = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
     const userId = req.userId;
-    const user = await client.user.findUnique({
+    const user = await client.participant.findUnique({
       where: { id: userId },
     });
 
