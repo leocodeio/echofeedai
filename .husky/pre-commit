@@ -1,4 +1,4 @@
-cd backend
+cd echofeedai-backend
 
 # lint 
 # pnpm run lint
@@ -8,3 +8,13 @@ cd backend
 
 # test
 # pnpm run test
+
+cd ../echofeedai-frontend
+
+# lint
+# pnpm run lint
+
+# test
+# pnpm run test
+
+cd ../
