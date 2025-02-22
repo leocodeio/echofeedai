@@ -27,3 +27,5 @@ EchofeedAI is a project that uses AI to analyze and understand the feedback from
     source .venv/bin/activate
     pip install -r requirements.txt
     python3 main.py
+
+test
