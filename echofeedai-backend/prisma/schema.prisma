@@ -13,10 +13,79 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// Initiator of a feedback, can be a company, a product, a service, etc.
+model Initiator {
+  id                String             @id @default(cuid())
+  email             String             @unique
+  passwordHash      String
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  sources           Source[]
+  feedbackInitiates FeedbackInitiate[]
+}
+
+// Participant of a feedback, can be a customer, a user, etc.
+model Participant {
+  id                String             @id @default(cuid())
+  sourceId          String
+  source            Source             @relation(fields: [sourceId], references: [id])
+  email             String             @unique
+  passwordHash      String
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  feedbackResponses FeedbackResponse[]
+}
+
+// Source of feedback, can be a company, a product, a service, etc.
+model Source {
+  id                String             @id @default(cuid())
+  companyName       String
+  initiatorId       String
+  initiator         Initiator          @relation(fields: [initiatorId], references: [id])
+  participants      Participant[]
+  feedbackInitiates FeedbackInitiate[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  feedbackResponses FeedbackResponse[]
+}
+
+// Initiates a feedback by an initiator, with source, and participants
+model FeedbackInitiate {
+  id                String             @id @default(cuid())
+  sourceId          String
+  source            Source             @relation(fields: [sourceId], references: [id])
+  mailTemplateId    String
+  mailTemplate      MailTemplate       @relation(fields: [mailTemplateId], references: [id])
+  initiatorId       String
+  initiator         Initiator          @relation(fields: [initiatorId], references: [id])
+  participantMails  String[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  feedbackResponses FeedbackResponse[]
+}
+
+// Feedback response by a participant to an particular FeedbackInitiated..
+model FeedbackResponse {
+  id                 String           @id @default(cuid())
+  feedbackInitiateId String
+  feedbackInitiate   FeedbackInitiate @relation(fields: [feedbackInitiateId], references: [id])
+  participantId      String
+  participant        Participant      @relation(fields: [participantId], references: [id])
+  response           String
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  Source             Source?          @relation(fields: [sourceId], references: [id])
+  sourceId           String?
+}
+
+// Mails that can be sent to participants
+model MailTemplate {
+  id               String             @id @default(cuid())
+  identifier       String             @unique
+  subject          String
+  variables        String[]
+  body             String
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  FeedbackInitiate FeedbackInitiate[]
 }
