@@ -1,6 +1,1 @@
 pnpm run release
-git push
-git checkout main
-git pull
-git push
-git checkout dev
