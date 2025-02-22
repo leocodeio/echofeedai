@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  addSource,
   getInitiatorProfile,
   initiatorSignin,
   initiatorSignout,
@@ -16,5 +17,7 @@ initiatorRouter.post("/signin", isApikeyAuthenticated, initiatorSignin);
 initiatorRouter.get("/signout", isApikeyAuthenticated, isAuthenticated, initiatorSignout);
 
 initiatorRouter.get("/profile", isApikeyAuthenticated, isAuthenticated, getInitiatorProfile);
+
+initiatorRouter.post("/add-source", isApikeyAuthenticated, isAuthenticated, addSource);
 
 export default initiatorRouter;

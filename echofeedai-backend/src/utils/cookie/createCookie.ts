@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
-import { ResponseData } from "../../types";
 
 export const createCookie = (
   req: Request,
   res: Response,
   accessToken: string,
   refreshToken: string,
-  responseData: ResponseData
+  responseData: any
 ): void => {
   res
     .status(200)
@@ -25,7 +24,6 @@ export const createCookie = (
       path: "/",
       maxAge: 48 * 60 * 60 * 1000, // 48 hours
     })
-
 
     .json(responseData);
 };

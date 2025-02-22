@@ -1,4 +1,8 @@
-import { initiatorLoginSchema, initiatorSignupSchema } from "../types/index";
+import {
+  initiatorLoginSchema,
+  initiatorSignupSchema,
+  sourceSchema,
+} from "../types/index";
 import client from "../db/client";
 import { compare, hash } from "../utils/crypt/mycrypt";
 import { Request, Response } from "express";
@@ -26,22 +30,22 @@ export const initiatorSignup = async (
     }
 
     const { email, password, name } = signupData.data;
-    const user = await client.initiator.findFirst({
+    const initiator = await client.initiator.findFirst({
       where: { OR: [{ email }] },
     });
 
-    if (user) {
+    if (initiator) {
       res.status(409).json({
-        message: "An account with this email or username already exists",
+        message: "An account with this email already exists",
         payload: {
-          details: "Email or username already exists",
+          details: "Email already exists",
         },
       });
       return;
     }
 
     const hashedPassword = await hash(password);
-    const newUser = await client.initiator.create({
+    const newInitiator = await client.initiator.create({
       data: {
         email,
         passwordHash: hashedPassword,
@@ -55,8 +59,8 @@ export const initiatorSignup = async (
     });
 
     res.status(201).json({
-      message: "User created successfully",
-      payload: { user: newUser },
+      message: "Initiator created successfully",
+      payload: { initiator: newInitiator },
     });
   } catch (error) {
     console.error("Signup error:", error);
@@ -86,21 +90,20 @@ export const initiatorSignin = async (
     }
 
     const { email, password } = loginData.data;
-    const user = await client.initiator.findFirst({
+    const initiator = await client.initiator.findFirst({
       where: { email },
     });
-    console.log("debug log 1: user", user);
-    if (!user) {
+    if (!initiator) {
       res.status(404).json({
         error: "Invalid credentials",
         payload: {
-          details: "No user found with the provided email",
+          details: "No initiator found with the provided email",
         },
       });
       return;
     }
 
-    const isPasswordValid = await compare(password, user.passwordHash);
+    const isPasswordValid = await compare(password, initiator.passwordHash);
     if (!isPasswordValid) {
       res.status(401).json({
         error: "Invalid credentials",
@@ -112,12 +115,14 @@ export const initiatorSignin = async (
     }
 
     const accessToken = createAccessToken({
-      id: user.id,
-      email: user.email,
+      id: initiator.id,
+      email: initiator.email,
+      type: "initiator",
     });
     const refreshToken = createRefreshToken({
-      id: user.id,
-      email: user.email,
+      id: initiator.id,
+      email: initiator.email,
+      type: "initiator",
     });
 
     createCookie(req, res, accessToken, refreshToken, {
@@ -152,18 +157,88 @@ export const getInitiatorProfile = async (
   res: Response
 ): Promise<void> => {
   try {
-    const userId = req.userId;
-    const user = await client.initiator.findUnique({
-      where: { id: userId },
+    const initiatorId = req.id;
+    const initiator = await client.initiator.findUnique({
+      where: { id: initiatorId },
     });
 
     res.status(200).json({
       message: "Profile fetched successfully",
       payload: {
-        user: user,
+        initiator: initiator,
       },
     });
   } catch (error) {
     console.error("Get profile error:", error);
+  }
+};
+
+export const addSource = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // decode the token
+    const initiatorId = req.id;
+
+    if (req.type !== "initiator") {
+      res.status(401).json({
+        message: "You are not a Initiator, canot process the request",
+      });
+      return;
+    }
+
+    if (!initiatorId) {
+      res.status(401).json({
+        message: "Unauthorized: No initiator ID found",
+      });
+      return;
+    }
+
+    const isInitiatorExists = await client.initiator.findUnique({
+      where: { id: initiatorId },
+    });
+
+    if (!isInitiatorExists) {
+      res.status(401).json({
+        message: "Unauthorized: Initiator not found",
+      });
+      return;
+    }
+
+    const sourceData = sourceSchema.safeParse(req.body);
+
+    if (!sourceData.success) {
+      res.status(400).json({
+        message: "Validation failed",
+        payload: {
+          details: sourceData.error.errors,
+        },
+      });
+      return;
+    }
+
+    const { companyName } = sourceData.data;
+
+    const newSource = await client.source.create({
+      data: {
+        initiatorId,
+        companyName,
+      },
+      select: {
+        id: true,
+        companyName: true,
+      },
+    });
+
+    res.status(201).json({
+      message: "Source added successfully",
+      payload: { source: newSource },
+    });
+  } catch (error) {
+    console.error("Add source error:", error);
+    res.status(500).json({
+      message: "An unexpected error occurred during add source",
+      payload: {
+        details: "Internal server error",
+      },
+    });
   }
 };

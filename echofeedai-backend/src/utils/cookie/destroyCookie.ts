@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
-import { ResponseData } from "../../types";
 
 export const destroyCookie = (
   req: Request,
   res: Response,
-  responseData: ResponseData
+  responseData: any
 ): void => {
   res
     .status(200)

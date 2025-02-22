@@ -28,39 +28,33 @@ export const participantSignup = async (
       return;
     }
 
-    const { email, password, name, sourceId } = signupData.data;
-    const user = await client.participant.findFirst({
+    const { email, password, name } = signupData.data;
+    const participant = await client.participant.findFirst({
       where: { OR: [{ email }] },
     });
 
-    if (user) {
+    if (participant) {
       res.status(409).json({
-        message: "An account with this email or username already exists",
+        message: "An account with this email already exists",
         payload: {
-          details: "Email or username already exists",
+          details: "Email already exists",
         },
       });
       return;
     }
 
     const hashedPassword = await hash(password);
-    const newUser = await client.participant.create({
+    const newParticipant = await client.participant.create({
       data: {
         email,
         passwordHash: hashedPassword,
         name,
-        sourceId,
-      },
-      select: {
-        id: true,
-        email: true,
-        createdAt: true,
       },
     });
 
     res.status(201).json({
-      message: "User created successfully",
-      payload: { user: newUser },
+      message: "Participant created successfully",
+      payload: { participant: newParticipant },
     });
   } catch (error) {
     console.error("Signup error:", error);
@@ -90,21 +84,21 @@ export const participantSignin = async (
     }
 
     const { email, password } = loginData.data;
-    const user = await client.participant.findFirst({
+    const participant = await client.participant.findFirst({
       where: { email },
     });
-    console.log("debug log 1: user", user);
-    if (!user) {
+    console.log("debug log 1: participant", participant);
+    if (!participant) {
       res.status(404).json({
         error: "Invalid credentials",
         payload: {
-          details: "No user found with the provided email",
+          details: "No participant found with the provided email",
         },
       });
       return;
     }
 
-    const isPasswordValid = await compare(password, user.passwordHash);
+    const isPasswordValid = await compare(password, participant.passwordHash);
     if (!isPasswordValid) {
       res.status(401).json({
         error: "Invalid credentials",
@@ -116,12 +110,14 @@ export const participantSignin = async (
     }
 
     const accessToken = createAccessToken({
-      id: user.id,
-      email: user.email,
+      id: participant.id,
+      email: participant.email,
+      type: "participant",
     });
     const refreshToken = createRefreshToken({
-      id: user.id,
-      email: user.email,
+      id: participant.id,
+      email: participant.email,
+      type: "participant",
     });
 
     createCookie(req, res, accessToken, refreshToken, {
@@ -156,15 +152,15 @@ export const getParticipantProfile = async (
   res: Response
 ): Promise<void> => {
   try {
-    const userId = req.userId;
-    const user = await client.participant.findUnique({
-      where: { id: userId },
+    const participantId = req.id;
+    const participant = await client.participant.findUnique({
+      where: { id: participantId },
     });
 
     res.status(200).json({
       message: "Profile fetched successfully",
       payload: {
-        user: user,
+        participant: participant,
       },
     });
   } catch (error) {

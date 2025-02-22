@@ -27,28 +27,35 @@ model Initiator {
 
 // Participant of a feedback, can be a customer, a user, etc.
 model Participant {
-  id                String             @id @default(cuid())
-  email             String             @unique
+  id                String                 @id @default(cuid())
+  email             String                 @unique
   passwordHash      String
   name              String
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  sourceId          String
-  source            Source             @relation(fields: [sourceId], references: [id])
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
   feedbackResponses FeedbackResponse[]
+  sources           SourceParticipantMap[]
 }
 
 // Source of feedback, can be a company, a product, a service, etc.
 model Source {
-  id                String             @id @default(cuid())
-  companyName       String
-  initiatorId       String
-  initiator         Initiator          @relation(fields: [initiatorId], references: [id])
-  participants      Participant[]
-  feedbackInitiates FeedbackInitiate[]
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  feedbackResponses FeedbackResponse[]
+  id                   String                 @id @default(cuid())
+  companyName          String
+  initiatorId          String
+  initiator            Initiator              @relation(fields: [initiatorId], references: [id])
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  feedbackInitiates    FeedbackInitiate[]
+  feedbackResponses    FeedbackResponse[]
+  SourceParticipantMap SourceParticipantMap[]
+}
+
+model SourceParticipantMap {
+  id            String      @id @default(cuid())
+  participantId String
+  participant   Participant @relation(fields: [participantId], references: [id])
+  sourceId      String
+  source        Source      @relation(fields: [sourceId], references: [id])
 }
 
 // Initiates a feedback by an initiator, with source, and participants
