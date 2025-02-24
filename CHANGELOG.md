@@ -1,3 +1,17 @@
+# [1.2.0](https://github.com/leocodeio/echofeedai/compare/v1.1.0...v1.2.0) (2025-02-24)
+
+
+### Features
+
+* **Added implementation for nm, should find a way to efficintly send main tho:** \ ([365176a](https://github.com/leocodeio/echofeedai/commit/365176a25f442b54a8aec795cb429fb9a58931c8))
+* **Updated code at backend for source:** Updated code at backend for source ([e938343](https://github.com/leocodeio/echofeedai/commit/e938343ed67d4a62ad1b98c81904f2f9fbedb6ac))
+
+
+### Performance Improvements
+
+* **initiator and panticipant added:** initiator and panticipant added ([8843a2e](https://github.com/leocodeio/echofeedai/commit/8843a2e008907a5ed39935784acdc91b02bef8ba))
+* **updated code for model:** updated code for model ([4f937db](https://github.com/leocodeio/echofeedai/commit/4f937dbf513c6a313bcd20ae111a358fdfabe7cb))
+
 # [1.1.0](https://github.com/leocodeio/echofeedai/compare/v1.0.0...v1.1.0) (2025-02-22)
 
 
