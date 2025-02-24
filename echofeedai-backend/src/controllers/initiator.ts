@@ -203,6 +203,19 @@ export const addSource = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    const source = await client.source.findFirst({
+      where: {
+        companyName: req.body.companyName,
+      },
+    });
+
+    if (source) {
+      res.status(400).json({
+        message: "Source already exists",
+      });
+      return;
+    }
+
     const sourceData = sourceSchema.safeParse(req.body);
 
     if (!sourceData.success) {
@@ -236,6 +249,97 @@ export const addSource = async (req: Request, res: Response): Promise<void> => {
     console.error("Add source error:", error);
     res.status(500).json({
       message: "An unexpected error occurred during add source",
+      payload: {
+        details: "Internal server error",
+      },
+    });
+  }
+};
+
+export const getSources = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const initiatorId = req.id;
+
+    if (req.type !== "initiator") {
+      res.status(401).json({
+        message: "You are not a Initiator, canot process the request",
+      });
+      return;
+    }
+
+    if (!initiatorId) {
+      res.status(401).json({
+        message: "Unauthorized: No initiator ID found",
+      });
+      return;
+    }
+
+    const isInitiatorExists = await client.initiator.findUnique({
+      where: { id: initiatorId },
+    });
+
+    if (!isInitiatorExists) {
+      res.status(401).json({
+        message: "Unauthorized: Initiator not found",
+      });
+      return;
+    }
+
+    const sources = await client.source.findMany({
+      where: {
+        initiatorId,
+      },
+      select: {
+        id: true,
+        companyName: true,
+      },
+    });
+
+    res.status(200).json({
+      message: "Sources fetched successfully",
+      payload: { sources },
+    });
+  } catch (error) {
+    console.error("Get sources error:", error);
+  }
+};
+
+export const getSourceById = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const sourceId = req.params.id;
+
+    if (req.type !== "initiator") {
+      res.status(401).json({
+        message: "You are not a Initiator, canot process the request",
+      });
+      return;
+    }
+
+    const source = await client.source.findUnique({
+      where: { id: sourceId },
+    });
+
+    if (!source) {
+      res.status(404).json({
+        message: "Source not found",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      message: "Source fetched successfully",
+      payload: { source },
+    });
+  } catch (error) {
+    console.error("Get source by id error:", error);
+    res.status(500).json({
+      message: "An unexpected error occurred during get source by id",
       payload: {
         details: "Internal server error",
       },
