@@ -46,7 +46,27 @@ export const participantProfileSchema = z.object({
 // schemas
 export const sourceSchema = z.object({
   companyName: z.string(),
-  participants: z.array(z.string())
+  participants: z.array(z.string()),
+});
+
+// mail template
+// schemas
+export const mailTemplateSchema = z.object({
+  identifier: z.string(),
+  subject: z.string(),
+  variables: z.array(z.string()),
+  body: z.string(),
+});
+
+export const sendMailSchema = z.object({
+  templateName: z.string(),
+  recipientEmail: z.string().email(),
+  variableValues: z.record(z.string(), z.string()),
+});
+
+export const sendMailToParticipantsSchema = z.object({
+  participantIds: z.array(z.string()),
+  templateName: z.string(),
 });
 
 // token payload
@@ -57,7 +77,6 @@ export type TokenPayload = {
 };
 
 // python model
-
 // schemas
 export const topicsSchema = z.object({
   topics: z.array(z.string()),

@@ -175,30 +175,10 @@ export const getInitiatorProfile = async (
 
 export const addSource = async (req: Request, res: Response): Promise<void> => {
   try {
-    // decode the token
     const initiatorId = req.id;
-
-    if (req.type !== "initiator") {
-      res.status(401).json({
-        message: "You are not a Initiator, canot process the request",
-      });
-      return;
-    }
-
     if (!initiatorId) {
       res.status(401).json({
         message: "Unauthorized: No initiator ID found",
-      });
-      return;
-    }
-
-    const isInitiatorExists = await client.initiator.findUnique({
-      where: { id: initiatorId },
-    });
-
-    if (!isInitiatorExists) {
-      res.status(401).json({
-        message: "Unauthorized: Initiator not found",
       });
       return;
     }
@@ -243,7 +223,7 @@ export const addSource = async (req: Request, res: Response): Promise<void> => {
 
     res.status(201).json({
       message: "Source added successfully",
-      payload: { source: newSource },
+      payload: newSource,
     });
   } catch (error) {
     console.error("Add source error:", error);
@@ -262,32 +242,6 @@ export const getSources = async (
 ): Promise<void> => {
   try {
     const initiatorId = req.id;
-
-    if (req.type !== "initiator") {
-      res.status(401).json({
-        message: "You are not a Initiator, canot process the request",
-      });
-      return;
-    }
-
-    if (!initiatorId) {
-      res.status(401).json({
-        message: "Unauthorized: No initiator ID found",
-      });
-      return;
-    }
-
-    const isInitiatorExists = await client.initiator.findUnique({
-      where: { id: initiatorId },
-    });
-
-    if (!isInitiatorExists) {
-      res.status(401).json({
-        message: "Unauthorized: Initiator not found",
-      });
-      return;
-    }
-
     const sources = await client.source.findMany({
       where: {
         initiatorId,
@@ -314,13 +268,6 @@ export const getSourceById = async (
   try {
     const sourceId = req.params.id;
 
-    if (req.type !== "initiator") {
-      res.status(401).json({
-        message: "You are not a Initiator, canot process the request",
-      });
-      return;
-    }
-
     const source = await client.source.findUnique({
       where: { id: sourceId },
     });
@@ -340,6 +287,53 @@ export const getSourceById = async (
     console.error("Get source by id error:", error);
     res.status(500).json({
       message: "An unexpected error occurred during get source by id",
+      payload: {
+        details: "Internal server error",
+      },
+    });
+  }
+};
+
+export const initiateFeedback = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const sourceId = req.params.sourceId;
+
+    if (!sourceId) {
+      res.status(401).json({
+        message: "Unauthorized: No source ID found",
+      });
+      return;
+    }
+
+    const source = await client.source.findUnique({
+      where: { id: sourceId },
+    });
+
+    if (!source) {
+      res.status(404).json({
+        message: "Source not found",
+      });
+      return;
+    }
+
+    const feedback = await client.feedbackInitiate.create({
+      data: {
+        sourceId,
+        initiatorId: source.initiatorId,
+        mailTemplateId: "clxk0000000000000000000000000000000",
+        participantMails: ["test@test.com"],
+        feedbackResponses: {
+          create: [],
+        },
+      },
+    });
+  } catch (error) {
+    console.error("Initiate feedback error:", error);
+    res.status(500).json({
+      message: "An unexpected error occurred during initiate feedback",
       payload: {
         details: "Internal server error",
       },

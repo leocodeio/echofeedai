@@ -43,6 +43,8 @@ model Source {
   companyName          String                 @unique
   initiatorId          String     
   initiator            Initiator              @relation(fields: [initiatorId], references: [id])
+  mailTemplateId    String
+  mailTemplate      MailTemplate       @relation(fields: [mailTemplateId], references: [id])
   createdAt            DateTime               @default(now())
   updatedAt            DateTime               @updatedAt
   feedbackInitiates    FeedbackInitiate[]
@@ -63,8 +65,6 @@ model FeedbackInitiate {
   id                String             @id @default(cuid())
   sourceId          String
   source            Source             @relation(fields: [sourceId], references: [id])
-  mailTemplateId    String
-  mailTemplate      MailTemplate       @relation(fields: [mailTemplateId], references: [id])
   initiatorId       String
   initiator         Initiator          @relation(fields: [initiatorId], references: [id])
   participantMails  String[]
@@ -96,5 +96,5 @@ model MailTemplate {
   body             String
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
-  FeedbackInitiate FeedbackInitiate[]
+  sources          Source[]
 }

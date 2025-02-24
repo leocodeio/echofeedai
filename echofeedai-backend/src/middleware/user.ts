@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { validateToken } from "../utils/token/validateToken";
-
+import client from "../db/client";
 declare global {
   namespace Express {
     export interface Request {
@@ -44,6 +44,30 @@ export const isApikeyAuthenticated = async (
     res.status(403).json({
       message: "You are not authorized to do this",
     });
+    return;
+  }
+  next();
+};
+
+export const isInitiator = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id, type } = req;
+  if (type !== "initiator") {
+    res.status(403).json({
+      message: "Forbidden!! Only initiators can do this",
+    });
+    return;
+  }
+
+  const initiator = await client.initiator.findUnique({
+    where: { id },
+  });
+
+  if (!initiator) {
+    res.status(404).json({ message: "Initiator not found" });
     return;
   }
   next();

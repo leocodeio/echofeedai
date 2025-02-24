@@ -9,6 +9,7 @@ dotenv.config();
 import initiatorRouter from "./routes/v1/initiator";
 import participantRouter from "./routes/v1/participant";
 import modelRouter from "./routes/v1/model";
+import nmRouter from "./routes/v1/nm";
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use(cookieParser());
 app.use("/initiator/v1", initiatorRouter);
 app.use("/participant/v1", participantRouter);
 app.use("/model/v1", modelRouter);
+app.use("/nm/v1", nmRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
