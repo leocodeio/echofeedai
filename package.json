@@ -9,13 +9,15 @@
     }
   },
   "scripts": {
-    "prepare": "husky",
-    "commit": "git-cz",
-    "release": "HUSKY=0 semantic-release --no-ci"
+    "prepare": "husky install",
+    "typecheck": "tsc",
+    "commit": "cz"
   },
   "dependencies": {
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
+    "commitizen": "^4.3.1",
+    "commitlint": "^19.7.1",
     "semantic-release": "^24.2.3"
   },
   "devDependencies": {

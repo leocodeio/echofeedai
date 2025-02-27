@@ -14,6 +14,12 @@ importers:
       '@semantic-release/git':
         specifier: ^10.0.1
         version: 10.0.1(semantic-release@24.2.3(typescript@5.6.3))
+      commitizen:
+        specifier: ^4.3.1
+        version: 4.3.1(@types/node@22.13.5)(typescript@5.6.3)
+      commitlint:
+        specifier: ^19.7.1
+        version: 19.7.1(@types/node@22.13.5)(typescript@5.6.3)
       semantic-release:
         specifier: ^24.2.3
         version: 24.2.3(typescript@5.6.3)
@@ -2401,6 +2407,11 @@ packages:
   commitizen@4.3.1:
     resolution: {integrity: sha512-gwAPAVTy/j5YcOOebcCRIijn+mSjWJC+IYKivTu6aG8Ei/scoXgfsMRnuAk6b0GRste2J4NGxVdMN3ZpfNaVaw==}
     engines: {node: '>= 12'}
+    hasBin: true
+
+  commitlint@19.7.1:
+    resolution: {integrity: sha512-iNWqXl/A1WN8qd9JehqUpzbOxczNBE1nzBiYE33TkHeTptq7Cvg5U4j8PpvO92Nxganv6o/20IO3omP5N5M7/A==}
+    engines: {node: '>=v18'}
     hasBin: true
 
   compare-func@2.0.0:
@@ -7997,6 +8008,14 @@ snapshots:
       minimist: 1.2.7
       strip-bom: 4.0.0
       strip-json-comments: 3.1.1
+    transitivePeerDependencies:
+      - '@types/node'
+      - typescript
+
+  commitlint@19.7.1(@types/node@22.13.5)(typescript@5.6.3):
+    dependencies:
+      '@commitlint/cli': 19.7.1(@types/node@22.13.5)(typescript@5.6.3)
+      '@commitlint/types': 19.5.0
     transitivePeerDependencies:
       - '@types/node'
       - typescript
