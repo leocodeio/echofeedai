@@ -43,8 +43,8 @@ model Source {
   companyName          String                 @unique
   initiatorId          String     
   initiator            Initiator              @relation(fields: [initiatorId], references: [id])
-  mailTemplateId    String
-  mailTemplate      MailTemplate       @relation(fields: [mailTemplateId], references: [id])
+  mailTemplateIdentifier String
+  mailTemplate      MailTemplate       @relation(fields: [mailTemplateIdentifier], references: [identifier])
   createdAt            DateTime               @default(now())
   updatedAt            DateTime               @updatedAt
   feedbackInitiates    FeedbackInitiate[]

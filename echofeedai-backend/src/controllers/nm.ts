@@ -347,7 +347,7 @@ export const sendMailToParticipants = async (req: Request, res: Response) => {
     }
 
     res.status(200).json({
-      message: "Emails sent successfully",
+      message: "Emails sent successfully [TODO]",
       payload: null,
     });
   } catch (error) {

@@ -47,6 +47,7 @@ export const participantProfileSchema = z.object({
 export const sourceSchema = z.object({
   companyName: z.string(),
   participants: z.array(z.string()),
+  mailTemplateIdentifier: z.string(),
 });
 
 // mail template

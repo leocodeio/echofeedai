@@ -208,12 +208,13 @@ export const addSource = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const { companyName } = sourceData.data;
+    const { companyName, mailTemplateIdentifier } = sourceData.data;
 
     const newSource = await client.source.create({
       data: {
         initiatorId,
         companyName,
+        mailTemplateIdentifier,
       },
       select: {
         id: true,
@@ -323,13 +324,18 @@ export const initiateFeedback = async (
       data: {
         sourceId,
         initiatorId: source.initiatorId,
-        mailTemplateId: "clxk0000000000000000000000000000000",
         participantMails: ["test@test.com"],
         feedbackResponses: {
           create: [],
         },
       },
     });
+
+    res.status(201).json({
+      message: "Feedback initiated successfully",
+      payload: { feedback },
+    });
+    return;
   } catch (error) {
     console.error("Initiate feedback error:", error);
     res.status(500).json({
