@@ -8,13 +8,16 @@ import {
   addSource,
   getSourceById,
   initiateFeedback,
+  addParticipant,
+  deleteSource,
+  updateSource,
 } from "../../controllers/initiator";
 import {
   isApikeyAuthenticated,
   isAuthenticated,
   isInitiator,
 } from "../../middleware/user";
-
+import { isAdminApikeyAuthenticated } from "../../middleware/admin";
 const initiatorRouter = Router();
 
 initiatorRouter.post("/signup", isApikeyAuthenticated, initiatorSignup);
@@ -43,6 +46,23 @@ initiatorRouter.post(
   addSource
 );
 
+initiatorRouter.put(
+  "/update-source/:id",
+  isApikeyAuthenticated,
+  isAuthenticated,
+  isInitiator,
+  updateSource
+);
+
+initiatorRouter.delete(
+  "/delete-source/:id",
+  isApikeyAuthenticated,
+  isAuthenticated,
+  isInitiator,
+  isAdminApikeyAuthenticated,
+  deleteSource
+);
+
 initiatorRouter.get(
   "/sources",
   isApikeyAuthenticated,
@@ -59,12 +79,21 @@ initiatorRouter.get(
   getSourceById
 );
 
-initiatorRouter.get(
-  "/initiate-feedback/:sourceId",
+initiatorRouter.post(
+  "/initiate-feedback",
   isApikeyAuthenticated,
   isAuthenticated,
   isInitiator,
   initiateFeedback
 );
+
+initiatorRouter.post(
+  "/add-participant",
+  isApikeyAuthenticated,
+  isAuthenticated,
+  isInitiator,
+  addParticipant
+);
+
 
 export default initiatorRouter;

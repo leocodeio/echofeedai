@@ -43,12 +43,9 @@ model Source {
   companyName          String                 @unique
   initiatorId          String     
   initiator            Initiator              @relation(fields: [initiatorId], references: [id])
-  mailTemplateId    String
-  mailTemplate      MailTemplate       @relation(fields: [mailTemplateId], references: [id])
   createdAt            DateTime               @default(now())
   updatedAt            DateTime               @updatedAt
   feedbackInitiates    FeedbackInitiate[]
-  feedbackResponses    FeedbackResponse[]
   SourceParticipantMap SourceParticipantMap[]
 }
 
@@ -70,7 +67,10 @@ model FeedbackInitiate {
   participantMails  String[]
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
+  feedbackResponseIds String[]
   feedbackResponses FeedbackResponse[]
+  mailTemplateIdentifier String
+  mailTemplate      MailTemplate       @relation(fields: [mailTemplateIdentifier], references: [identifier])
 }
 
 // Feedback response by a participant to an particular FeedbackInitiated..
@@ -83,8 +83,6 @@ model FeedbackResponse {
   response           String
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
-  Source             Source?          @relation(fields: [sourceId], references: [id])
-  sourceId           String?
 }
 
 // Mails that can be sent to participants
@@ -96,5 +94,5 @@ model MailTemplate {
   body             String
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
-  sources          Source[]
+  feedbackInitiates FeedbackInitiate[]
 }
