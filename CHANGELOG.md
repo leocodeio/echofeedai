@@ -1,3 +1,18 @@
+# [1.3.0](https://github.com/leocodeio/echofeedai/compare/v1.2.0...v1.3.0) (2025-02-28)
+
+
+### Features
+
+* **new sr:** new sr ([6de8726](https://github.com/leocodeio/echofeedai/commit/6de8726137c311eff5e0b1c3e8ab0c9a3d476c3e))
+
+
+### Performance Improvements
+
+* **added error tracing at mdole eps:** added error tracing at mdole eps ([e19ad9c](https://github.com/leocodeio/echofeedai/commit/e19ad9cda27131e93d4f5d301db0885bcc0b45cb))
+* **initiator:** added some updated while branin storming ([d367793](https://github.com/leocodeio/echofeedai/commit/d367793781a42e3b62466cc5862ae10146a7440d))
+* **mig:** merge from dev ([15d4074](https://github.com/leocodeio/echofeedai/commit/15d4074462d28717c6cd528ec3fb9a0692684338))
+* **Updated code that works for creating sources via initiator":** Updated code that works ([454edfe](https://github.com/leocodeio/echofeedai/commit/454edfead00dd16b555ad7bbeff7bd1f54c7411f))
+
 # [1.2.0](https://github.com/leocodeio/echofeedai/compare/v1.1.0...v1.2.0) (2025-02-28)
 
 
