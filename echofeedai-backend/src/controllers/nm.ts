@@ -2,10 +2,8 @@ import { Request, Response } from "express";
 import client from "../db/client";
 import {
   mailTemplateSchema,
-  sendMailSchema,
   sendMailToParticipantsSchema,
 } from "../types";
-import { MailTemplate } from "@prisma/client";
 
 const getVariablesFromBody = (body: string) => {
   const regex = /{{(.*?)}}/g;
@@ -271,7 +269,7 @@ export const getTemplateById = async (req: Request, res: Response) => {
 };
 
 const sendMail = async (
-  templateName: string,
+    templateIdentifier: string,
   recipientEmail: string,
   variableValues: Record<string, string>
 ) => {
@@ -281,12 +279,12 @@ const sendMail = async (
     // 1. Replacing variables in template with provided values
     // 2. Using an email service (like nodemailer) to send the email
     // 3. Possibly logging the email send attempt
-    console.log("mail sent", templateName, recipientEmail, variableValues);
+    console.log("mail sent", templateIdentifier, recipientEmail, variableValues);
     return {
       isValid: true,
       message: "Email sent successfully",
       payload: {
-        templateName,
+        templateIdentifier,
         recipientEmail,
         variableValues,
       },
@@ -312,11 +310,11 @@ export const sendMailToParticipants = async (req: Request, res: Response) => {
       return;
     }
 
-    const { templateName, participantIds } = parsedSendMail.data;
+    const { templateIdentifier, participantIds } = parsedSendMail.data;
 
     // Get the template
     const template = await client.mailTemplate.findUnique({
-      where: { identifier: templateName },
+      where: { identifier: templateIdentifier },
     });
 
     if (!template) {

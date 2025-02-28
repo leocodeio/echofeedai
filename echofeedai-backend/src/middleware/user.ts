@@ -39,7 +39,7 @@ export const isApikeyAuthenticated = async (
   next: NextFunction
 ) => {
   const apiKey = req.headers["x-api-key"];
-  const apiKeyAccepted = apiKey === process.env.X_API_KEY;
+  const apiKeyAccepted = apiKey === process.env.API_KEY;
   if (!apiKeyAccepted) {
     res.status(403).json({
       message: "You are not authorized to do this",

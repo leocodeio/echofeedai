@@ -46,8 +46,11 @@ export const participantProfileSchema = z.object({
 // schemas
 export const sourceSchema = z.object({
   companyName: z.string(),
-  participants: z.array(z.string()),
-  mailTemplateIdentifier: z.string(),
+});
+
+export const sourceParticipantMapSchema = z.object({
+  sourceId: z.string(),
+  participantId: z.string(),
 });
 
 // mail template
@@ -60,14 +63,21 @@ export const mailTemplateSchema = z.object({
 });
 
 export const sendMailSchema = z.object({
-  templateName: z.string(),
+  templateIdentifier: z.string(),
   recipientEmail: z.string().email(),
   variableValues: z.record(z.string(), z.string()),
 });
 
 export const sendMailToParticipantsSchema = z.object({
   participantIds: z.array(z.string()),
-  templateName: z.string(),
+  templateIdentifier: z.string(),
+});
+
+// feedback initiate
+// schemas
+export const feedbackInitiateSchema = z.object({
+  sourceId: z.string(),
+  mailTemplateIdentifier: z.string(),
 });
 
 // token payload

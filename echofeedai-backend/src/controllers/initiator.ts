@@ -2,6 +2,8 @@ import {
   initiatorLoginSchema,
   initiatorSignupSchema,
   sourceSchema,
+  sourceParticipantMapSchema,
+  feedbackInitiateSchema,
 } from "../types/index";
 import client from "../db/client";
 import { compare, hash } from "../utils/crypt/mycrypt";
@@ -208,13 +210,12 @@ export const addSource = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const { companyName, mailTemplateIdentifier } = sourceData.data;
+    const { companyName } = sourceData.data;
 
     const newSource = await client.source.create({
       data: {
         initiatorId,
         companyName,
-        mailTemplateIdentifier,
       },
       select: {
         id: true,
@@ -233,6 +234,97 @@ export const addSource = async (req: Request, res: Response): Promise<void> => {
       payload: {
         details: "Internal server error",
       },
+    });
+  }
+};
+
+export const updateSource = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const sourceId = req.params.id;
+    const source = await client.source.findUnique({
+      where: { id: sourceId },
+    });
+
+    if (!source) {
+      res.status(404).json({
+        message: "Source not found",
+      });
+      return;
+    }
+
+    const sourceData = sourceSchema.safeParse(req.body);
+
+    if (!sourceData.success) {
+      res.status(400).json({
+        message: "Validation failed",
+        payload: {
+          details: sourceData.error.errors,
+        },
+      });
+      return;
+    }
+
+    const { companyName } = sourceData.data;
+
+    const updatedSource = await client.source.update({
+      where: { id: sourceId },
+      data: { companyName },
+    });
+
+    res.status(200).json({
+      message: "Source updated successfully",
+      payload: updatedSource,
+    });
+  } catch (error) {
+    console.error("Update source error:", error);
+    res.status(500).json({
+      message: "An unexpected error occurred during update source",
+    });
+  }
+};
+
+export const deleteSource = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const sourceId = req.params.id;
+    if (!sourceId) {
+      res.status(401).json({
+        message: "Unauthorized: No source ID found",
+      });
+      return;
+    }
+
+    const source = await client.source.findUnique({
+      where: { id: sourceId },
+      include: {
+        feedbackInitiates: true,
+        SourceParticipantMap: true,
+      },
+    });
+
+    if (!source) {
+      res.status(404).json({
+        message: "Source not found",
+      });
+      return;
+    }
+
+    await client.source.delete({
+      where: { id: sourceId },
+    });
+
+    res.status(200).json({
+      message: "Source deleted successfully",
+    });
+  } catch (error) {
+    console.error("Delete source error:", error);
+    res.status(500).json({
+      message: "An unexpected error occurred during delete source",
     });
   }
 };
@@ -300,7 +392,18 @@ export const initiateFeedback = async (
   res: Response
 ): Promise<void> => {
   try {
-    const sourceId = req.params.sourceId;
+    const initiateFeedbackData = feedbackInitiateSchema.safeParse(req.body);
+    if (!initiateFeedbackData.success) {
+      res.status(400).json({
+        message: "Validation failed",
+        payload: {
+          details: initiateFeedbackData.error.errors,
+        },
+      });
+      return;
+    }
+
+    const { sourceId, mailTemplateIdentifier } = initiateFeedbackData.data;
 
     if (!sourceId) {
       res.status(401).json({
@@ -320,14 +423,29 @@ export const initiateFeedback = async (
       return;
     }
 
+    // get all participants for the source
+    const sourceParticipantMap = await client.sourceParticipantMap.findMany({
+      where: {
+        sourceId,
+      },
+      select: {
+        participant: {
+          select: {
+            email: true,
+          },
+        },
+      },
+    });
+
     const feedback = await client.feedbackInitiate.create({
       data: {
         sourceId,
+        mailTemplateIdentifier,
         initiatorId: source.initiatorId,
-        participantMails: ["test@test.com"],
-        feedbackResponses: {
-          create: [],
-        },
+        participantMails: sourceParticipantMap.map(
+          (map) => map.participant.email
+        ),
+        feedbackResponseIds: [],
       },
     });
 
@@ -343,6 +461,65 @@ export const initiateFeedback = async (
       payload: {
         details: "Internal server error",
       },
+    });
+  }
+};
+
+export const addParticipant = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const addParticipantData = sourceParticipantMapSchema.safeParse(req.body);
+    if (!addParticipantData.success) {
+      res.status(400).json({
+        message: "Validation failed",
+        payload: {
+          details: addParticipantData.error.errors,
+        },
+      });
+      return;
+    }
+
+    const { sourceId, participantId } = addParticipantData.data;
+
+    const source = await client.source.findUnique({
+      where: { id: sourceId },
+    });
+
+    if (!source) {
+      res.status(404).json({
+        message: "Source not found",
+      });
+      return;
+    }
+
+    const participant = await client.participant.findUnique({
+      where: { id: participantId },
+    });
+
+    if (!participant) {
+      res.status(404).json({
+        message: "Participant not found",
+      });
+      return;
+    }
+
+    const sourceParticipantMap = await client.sourceParticipantMap.create({
+      data: {
+        sourceId,
+        participantId,
+      },
+    });
+
+    res.status(201).json({
+      message: "Participant added successfully",
+      payload: { sourceParticipantMap },
+    });
+  } catch (error) {
+    console.error("Add participant error:", error);
+    res.status(500).json({
+      message: "An unexpected error occurred during add participant",
     });
   }
 };
