@@ -1,3 +1,10 @@
+## [1.3.3](https://github.com/leocodeio/echofeedai/compare/v1.3.2...v1.3.3) (2025-03-01)
+
+
+### Performance Improvements
+
+* **Added logic to check if response can be mapped:** Added logic to check if response can be mapped ([b6ec2ff](https://github.com/leocodeio/echofeedai/commit/b6ec2ff649c39a191984d4da2378b416062b5b04))
+
 ## [1.3.2](https://github.com/leocodeio/echofeedai/compare/v1.3.1...v1.3.2) (2025-03-01)
 
 ## [1.3.1](https://github.com/leocodeio/echofeedai/compare/v1.3.0...v1.3.1) (2025-03-01)
