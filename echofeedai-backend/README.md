@@ -44,3 +44,8 @@ FeedbackResponse
 - response
 - created_at
 - updated_at
+
+[ TODO ]
+
+- response can be given by the participant only once
+- response can only be given to the if participant exists in the source

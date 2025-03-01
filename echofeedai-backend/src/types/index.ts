@@ -42,6 +42,11 @@ export const participantProfileSchema = z.object({
   token: z.string(),
 });
 
+export const participantFeedbackResponseSchema = z.object({
+  participantId: z.string(),
+  feedbackResponse: z.string(),
+});
+
 // source
 // schemas
 export const sourceSchema = z.object({
@@ -78,6 +83,13 @@ export const sendMailToParticipantsSchema = z.object({
 export const feedbackInitiateSchema = z.object({
   sourceId: z.string(),
   mailTemplateIdentifier: z.string(),
+});
+
+// feedback response
+// schemas
+export const feedbackResponseSchema = z.object({
+  feedbackInitiateId: z.string(),
+  response: z.string(),
 });
 
 // token payload

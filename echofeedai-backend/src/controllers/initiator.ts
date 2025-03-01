@@ -387,6 +387,65 @@ export const getSourceById = async (
   }
 };
 
+export const addParticipant = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const addParticipantData = sourceParticipantMapSchema.safeParse(req.body);
+    if (!addParticipantData.success) {
+      res.status(400).json({
+        message: "Validation failed",
+        payload: {
+          details: addParticipantData.error.errors,
+        },
+      });
+      return;
+    }
+
+    const { sourceId, participantId } = addParticipantData.data;
+
+    const source = await client.source.findUnique({
+      where: { id: sourceId },
+    });
+
+    if (!source) {
+      res.status(404).json({
+        message: "Source not found",
+      });
+      return;
+    }
+
+    const participant = await client.participant.findUnique({
+      where: { id: participantId },
+    });
+
+    if (!participant) {
+      res.status(404).json({
+        message: "Participant not found",
+      });
+      return;
+    }
+
+    const sourceParticipantMap = await client.sourceParticipantMap.create({
+      data: {
+        sourceId,
+        participantId,
+      },
+    });
+
+    res.status(201).json({
+      message: "Participant added successfully",
+      payload: { sourceParticipantMap },
+    });
+  } catch (error) {
+    console.error("Add participant error:", error);
+    res.status(500).json({
+      message: "An unexpected error occurred during add participant",
+    });
+  }
+};
+
 export const initiateFeedback = async (
   req: Request,
   res: Response
@@ -448,10 +507,10 @@ export const initiateFeedback = async (
         feedbackResponseIds: [],
       },
     });
-
+    console.log("debug log 1: feedback initiated", feedback);
     res.status(201).json({
       message: "Feedback initiated successfully",
-      payload: { feedback },
+      payload: feedback,
     });
     return;
   } catch (error) {
@@ -461,65 +520,6 @@ export const initiateFeedback = async (
       payload: {
         details: "Internal server error",
       },
-    });
-  }
-};
-
-export const addParticipant = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    const addParticipantData = sourceParticipantMapSchema.safeParse(req.body);
-    if (!addParticipantData.success) {
-      res.status(400).json({
-        message: "Validation failed",
-        payload: {
-          details: addParticipantData.error.errors,
-        },
-      });
-      return;
-    }
-
-    const { sourceId, participantId } = addParticipantData.data;
-
-    const source = await client.source.findUnique({
-      where: { id: sourceId },
-    });
-
-    if (!source) {
-      res.status(404).json({
-        message: "Source not found",
-      });
-      return;
-    }
-
-    const participant = await client.participant.findUnique({
-      where: { id: participantId },
-    });
-
-    if (!participant) {
-      res.status(404).json({
-        message: "Participant not found",
-      });
-      return;
-    }
-
-    const sourceParticipantMap = await client.sourceParticipantMap.create({
-      data: {
-        sourceId,
-        participantId,
-      },
-    });
-
-    res.status(201).json({
-      message: "Participant added successfully",
-      payload: { sourceParticipantMap },
-    });
-  } catch (error) {
-    console.error("Add participant error:", error);
-    res.status(500).json({
-      message: "An unexpected error occurred during add participant",
     });
   }
 };
