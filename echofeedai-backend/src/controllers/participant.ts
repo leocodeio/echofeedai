@@ -1,6 +1,7 @@
 import {
   participantLoginSchema,
   participantSignupSchema,
+  feedbackResponseSchema,
 } from "../types/index";
 import client from "../db/client";
 import { compare, hash } from "../utils/crypt/mycrypt";
@@ -165,5 +166,45 @@ export const getParticipantProfile = async (
     });
   } catch (error) {
     console.error("Get profile error:", error);
+  }
+};
+
+export const participantFeedbackResponse = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const participantId = req.id;
+    if (!participantId) {
+      res.status(401).json({
+        message: "Unauthorized",
+      });
+      return;
+    }
+    const feedbackResponseData = feedbackResponseSchema.safeParse(req.body);
+    if (!feedbackResponseData.success) {
+      res.status(400).json({
+        message: "Validation failed",
+        payload: {
+          details: feedbackResponseData.error.errors,
+        },
+      });
+      return;
+    }
+
+    const { feedbackInitiateId, response } = feedbackResponseData.data;
+
+    const feedbackResponse = await client.feedbackResponse.create({
+      data: { participantId, feedbackInitiateId, response },
+    });
+
+    res.status(201).json({
+      message: "Feedback response created successfully",
+      payload: {
+        feedbackResponse,
+      },
+    });
+  } catch (error) {
+    console.error("Feedback response error:", error);
   }
 };

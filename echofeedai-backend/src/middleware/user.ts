@@ -55,6 +55,12 @@ export const isInitiator = async (
   next: NextFunction
 ) => {
   const { id, type } = req;
+  if (!id || !type) {
+    res.status(401).json({
+      message: "Unauthorized",
+    });
+    return;
+  }
   if (type !== "initiator") {
     res.status(403).json({
       message: "Forbidden!! Only initiators can do this",
@@ -68,6 +74,36 @@ export const isInitiator = async (
 
   if (!initiator) {
     res.status(404).json({ message: "Initiator not found" });
+    return;
+  }
+  next();
+};
+
+export const isParticipant = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id, type } = req;
+  if (!id || !type) {
+    res.status(401).json({
+      message: "Unauthorized",
+    });
+    return;
+  }
+  if (type !== "participant") {
+    res.status(403).json({
+      message: "Forbidden!! Only participants can do this",
+    });
+    return;
+  }
+
+  const participant = await client.participant.findUnique({
+    where: { id },
+  });
+
+  if (!participant) {
+    res.status(404).json({ message: "Participant not found" });
     return;
   }
   next();
