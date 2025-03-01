@@ -33,6 +33,7 @@ model Participant {
   name              String
   createdAt         DateTime               @default(now())
   updatedAt         DateTime               @updatedAt
+  feedbackInitiates FeedbackInitiate[]
   feedbackResponses FeedbackResponse[]
   sources           SourceParticipantMap[]
 }
@@ -64,7 +65,8 @@ model FeedbackInitiate {
   source            Source             @relation(fields: [sourceId], references: [id])
   initiatorId       String
   initiator         Initiator          @relation(fields: [initiatorId], references: [id])
-  participantMails  String[]
+  participantIds    String[]
+  participants      Participant[]
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
   feedbackResponseIds String[]

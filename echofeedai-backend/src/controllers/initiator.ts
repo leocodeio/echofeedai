@@ -374,7 +374,7 @@ export const getSourceById = async (
 
     res.status(200).json({
       message: "Source fetched successfully",
-      payload: { source },
+      payload: source,
     });
   } catch (error) {
     console.error("Get source by id error:", error);
@@ -427,6 +427,21 @@ export const addParticipant = async (
       return;
     }
 
+    // check if the participant is already in the source
+    const isParticipantInSource = await client.sourceParticipantMap.findFirst({
+      where: {
+        sourceId,
+        participantId,
+      },
+    });
+
+    if (isParticipantInSource) {
+      res.status(400).json({
+        message: "Participant already in the source",
+      });
+      return;
+    }
+
     const sourceParticipantMap = await client.sourceParticipantMap.create({
       data: {
         sourceId,
@@ -434,6 +449,20 @@ export const addParticipant = async (
       },
     });
 
+    // add to all feedback initiates for the source
+    const feedbackInitiates = await client.feedbackInitiate.findMany({
+      where: {
+        sourceId,
+      },
+    });
+
+    for (const feedbackInitiate of feedbackInitiates) {
+      await client.feedbackInitiate.update({
+        where: { id: feedbackInitiate.id },
+        data: { participantIds: [...feedbackInitiate.participantIds, participantId] },
+      });
+    }
+    
     res.status(201).json({
       message: "Participant added successfully",
       payload: { sourceParticipantMap },
@@ -490,7 +519,7 @@ export const initiateFeedback = async (
       select: {
         participant: {
           select: {
-            email: true,
+            id: true,
           },
         },
       },
@@ -501,9 +530,7 @@ export const initiateFeedback = async (
         sourceId,
         mailTemplateIdentifier,
         initiatorId: source.initiatorId,
-        participantMails: sourceParticipantMap.map(
-          (map) => map.participant.email
-        ),
+        participantIds: sourceParticipantMap.map((map) => map.participant.id),
         feedbackResponseIds: [],
       },
     });
@@ -520,6 +547,42 @@ export const initiateFeedback = async (
       payload: {
         details: "Internal server error",
       },
+    });
+  }
+};
+
+export const getFeedbackInitiates = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const sourceId = req.params.sourceId;
+    if (!sourceId) {
+      res.status(401).json({
+        message: "source ID not found",
+      });
+      return;
+    }
+
+    const feedbackInitiates = await client.feedbackInitiate.findMany({
+      where: {
+        sourceId,
+      },
+      select: {
+        id: true,
+        mailTemplateIdentifier: true,
+        participantIds: true,
+      },
+    });
+
+    res.status(200).json({
+      message: "Feedback initiates fetched successfully",
+      payload: feedbackInitiates,
+    });
+  } catch (error) {
+    console.error("Get feedback initiates error:", error);
+    res.status(500).json({
+      message: "An unexpected error occurred during get feedback initiates",
     });
   }
 };

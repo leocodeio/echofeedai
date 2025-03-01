@@ -55,7 +55,7 @@ export const participantSignup = async (
 
     res.status(201).json({
       message: "Participant created successfully",
-      payload: { participant: newParticipant },
+      payload: newParticipant,
     });
   } catch (error) {
     console.error("Signup error:", error);
@@ -193,6 +193,27 @@ export const participantFeedbackResponse = async (
     }
 
     const { feedbackInitiateId, response } = feedbackResponseData.data;
+
+    const feedbackInitiate = await client.feedbackInitiate.findUnique({
+      where: { id: feedbackInitiateId },
+    });
+
+    if (!feedbackInitiate) {
+      res.status(404).json({
+        message:
+          "You cannot respond to this feedback initiate as it is not existing",
+      });
+      return;
+    }
+
+    const particiantIds = feedbackInitiate.participantIds;
+
+    if (!particiantIds.includes(participantId)) {
+      res.status(404).json({
+        message: "You are not a participant of this feedback initiate",
+      });
+      return;
+    }
 
     const feedbackResponse = await client.feedbackResponse.create({
       data: { participantId, feedbackInitiateId, response },
