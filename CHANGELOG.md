@@ -1,3 +1,12 @@
+## [1.3.1](https://github.com/leocodeio/echofeedai/compare/v1.3.0...v1.3.1) (2025-03-01)
+
+
+### Performance Improvements
+
+* **feedback response:** Updated code for feedback response, have to check for acceptance ([4ee3d77](https://github.com/leocodeio/echofeedai/commit/4ee3d77c41ad35f313df12d4034790a526b0cefe))
+* **version:** version ([2fd207d](https://github.com/leocodeio/echofeedai/commit/2fd207d6ff66d2e91ec4a38fc462d9e1c8af9d85))
+* **version:** version ([c5a52db](https://github.com/leocodeio/echofeedai/commit/c5a52dbf3144272091342a56ce74597413a035ac))
+
 # [1.3.0](https://github.com/leocodeio/echofeedai/compare/v1.2.0...v1.3.0) (2025-02-28)
 
 
