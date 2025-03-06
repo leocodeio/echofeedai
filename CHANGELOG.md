@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/leocodeio/echofeedai/compare/v1.3.3...v1.4.0) (2025-03-06)
+
+
+### Features
+
+* **dual persona:** dual login achieved end to enc ([a0d6847](https://github.com/leocodeio/echofeedai/commit/a0d68474abb60b82776d14492e96352a6289f9ef))
+
 ## [1.3.3](https://github.com/leocodeio/echofeedai/compare/v1.3.2...v1.3.3) (2025-03-01)
 
 
