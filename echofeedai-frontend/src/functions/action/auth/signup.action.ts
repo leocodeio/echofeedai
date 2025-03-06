@@ -13,10 +13,13 @@ import { signinPayloadSchema } from "@/services/schemas/signin.schema";
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
+  console.log(data);  
   const signupPayload = {
     email: data.email,
     password: data.password,
     confirmPassword: data.confirmPassword,
+    role: data.role,
+    name: data.name,
   } as SignupPayload;
 
   // parse with zod
@@ -61,10 +64,18 @@ export async function action({ request }: ActionFunctionArgs) {
       const result: ActionResultError<SignupPayload> = {
         success: false,
         origin: "email",
-        message: "Failed to signup",
+        message: "Failed to signup due to backend server error",
         data: parsedSignupPayload.data,
       };
       return Response.json(result, { status: 500 });
+    } else if (signupReponse.status === 401 || signupReponse.status === 403) {
+      const result: ActionResultError<SignupPayload> = {
+        success: false,
+        origin: "email",
+        message: "Failed to signup due to invalid authorization",
+        data: parsedSignupPayload.data,
+      };
+      return Response.json(result, { status: 401 });
     } else {
       const result: ActionResultError<SignupPayload> = {
         success: false,

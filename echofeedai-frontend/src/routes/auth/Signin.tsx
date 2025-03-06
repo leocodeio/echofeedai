@@ -14,10 +14,15 @@ import { SigninPayload, User } from "@/types/user";
 import { ActionResult } from "@/types/action-result";
 import { toast } from "@/hooks/use-toast";
 
+// toggle group
+import { UserCircle2Icon, UserRoundIcon } from "lucide-react";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+
 export default function Signin() {
   // state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("participant");
 
   const [error, setError] = useState<{ type: string; message: string } | null>(
     null
@@ -26,6 +31,7 @@ export default function Signin() {
   // action
   const navigate = useNavigate();
   const actionData = useActionData<ActionResult<User | SigninPayload>>();
+
   useEffect(() => {
     if (actionData?.success) {
       toast({
@@ -61,7 +67,35 @@ export default function Signin() {
         <CardContent>
           <Form method="post">
             <div className="flex flex-col gap-6">
+              {/* role toggle group */}
+              <ToggleGroup
+                type="single"
+                variant="outline"
+                defaultValue={role}
+                onValueChange={(value) => {
+                  if (value) {
+                    setRole(value);
+                  }
+                }}
+              >
+                <ToggleGroupItem
+                  value="initiator"
+                  aria-label="Toggle initiator"
+                  name="role"
+                >
+                  <UserCircle2Icon className="h-4 w-4" /> Initiator
+                </ToggleGroupItem>
+                <ToggleGroupItem
+                  value="participant"
+                  aria-label="Toggle participant"
+                  name="role"
+                >
+                  <UserRoundIcon className="h-4 w-4" /> Participant
+                </ToggleGroupItem>
+              </ToggleGroup>
+              <input type="hidden" name="role" value={role || "participant"} />
               <div className="grid gap-2">
+                {/* email input */}
                 <UserInput
                   id="email"
                   className="grid gap-2"
@@ -75,6 +109,7 @@ export default function Signin() {
                   required
                 />
               </div>
+              {/* password input */}
               <div className="grid gap-2">
                 <UserInput
                   id="password"
@@ -95,13 +130,16 @@ export default function Signin() {
                   Forgot your password?
                 </a>
               </div>
+              {/* login button */}
               <Button type="submit" className="w-full">
                 Login
               </Button>
+              {/* back to home button */}
               <Button variant="outline" className="w-full">
                 <Link to="/">Back to Home</Link>
               </Button>
             </div>
+            {/* toggle signup link */}
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?
               <Link to="/auth/signup" className="underline underline-offset-4">

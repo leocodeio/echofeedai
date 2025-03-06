@@ -3,17 +3,24 @@ import { SignupPayload, SigninPayload } from "@/types/user";
 // start ------------------------------ signup ------------------------------
 export const signup = async (signupPayload: SignupPayload) => {
   try {
-    const signupUri = `${import.meta.env.VITE_APP_USER_BACKEND_USER_URL}/signup`;
+    const { role, confirmPassword, ...signupPayloadWithoutRole } =
+      signupPayload;
+    console.log(signupPayloadWithoutRole);
+    const signupUri =
+      role === "initiator"
+        ? `${import.meta.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/signup`
+        : `${import.meta.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL}/signup`;
     console.log(signupUri);
     const signupResponse = await fetch(signupUri, {
       method: "POST",
-      body: JSON.stringify(signupPayload),
+      body: JSON.stringify(signupPayloadWithoutRole),
       headers: {
         "Content-Type": "application/json",
         "x-api-key": import.meta.env.VITE_APP_API_KEY,
       },
+      credentials: "include",
+      mode: "cors",
     });
-    console.log(signupResponse);
 
     return signupResponse;
   } catch (error) {
@@ -26,10 +33,14 @@ export const signup = async (signupPayload: SignupPayload) => {
 
 export const signin = async (signinPayload: SigninPayload) => {
   try {
-    const signinUri = `${import.meta.env.VITE_APP_USER_BACKEND_USER_URL}/signin`;
+    const { role, ...signinPayloadWithoutRole } = signinPayload;
+    const signinUri =
+      role === "initiator"
+        ? `${import.meta.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/signin`
+        : `${import.meta.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL}/signin`;
     const signinResponse = await fetch(signinUri, {
       method: "POST",
-      body: JSON.stringify(signinPayload),
+      body: JSON.stringify(signinPayloadWithoutRole),
       headers: {
         "Content-Type": "application/json",
         "x-api-key": import.meta.env.VITE_APP_API_KEY,
@@ -44,3 +55,21 @@ export const signin = async (signinPayload: SigninPayload) => {
   }
 };
 // end ------------------------------ signin ------------------------------
+// start ------------------------------ logout ------------------------------
+export const logout = async (role: string) => {
+  const logoutUri =
+    role === "initiator"
+      ? `${import.meta.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/signout`
+      : `${import.meta.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL}/signout`;
+  const logoutResponse = await fetch(logoutUri, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": import.meta.env.VITE_APP_API_KEY,
+    },
+    credentials: "include",
+    mode: "cors",
+  });
+  return logoutResponse;
+};
+// end ------------------------------ logout ------------------------------
