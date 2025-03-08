@@ -1,3 +1,10 @@
+## [1.4.4](https://github.com/leocodeio/echofeedai/compare/v1.4.3...v1.4.4) (2025-03-08)
+
+
+### Performance Improvements
+
+* **still view:** update still view ([6ef6802](https://github.com/leocodeio/echofeedai/commit/6ef6802c983cb7a4eab7e58cd7e45c0b3041c85a))
+
 ## [1.4.3](https://github.com/leocodeio/echofeedai/compare/v1.4.2...v1.4.3) (2025-03-08)
 
 ## [1.4.2](https://github.com/leocodeio/echofeedai/compare/v1.4.1...v1.4.2) (2025-03-08)
