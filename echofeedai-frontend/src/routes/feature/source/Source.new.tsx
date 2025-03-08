@@ -76,6 +76,7 @@ export const NewSource = () => {
           </CardContent>
           <CardFooter className="flex justify-between">
             <Button
+              type="button"
               variant="outline"
               onClick={() => navigate("/feature/source")}
             >

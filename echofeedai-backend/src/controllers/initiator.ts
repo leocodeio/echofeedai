@@ -342,6 +342,7 @@ export const getSources = async (
       select: {
         id: true,
         companyName: true,
+        createdAt: true,
       },
     });
 

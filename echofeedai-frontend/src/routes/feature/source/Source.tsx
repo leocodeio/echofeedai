@@ -24,6 +24,7 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Plus, Trash, Edit, RefreshCw } from "lucide-react";
 import { loader as SourceListLoader } from "@/functions/loader/feature/source/source.loader";
 import { SourceType } from "@/types/source";
+import { getDate } from "@/utils/common";
 
 const SourceList = () => {
   const [loading, setLoading] = useState(false);
@@ -62,9 +63,11 @@ const SourceList = () => {
   }
 
   return (
-    <div className="container mx-auto py-8 relative">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Your Sources</h1>
+    <div className="container mx-auto py-8 relative w-full">
+      <div className="flex justify-between items-center mb-6 w-full">
+        <h1 className="text-2xl font-bold text-center w-full">
+          Feedback Sources
+        </h1>
       </div>
 
       {error && (
@@ -88,13 +91,13 @@ const SourceList = () => {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {sources.map((source) => (
             <Card key={source.id}>
               <CardHeader>
                 <CardTitle>{source.companyName}</CardTitle>
                 <CardDescription>
-                  Created on {new Date(source.createdAt).toLocaleDateString()}
+                  Created on {getDate(source.createdAt)}
                 </CardDescription>
               </CardHeader>
               <CardFooter className="flex justify-between">
@@ -115,18 +118,19 @@ const SourceList = () => {
               </CardFooter>
             </Card>
           ))}
+          <Card>
+            <CardContent className="pt-6 flex justify-center items-center">
+              <Button
+                onClick={handleAddSource}
+                size="icon"
+                aria-label="Add new source"
+              >
+                <Plus className="h-6 w-6" />
+              </Button>
+            </CardContent>
+          </Card>
         </div>
       )}
-
-      {/* CapCut-style floating action button */}
-      <Button
-        onClick={handleAddSource}
-        className="fixed bottom-8 right-8 rounded-full w-14 h-14 shadow-lg bg-blue-500 hover:bg-blue-600 text-white"
-        size="icon"
-        aria-label="Add new source"
-      >
-        <Plus className="h-6 w-6" />
-      </Button>
     </div>
   );
 };

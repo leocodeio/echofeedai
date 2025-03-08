@@ -29,9 +29,10 @@ export async function action({
     const response = await createSource(parsedSourcePayload.data);
 
     if (!response.ok) {
+      const responseData = await response.json();
       const result: ActionResultError<any> = {
         success: false,
-        message: "Failed to create source",
+        message: responseData.message,
         origin: "source",
         data: parsedSourcePayload.data,
       };
