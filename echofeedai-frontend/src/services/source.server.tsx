@@ -124,3 +124,54 @@ export const deleteSource = async (id: string) => {
   }
 };
 // end ------------------------------ deleteSource ------------------------------
+
+// start ------------------------------ getParticipantByName ------------------------------
+export const getParticipantByName = async (name: string) => {
+  try {
+    const participantUri = `${
+      import.meta.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL
+    }/byName/${name}`;
+    const participantResponse = await fetch(participantUri, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": import.meta.env.VITE_APP_API_KEY,
+      },
+      credentials: "include",
+      mode: "cors",
+    });
+
+    return participantResponse;
+  } catch (error) {
+    console.error("Get participant error - source.server.tsx", error);
+    throw new Error("Backend Server did not respond correctly");
+  }
+};
+
+// start ------------------------------ addParticipantToSource ------------------------------
+export const addParticipantToSource = async (
+  sourceId: string,
+  participantId: string
+) => {
+  try {
+    const addParticipantUri = `${
+      import.meta.env.VITE_APP_INITIATOR_BACKEND_USER_URL
+    }/add-participant`;
+    const addParticipantResponse = await fetch(addParticipantUri, {
+      method: "POST",
+      body: JSON.stringify({ sourceId, participantId }),
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": import.meta.env.VITE_APP_API_KEY,
+      },
+      credentials: "include",
+      mode: "cors",
+    });
+
+    return addParticipantResponse;
+  } catch (error) {
+    console.error("Add participant error - source.server.tsx", error);
+    throw new Error("Backend Server did not respond correctly");
+  }
+};
+// end ------------------------------ addParticipantToSource ------------------------------

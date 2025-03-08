@@ -62,7 +62,7 @@ export const initiatorSignup = async (
 
     res.status(201).json({
       message: "Initiator created successfully",
-      payload: { initiator: newInitiator },
+      payload: newInitiator,
     });
   } catch (error) {
     console.error("Signup error:", error);
@@ -119,12 +119,12 @@ export const initiatorSignin = async (
     const accessToken = createAccessToken({
       id: initiator.id,
       email: initiator.email,
-      type: "initiator",
+      role: initiator.role as "initiator",
     });
     const refreshToken = createRefreshToken({
       id: initiator.id,
       email: initiator.email,
-      type: "initiator",
+      role: initiator.role as "initiator",
     });
 
     createCookie(req, res, accessToken, refreshToken, {
@@ -163,12 +163,16 @@ export const getInitiatorProfile = async (
     const initiator = await client.initiator.findUnique({
       where: { id: initiatorId },
     });
+    if (!initiator) {
+      res.status(404).json({
+        message: "Initiator not found",
+      });
+      return;
+    }
 
     res.status(200).json({
       message: "Profile fetched successfully",
-      payload: {
-        initiator: initiator,
-      },
+      payload: initiator,
     });
   } catch (error) {
     console.error("Get profile error:", error);

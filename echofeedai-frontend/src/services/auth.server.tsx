@@ -73,3 +73,21 @@ export const logout = async (role: string) => {
   return logoutResponse;
 };
 // end ------------------------------ logout ------------------------------
+// start ------------------------------ me ------------------------------
+export const me = async (role: string) => {
+  const meUri =
+    role === "initiator"
+      ? `${import.meta.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/me`
+      : `${import.meta.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL}/me`;
+  const meResponse = await fetch(meUri, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": import.meta.env.VITE_APP_API_KEY,
+    },
+    credentials: "include",
+    mode: "cors",
+  });
+  return meResponse;
+};
+// end ------------------------------ me ------------------------------

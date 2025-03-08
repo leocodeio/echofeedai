@@ -3,9 +3,8 @@ import { redirect } from "react-router-dom";
 import { logout } from "@/services/auth.server";
 export async function action() {
   const session = getUserSession();
-  const user = session.getUser();
+  const role = session.getRole();
+  await logout(role);
   session.removeUser();
-  // make a request to the backend to logout
-  await logout(user.role);
   return redirect("/");
 }

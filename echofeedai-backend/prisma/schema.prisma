@@ -18,7 +18,8 @@ model Initiator {
   id                String             @id @default(cuid())
   email             String             @unique
   passwordHash      String
-  name              String
+  name              String             @unique
+  role              String             @default("initiator")
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
   sources           Source[]
@@ -30,7 +31,8 @@ model Participant {
   id                String                 @id @default(cuid())
   email             String                 @unique
   passwordHash      String
-  name              String
+  name              String                 @unique
+  role              String                 @default("participant")
   createdAt         DateTime               @default(now())
   updatedAt         DateTime               @updatedAt
   feedbackInitiates FeedbackInitiate[]

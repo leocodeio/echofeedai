@@ -5,7 +5,7 @@ declare global {
   namespace Express {
     export interface Request {
       id?: string;
-      type?: string;
+      role?: string;
       email?: string;
     }
   }
@@ -28,7 +28,7 @@ export const isAuthenticated = async (
 
   const decoded = validateToken(accessToken);
   req.id = decoded.id;
-  req.type = decoded.type;
+  req.role = decoded.role;
   req.email = decoded.email;
   next();
 };
@@ -54,14 +54,14 @@ export const isInitiator = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { id, type } = req;
-  if (!id || !type) {
+  const { id, role } = req;
+  if (!id || !role) {
     res.status(401).json({
       message: "Unauthorized",
     });
     return;
   }
-  if (type !== "initiator") {
+  if (role !== "initiator") {
     res.status(403).json({
       message: "Forbidden!! Only initiators can do this",
     });
@@ -84,14 +84,14 @@ export const isParticipant = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { id, type } = req;
-  if (!id || !type) {
+  const { id, role } = req;
+  if (!id || !role) {
     res.status(401).json({
       message: "Unauthorized",
     });
     return;
   }
-  if (type !== "participant") {
+  if (role !== "participant") {
     res.status(403).json({
       message: "Forbidden!! Only participants can do this",
     });

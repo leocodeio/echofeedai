@@ -96,7 +96,7 @@ export const feedbackResponseSchema = z.object({
 export type TokenPayload = {
   id: string;
   email: string;
-  type: "initiator" | "participant";
+  role: "initiator" | "participant";
 };
 
 // python model

@@ -52,6 +52,8 @@ import { loader as EditSourceLoader } from "@/functions/loader/feature/source/ed
 import { action as EditSourceAction } from "@/functions/action/feature/source/edit-source.action";
 // feature/source/delete
 import { action as SourceDeleteAction } from "@/functions/action/feature/source/delete-source.action";
+// feature/source [ add participant ]
+import { action as AddParticipantAction } from "@/functions/action/feature/source/add-participant-source.action";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -133,6 +135,10 @@ const router = createBrowserRouter([
           {
             path: "delete/:id",
             action: SourceDeleteAction,
+          },
+          {
+            path: "add-participant/:id",
+            action: AddParticipantAction,
           },
         ],
       },

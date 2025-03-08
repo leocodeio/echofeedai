@@ -113,12 +113,12 @@ export const participantSignin = async (
     const accessToken = createAccessToken({
       id: participant.id,
       email: participant.email,
-      type: "participant",
+      role: participant.role as "participant",
     });
     const refreshToken = createRefreshToken({
       id: participant.id,
       email: participant.email,
-      type: "participant",
+      role: participant.role as "participant",
     });
 
     createCookie(req, res, accessToken, refreshToken, {
@@ -158,11 +158,16 @@ export const getParticipantProfile = async (
       where: { id: participantId },
     });
 
+    if (!participant) {
+      res.status(404).json({
+        message: "Participant not found",
+      });
+      return;
+    }
+
     res.status(200).json({
       message: "Profile fetched successfully",
-      payload: {
-        participant: participant,
-      },
+      payload: participant,
     });
   } catch (error) {
     console.error("Get profile error:", error);
@@ -227,5 +232,29 @@ export const participantFeedbackResponse = async (
     });
   } catch (error) {
     console.error("Feedback response error:", error);
+  }
+};
+
+export const getParticipantByName = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { name } = req.params;
+    const participant = await client.participant.findFirst({
+      where: { name },
+    });
+    if (!participant) {
+      res.status(404).json({
+        message: "Participant not found",
+      });
+      return;
+    }
+    res.status(200).json({
+      message: "Participant fetched successfully",
+      payload: participant,
+    });
+  } catch (error) {
+    console.error("Get participant by name error:", error);
   }
 };

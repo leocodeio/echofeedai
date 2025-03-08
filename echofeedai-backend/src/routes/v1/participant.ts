@@ -5,10 +5,12 @@ import {
   participantSignout,
   participantSignup,
   participantFeedbackResponse,
+  getParticipantByName,
 } from "../../controllers/participant";
 import {
   isApikeyAuthenticated,
   isAuthenticated,
+  isInitiator,
   isParticipant,
 } from "../../middleware/user";
 
@@ -42,4 +44,11 @@ participantRouter.post(
   participantFeedbackResponse
 );
 
+participantRouter.get(
+  "/byName/:name",
+  isApikeyAuthenticated,
+  isAuthenticated,
+  isInitiator,
+  getParticipantByName
+);
 export default participantRouter;

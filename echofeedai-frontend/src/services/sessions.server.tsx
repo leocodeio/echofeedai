@@ -1,5 +1,6 @@
 import { Cookies } from "react-cookie";
 import { User } from "@/types/user";
+import { jwtDecode } from "jwt-decode";
 
 // You can default to 'development' if process.env.NODE_ENV is not set
 const isProduction = process.env.NODE_ENV === "production";
@@ -38,6 +39,11 @@ export function getUserSession() {
   const cookies = new Cookies();
   return {
     getUser: () => cookies.get("user") || null,
+    getRole: () => {
+      const accessToken = cookies.get("access-token");
+      const { role } = jwtDecode(accessToken) as { role: string; any: any };
+      return role;
+    },
     getIsAuthenticated: () => {
       const session = getUserSession();
       const user = session.getUser();
