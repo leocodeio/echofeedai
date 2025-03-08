@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/leocodeio/echofeedai/compare/v1.4.1...v1.4.2) (2025-03-08)
+
+
+### Performance Improvements
+
+* **source:** css and some code adjustmenets at source ([680e973](https://github.com/leocodeio/echofeedai/commit/680e9739160daade9c06826f818bea1a1875ee41))
+
 ## [1.4.1](https://github.com/leocodeio/echofeedai/compare/v1.4.0...v1.4.1) (2025-03-08)
 
 
