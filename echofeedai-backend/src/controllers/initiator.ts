@@ -347,7 +347,7 @@ export const getSources = async (
 
     res.status(200).json({
       message: "Sources fetched successfully",
-      payload: { sources },
+      payload: sources,
     });
   } catch (error) {
     console.error("Get sources error:", error);
@@ -459,10 +459,12 @@ export const addParticipant = async (
     for (const feedbackInitiate of feedbackInitiates) {
       await client.feedbackInitiate.update({
         where: { id: feedbackInitiate.id },
-        data: { participantIds: [...feedbackInitiate.participantIds, participantId] },
+        data: {
+          participantIds: [...feedbackInitiate.participantIds, participantId],
+        },
       });
     }
-    
+
     res.status(201).json({
       message: "Participant added successfully",
       payload: { sourceParticipantMap },

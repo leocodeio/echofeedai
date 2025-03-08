@@ -1,4 +1,11 @@
-export type ORIGIN = "email" | "password" | "topics" | "respond" | "role";
+export type ORIGIN =
+  | "email"
+  | "password"
+  | "topics"
+  | "respond"
+  | "role"
+  | "source"
+  | "companyName";
 
 export type ActionResultSuccess<T> = {
   success: true;

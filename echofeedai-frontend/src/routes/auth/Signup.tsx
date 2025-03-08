@@ -19,19 +19,29 @@ import { UserCircle2Icon, UserRoundIcon } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 export default function Signup() {
-  // Action data from -  echofeedai-frontend/src/functions/action/auth/signup.ts
+  // Reorder state declarations to match Signin.tsx
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState("participant");
+  const [error, setError] = useState<{ type: string; message: string } | null>(
+    null
+  );
+
+  // Move navigate and actionData declarations here
   const navigate = useNavigate();
   const actionData = useActionData<ActionResult<User | SignupPayload>>();
+
   useEffect(() => {
     if (actionData?.success) {
       toast({
         title: "Signup",
-        description: actionData?.message,
+        description: actionData.message,
         variant: "default",
       });
       navigate("/auth/signin");
     } else if (actionData?.success === false) {
-      // origin email
       if (actionData.origin === "email") {
         setError({ type: "email", message: actionData.message });
       } else if (actionData.origin === "password") {
@@ -39,24 +49,11 @@ export default function Signup() {
       } else {
         toast({
           title: "Signup Failed",
-          description: actionData?.message,
-          variant: "destructive",
+          description: actionData.message,
         });
       }
     }
   }, [actionData, navigate]);
-
-  // State variables
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState("participant");
-
-  // Error state
-  const [error, setError] = useState<{ type: string; message: string } | null>(
-    null
-  );
 
   return (
     <div className={cn("flex flex-col gap-6")}>
@@ -74,7 +71,6 @@ export default function Signup() {
                 type="single"
                 variant="outline"
                 defaultValue={role}
-                value={role}
                 onValueChange={(value) => {
                   if (value) {
                     setRole(value);
@@ -84,12 +80,14 @@ export default function Signup() {
                 <ToggleGroupItem
                   value="initiator"
                   aria-label="Toggle initiator"
+                  name="role"
                 >
                   <UserCircle2Icon className="h-4 w-4" /> Initiator
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   value="participant"
                   aria-label="Toggle participant"
+                  name="role"
                 >
                   <UserRoundIcon className="h-4 w-4" /> Participant
                 </ToggleGroupItem>

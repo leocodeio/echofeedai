@@ -18,7 +18,8 @@ import {
   isAuthenticated,
   isInitiator,
 } from "../../middleware/user";
-import { isAdminApikeyAuthenticated } from "../../middleware/admin";
+// import { isAdminApikeyAuthenticated } from "../../middleware/admin";
+
 const initiatorRouter = Router();
 
 initiatorRouter.post("/signup", isApikeyAuthenticated, initiatorSignup);
@@ -60,7 +61,7 @@ initiatorRouter.delete(
   isApikeyAuthenticated,
   isAuthenticated,
   isInitiator,
-  isAdminApikeyAuthenticated,
+  // isAdminApikeyAuthenticated,
   deleteSource
 );
 
