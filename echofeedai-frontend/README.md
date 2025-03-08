@@ -8,3 +8,8 @@
 ### Signup
 
 - [ ] Add logic for google login at signup ( ./src/routes/auth/Signup.tsx )
+
+### Source
+
+- [ ] Add logic for add participant inline at the hovering input and manage it there it self, add or remove participants ( ./src/routes/feature/source/Source.tsx )
+  - Add logic to validate before adding participant to the tags

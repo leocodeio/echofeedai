@@ -54,6 +54,14 @@ import { action as EditSourceAction } from "@/functions/action/feature/source/ed
 import { action as SourceDeleteAction } from "@/functions/action/feature/source/delete-source.action";
 // feature/source [ add participant ]
 import { action as AddParticipantAction } from "@/functions/action/feature/source/add-participant-source.action";
+// feature/source/view
+import { SourceView } from "./routes/feature/source/Source.view";
+import { loader as SourceViewLoader } from "@/functions/loader/feature/source/view-source.loder";
+// feature/source/delete-feedback-initiate
+import { action as DeleteFeedbackInitiateAction } from "@/functions/action/feature/source/delete-feedback-initiate.action";
+// feature/source/create-feedback-initiate
+import { action as CreateFeedbackInitiateAction } from "@/functions/action/feature/source/create-feedback-initiate.action";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -139,6 +147,16 @@ const router = createBrowserRouter([
           {
             path: "add-participant/:id",
             action: AddParticipantAction,
+          },
+          {
+            path: "view/:id",
+            element: <SourceView />,
+            loader: SourceViewLoader,
+            action: CreateFeedbackInitiateAction,
+          },
+          {
+            path: "delete-feedback-initiate/:id",
+            action: DeleteFeedbackInitiateAction,
           },
         ],
       },

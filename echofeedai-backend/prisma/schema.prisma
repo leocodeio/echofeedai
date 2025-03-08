@@ -67,6 +67,7 @@ model FeedbackInitiate {
   source            Source             @relation(fields: [sourceId], references: [id])
   initiatorId       String
   initiator         Initiator          @relation(fields: [initiatorId], references: [id])
+  topics            String[]           @default([])
   participantIds    String[]
   participants      Participant[]
   createdAt         DateTime           @default(now())

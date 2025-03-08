@@ -14,6 +14,7 @@ import {
   createRefreshToken,
 } from "../utils/token/createToken";
 import { destroyCookie } from "../utils/cookie/destroyCookie";
+import { addSyntheticLeadingComment } from "typescript";
 
 export const initiatorSignup = async (
   req: Request,
@@ -318,6 +319,17 @@ export const deleteSource = async (
       return;
     }
 
+    // First delete all related SourceParticipantMap entries
+    await client.sourceParticipantMap.deleteMany({
+      where: { sourceId },
+    });
+
+    // Then delete all related FeedbackInitiate entries
+    await client.feedbackInitiate.deleteMany({
+      where: { sourceId },
+    });
+
+    // Finally delete the source
     await client.source.delete({
       where: { id: sourceId },
     });
@@ -498,7 +510,8 @@ export const initiateFeedback = async (
       return;
     }
 
-    const { sourceId, mailTemplateIdentifier } = initiateFeedbackData.data;
+    const { sourceId, mailTemplateIdentifier, topics } =
+      initiateFeedbackData.data;
 
     if (!sourceId) {
       res.status(401).json({
@@ -539,6 +552,7 @@ export const initiateFeedback = async (
         initiatorId: source.initiatorId,
         participantIds: sourceParticipantMap.map((map) => map.participant.id),
         feedbackResponseIds: [],
+        topics,
       },
     });
     console.log("debug log 1: feedback initiated", feedback);
@@ -558,6 +572,34 @@ export const initiateFeedback = async (
   }
 };
 
+export const deleteFeedbackInitiate = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const feedbackInitiateId = req.params.id;
+    if (!feedbackInitiateId) {
+      res.status(401).json({
+        message: "Unauthorized: No feedback initiate ID found",
+      });
+      return;
+    }
+
+    await client.feedbackInitiate.delete({
+      where: { id: feedbackInitiateId },
+    });
+
+    res.status(200).json({
+      message: "Feedback initiate deleted successfully",
+    });
+  } catch (error) {
+    console.error("Delete feedback initiate error:", error);
+    res.status(500).json({
+      message: "An unexpected error occurred during delete feedback initiate",
+    });
+  }
+};
+
 export const getFeedbackInitiates = async (
   req: Request,
   res: Response
@@ -571,6 +613,17 @@ export const getFeedbackInitiates = async (
       return;
     }
 
+    const source = await client.source.findUnique({
+      where: { id: sourceId },
+    });
+
+    if (!source) {
+      res.status(404).json({
+        message: "Source not found",
+      });
+      return;
+    }
+
     const feedbackInitiates = await client.feedbackInitiate.findMany({
       where: {
         sourceId,
@@ -579,17 +632,119 @@ export const getFeedbackInitiates = async (
         id: true,
         mailTemplateIdentifier: true,
         participantIds: true,
+        createdAt: true,
+        topics: true,
       },
     });
 
     res.status(200).json({
       message: "Feedback initiates fetched successfully",
-      payload: feedbackInitiates,
+      payload: feedbackInitiates.map((feedbackInitiate) => ({
+        ...feedbackInitiate,
+        name: source.companyName,
+      })),
     });
   } catch (error) {
     console.error("Get feedback initiates error:", error);
     res.status(500).json({
       message: "An unexpected error occurred during get feedback initiates",
+    });
+  }
+};
+
+export const removeParticipants = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const sourceId = req.params.sourceId;
+    const participantId = req.params.participantId;
+
+    if (!sourceId || !participantId) {
+      res.status(401).json({
+        message: "Unauthorized: No source ID or participant ID found",
+      });
+      return;
+    }
+
+    const source = await client.source.findUnique({
+      where: { id: sourceId },
+    });
+
+    if (!source) {
+      res.status(404).json({
+        message: "Source not found",
+      });
+      return;
+    }
+
+    const sourceParticipantMap = await client.sourceParticipantMap.findFirst({
+      where: {
+        AND: [{ sourceId: sourceId }, { participantId: participantId }],
+      },
+    });
+
+    if (!sourceParticipantMap) {
+      res.status(404).json({
+        message: "Participant not found in the source",
+      });
+      return;
+    }
+
+    await client.sourceParticipantMap.delete({
+      where: {
+        id: sourceParticipantMap.id,
+      },
+    });
+
+    res.status(200).json({
+      message: "Participant removed successfully",
+    });
+  } catch (error) {
+    console.error("Remove participants error:", error);
+  }
+};
+
+export const getParticipants = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const sourceId = req.params.sourceId;
+    if (!sourceId) {
+      res.status(401).json({
+        message: "Unauthorized: No source ID found",
+      });
+      return;
+    }
+
+    const participants = await client.sourceParticipantMap.findMany({
+      where: {
+        sourceId,
+      },
+    });
+    const participantsWithDetails = await Promise.all(
+      participants.map(async (participant) => {
+        const participantData = await client.participant.findUnique({
+          where: { id: participant.participantId },
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        });
+        return participantData;
+      })
+    );
+
+    res.status(200).json({
+      message: "Participants fetched successfully",
+      payload: participantsWithDetails,
+    });
+  } catch (error) {
+    console.error("Get participants error:", error);
+    res.status(500).json({
+      message: "An unexpected error occurred during get participants",
     });
   }
 };

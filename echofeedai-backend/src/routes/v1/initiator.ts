@@ -8,10 +8,13 @@ import {
   addSource,
   getSourceById,
   initiateFeedback,
-  addParticipant,
+  deleteFeedbackInitiate,
   deleteSource,
   updateSource,
   getFeedbackInitiates,
+  addParticipant,
+  getParticipants,
+  removeParticipants,
 } from "../../controllers/initiator";
 import {
   isApikeyAuthenticated,
@@ -89,6 +92,14 @@ initiatorRouter.post(
   initiateFeedback
 );
 
+initiatorRouter.delete(
+  "/delete-feedback-initiate/:id",
+  isApikeyAuthenticated,
+  isAuthenticated,
+  isInitiator,
+  deleteFeedbackInitiate
+);
+
 initiatorRouter.get(
   "/feedback-initiates/:sourceId",
   isApikeyAuthenticated,
@@ -105,7 +116,21 @@ initiatorRouter.post(
   addParticipant
 );
 
+initiatorRouter.get(
+  "/source/participants/:sourceId",
+  isApikeyAuthenticated,
+  isAuthenticated,
+  isInitiator,
+  getParticipants
+);
 
+initiatorRouter.delete(
+  "/source/:sourceId/participants/:participantId",
+  isApikeyAuthenticated,
+  isAuthenticated,
+  isInitiator,
+  removeParticipants
+);
 
 
 export default initiatorRouter;

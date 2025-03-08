@@ -6,7 +6,6 @@ import {
 import {
   ActionResult,
   ActionResultError,
-  ActionResultSuccess,
 } from "@/types/action-result";
 
 export async function action({
@@ -16,6 +15,9 @@ export async function action({
   const formData = await request.formData();
   const participantName = formData.get("participantName") as string;
   const sourceId = params.id;
+
+  console.log("sourceId", sourceId);
+  console.log("participantName", participantName);
 
   if (!sourceId || !participantName) {
     const result: ActionResultError<any> = {
@@ -67,16 +69,16 @@ export async function action({
       return result;
     }
 
-    // return redirect(`/feature/source`);
-    const result: ActionResultSuccess<any> = {
-      success: true,
-      message: "Participant added to source",
-      data: {
-        existing: true,
-        participant: participantData.payload,
-      },
-    };
-    return result;
+    return redirect(`/feature/source`);
+    // const result: ActionResultSuccess<any> = {
+    //   success: true,
+    //   message: "Participant added to source",
+    //   data: {
+    //     existing: true,
+    //     participant: participantData.payload,
+    //   },
+    // };
+    // return result;
   } catch (error) {
     const result: ActionResultError<any> = {
       success: false,

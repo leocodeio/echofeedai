@@ -1,3 +1,4 @@
+import { FeedbackInitiativePayload } from "@/types/initiate";
 import { SourcePayload } from "@/types/source";
 // start ------------------------------ getSources ------------------------------
 export const getSources = async () => {
@@ -175,3 +176,110 @@ export const addParticipantToSource = async (
   }
 };
 // end ------------------------------ addParticipantToSource ------------------------------
+
+// start ------------------------------ getParticipants ------------------------------
+export const getParticipants = async (sourceId: string) => {
+  try {
+    const participantsUri = `${
+      import.meta.env.VITE_APP_INITIATOR_BACKEND_USER_URL
+    }/source/participants/${sourceId}`;
+    const participantsResponse = await fetch(participantsUri, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": import.meta.env.VITE_APP_API_KEY,
+      },
+      credentials: "include",
+      mode: "cors",
+    });
+
+    return participantsResponse;
+  } catch (error) {
+    console.error("Get participants error - source.server.tsx", error);
+    throw new Error("Backend Server did not respond correctly");
+  }
+};
+// end ------------------------------ getParticipants ------------------------------
+
+// start ------------------------------ getFeedbackInitiatives ------------------------------
+export const getFeedbackInitiatives = async (sourceId: string) => {
+  try {
+    const feedbackInitiatorsUri = `${
+      import.meta.env.VITE_APP_INITIATOR_BACKEND_USER_URL
+    }/feedback-initiates/${sourceId}`;
+    const feedbackInitiatorsResponse = await fetch(feedbackInitiatorsUri, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": import.meta.env.VITE_APP_API_KEY,
+      },
+      credentials: "include",
+      mode: "cors",
+    });
+
+    return feedbackInitiatorsResponse;
+  } catch (error) {
+    console.error("Get feedback initiators error - source.server.tsx", error);
+    throw new Error("Backend Server did not respond correctly");
+  }
+};
+// end ------------------------------ getFeedbackInitiatives ------------------------------
+
+// start ------------------------------ deleteFeedbackInitiate ------------------------------
+export const deleteFeedbackInitiate = async (id: string) => {
+  try {
+    const deleteFeedbackInitiateUri = `${
+      import.meta.env.VITE_APP_INITIATOR_BACKEND_USER_URL
+    }/delete-feedback-initiate/${id}`;
+    const deleteFeedbackInitiateResponse = await fetch(
+      deleteFeedbackInitiateUri,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": import.meta.env.VITE_APP_API_KEY,
+        },
+        credentials: "include",
+        mode: "cors",
+      }
+    );
+
+    return deleteFeedbackInitiateResponse;
+  } catch (error) {
+    console.error("Delete feedback initiate error - source.server.tsx", error);
+    throw new Error("Backend Server did not respond correctly");
+  }
+};
+// end ------------------------------ deleteFeedbackInitiate ------------------------------
+// start ------------------------------ createFeedbackInitiative ------------------------------
+export const createFeedbackInitiative = async (
+  feedbackInitiativePayload: FeedbackInitiativePayload
+) => {
+  try {
+    const createFeedbackInitiativeUri = `${
+      import.meta.env.VITE_APP_INITIATOR_BACKEND_USER_URL
+    }/initiate-feedback`;
+    const createFeedbackInitiativeResponse = await fetch(
+      createFeedbackInitiativeUri,
+      {
+        method: "POST",
+        body: JSON.stringify(feedbackInitiativePayload),
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": import.meta.env.VITE_APP_API_KEY,
+        },
+        credentials: "include",
+        mode: "cors",
+      }
+    );
+
+    return createFeedbackInitiativeResponse;
+  } catch (error) {
+    console.error(
+      "Create feedback initiative error - source.server.tsx",
+      error
+    );
+    throw new Error("Backend Server did not respond correctly");
+  }
+};
+// end ------------------------------ createFeedbackInitiative ------------------------------

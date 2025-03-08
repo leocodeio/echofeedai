@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { Plus, Trash, Edit, RefreshCw } from "lucide-react";
+import { Plus, Trash, Edit, RefreshCw, ArrowRight } from "lucide-react";
 import { loader as SourceListLoader } from "@/functions/loader/feature/source/source.loader";
 import { SourceType } from "@/types/source";
 import { getDate } from "@/utils/common";
@@ -38,6 +38,7 @@ import { Form, useActionData } from "react-router-dom";
 import { ActionResult } from "@/types/action-result";
 import { toast } from "@/hooks/use-toast";
 import { Tag, TagInput } from "emblor";
+import { use } from "i18next";
 
 const SourceList = () => {
   const [loading, setLoading] = useState(false);
@@ -47,12 +48,12 @@ const SourceList = () => {
   const { sources } = useLoaderData<typeof SourceListLoader>() as {
     sources: SourceType[];
   };
-  const [showAddParticipant, setShowAddParticipant] = useState<string | null>(
-    null
-  );
+  const [showAddParticipantDialog, setShowAddParticipantDialog] =
+    useState<boolean>(false);
   const actionData = useActionData<ActionResult<any>>();
   const [participantTags, setParticipantTags] = useState<Tag[]>([]);
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
+  const [sourceId, setSourceId] = useState<string | null>(null);
 
   useEffect(() => {
     setLoading(false);
@@ -65,7 +66,7 @@ const SourceList = () => {
         title: "Success",
         description: actionData.message,
       });
-      setShowAddParticipant(null);
+      setShowAddParticipantDialog(false);
     } else if (actionData?.success === false) {
       toast({
         title: "Error",
@@ -91,7 +92,12 @@ const SourceList = () => {
   };
 
   const handleAddParticipant = (id: string) => {
-    setShowAddParticipant(id);
+    setSourceId(id);
+    setShowAddParticipantDialog(true);
+  };
+
+  const handleViewSource = (id: string) => {
+    navigate(`/feature/source/view/${id}`);
   };
 
   const handleParticipantSubmit = (e: React.FormEvent) => {
@@ -109,7 +115,7 @@ const SourceList = () => {
       { participantName: participantTags.map((tag) => tag.text).join(",") },
       {
         method: "post",
-        action: `/feature/source/add-participant/${showAddParticipant}`,
+        action: `/feature/source/add-participant/${sourceId}`,
       }
     );
   };
@@ -184,6 +190,13 @@ const SourceList = () => {
                 >
                   <Trash className="h-4 w-4" />
                 </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleViewSource(source.id)}
+                >
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
               </CardFooter>
             </Card>
           ))}
@@ -202,10 +215,10 @@ const SourceList = () => {
         </div>
       )}
 
-      {showAddParticipant && (
+      {showAddParticipantDialog && (
         <Dialog
-          open={!!showAddParticipant}
-          onOpenChange={() => setShowAddParticipant(null)}
+          open={showAddParticipantDialog}
+          onOpenChange={() => setShowAddParticipantDialog(false)}
         >
           <DialogContent>
             <DialogHeader>
@@ -214,7 +227,7 @@ const SourceList = () => {
                 Enter participant names to add them to this source
               </DialogDescription>
             </DialogHeader>
-            <form onSubmit={handleParticipantSubmit}>
+            <Form onSubmit={handleParticipantSubmit}>
               <div className="grid gap-4 py-4">
                 <div className="grid gap-2">
                   <Label htmlFor="participantName">Participant Names</Label>
@@ -247,7 +260,7 @@ const SourceList = () => {
                   type="button"
                   variant="outline"
                   onClick={() => {
-                    setShowAddParticipant(null);
+                    setShowAddParticipantDialog(false);
                     setParticipantTags([]);
                   }}
                 >
@@ -255,7 +268,7 @@ const SourceList = () => {
                 </Button>
                 <Button type="submit">Add Participants</Button>
               </DialogFooter>
-            </form>
+            </Form>
           </DialogContent>
         </Dialog>
       )}

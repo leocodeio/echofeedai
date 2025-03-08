@@ -83,6 +83,7 @@ export const sendMailToParticipantsSchema = z.object({
 export const feedbackInitiateSchema = z.object({
   sourceId: z.string(),
   mailTemplateIdentifier: z.string(),
+  topics: z.array(z.string()),
 });
 
 // feedback response
