@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/leocodeio/echofeedai/compare/v1.4.0...v1.4.1) (2025-03-08)
+
+
+### Performance Improvements
+
+* **sources:** Added logic for source creation, edit and delete through frontend ([8715b64](https://github.com/leocodeio/echofeedai/commit/8715b645752b6d7e8285842ca59dd13f66e20cc4))
+
 # [1.4.0](https://github.com/leocodeio/echofeedai/compare/v1.3.3...v1.4.0) (2025-03-06)
 
 
