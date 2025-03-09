@@ -46,11 +46,6 @@ export default function Signup() {
         setError({ type: "email", message: actionData.message });
       } else if (actionData.origin === "password") {
         setError({ type: "password", message: actionData.message });
-      } else {
-        toast({
-          title: "Signup Failed",
-          description: actionData.message,
-        });
       }
     }
   }, [actionData, navigate]);

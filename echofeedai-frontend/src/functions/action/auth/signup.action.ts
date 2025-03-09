@@ -93,6 +93,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const signinPayload = {
     email: parsedSignupPayload.data.email,
     password: parsedSignupPayload.data.password,
+    role: parsedSignupPayload.data.role,
   } as SigninPayload;
 
   // parse with zod
