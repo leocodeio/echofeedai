@@ -67,7 +67,7 @@ import { action as SendMailAction } from "@/functions/action/feature/source/inti
 // feature/response
 import Response from "./routes/feature/response/Response";
 import { loader as responseLoader } from "@/functions/loader/feature/response/response.loader";
-import { action as responseAction } from "@/functions/action/feature/respond/respond.action";
+import { action as responseAction } from "@/functions/action/feature/response/response.action";
 
 const router = createBrowserRouter([
   {

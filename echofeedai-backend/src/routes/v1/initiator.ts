@@ -97,7 +97,7 @@ initiatorRouter.get(
   "/feedback-initiate/:id",
   isApikeyAuthenticated,
   isAuthenticated,
-  isInitiator,
+  // isInitiator, 
   getFeedbackInitiate
 );
 

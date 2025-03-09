@@ -77,6 +77,7 @@ const Response = () => {
 
       console.log("New Coverage State:", newCoverage);
       setCoverage(newCoverage);
+      console.log("Coverage State:", coverage);
     }
   }, [actionData]);
 
@@ -145,6 +146,7 @@ const Response = () => {
 
             <Form method="post">
               <input type="hidden" name="feedback" value={outputMessage} />
+              <input type="hidden" name="questionsByTopic" value={JSON.stringify(questions)} />
               <Button disabled={!outputMessage} className="mt-4" type="submit">
                 Submit
               </Button>
