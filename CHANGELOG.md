@@ -1,3 +1,10 @@
+## [1.4.9](https://github.com/leocodeio/echofeedai/compare/v1.4.8...v1.4.9) (2025-03-09)
+
+
+### Performance Improvements
+
+* **worked good with navigation with link:** worked good with navigation with link ([1fad9fe](https://github.com/leocodeio/echofeedai/commit/1fad9fec58378f1dd435615f765e89d299531b3c))
+
 ## [1.4.8](https://github.com/leocodeio/echofeedai/compare/v1.4.7...v1.4.8) (2025-03-09)
 
 
