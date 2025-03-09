@@ -1,3 +1,10 @@
+## [1.4.11](https://github.com/leocodeio/echofeedai/compare/v1.4.10...v1.4.11) (2025-03-09)
+
+
+### Performance Improvements
+
+* **minor:** minor changes ([e701894](https://github.com/leocodeio/echofeedai/commit/e701894d08af7e7e71442ce2ea73914b6048f9b6))
+
 ## [1.4.10](https://github.com/leocodeio/echofeedai/compare/v1.4.9...v1.4.10) (2025-03-09)
 
 
