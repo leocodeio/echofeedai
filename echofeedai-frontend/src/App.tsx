@@ -31,7 +31,6 @@ import FeatureIndex from "./routes/feature/FeatureIndex";
 // feature/generate
 import Generate from "./routes/feature/generate/Generate";
 import { action as generateAction } from "@/functions/action/feature/generate/gnerate.action";
-
 // feature/respond
 import Respond from "./routes/feature/respond/Respond";
 import { action as respondAction } from "@/functions/action/feature/respond/respond.action";
@@ -67,7 +66,7 @@ import { loader as FeedbackInitiativeViewLoader } from "@/functions/loader/featu
 import { action as SendMailAction } from "@/functions/action/feature/source/intitiate-send-emails.action";
 // feature/response
 import Response from "./routes/feature/response/Response";
-import { loader as responseLoader } from "@/functions/loader/feature/respond/respond.loader";
+import { loader as responseLoader } from "@/functions/loader/feature/response/response.loader";
 import { action as responseAction } from "@/functions/action/feature/respond/respond.action";
 
 const router = createBrowserRouter([

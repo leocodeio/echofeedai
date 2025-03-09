@@ -1,7 +1,7 @@
 export const NavLinks = [
-  { name: "Home", to: "/home", role: ["initiator", "participant"] },
-  { name: "DemoRespond", to: "/feature/respond", role: ["participant"] },
-  { name: "DemoGenerate", to: "/feature/generate", role: ["initiator"] },
+  { name: "Home", to: "/home", role: [] },
+  { name: "DemoRespond", to: "/feature/respond", role: [] },
+  { name: "DemoGenerate", to: "/feature/generate", role: [] },
   { name: "Source", to: "/feature/source", role: ["initiator"] },
   { name: "Response", to: "/feature/response", role: ["participant"] },
   //   { name: "Services", to: "/services" },

@@ -44,13 +44,22 @@ export function getUserSession() {
       const { role } = jwtDecode(accessToken) as { role: string; any: any };
       return role;
     },
+    getIsRole: (roles: string[]): boolean => {
+      const session = getUserSession();
+      const userRole = session.getRole();
+      if (roles.length === 0) {
+        return true;
+      }
+      if (roles.includes(userRole)) {
+        return true;
+      }
+      return false;
+    },
     getIsAuthenticated: () => {
       const session = getUserSession();
       const user = session.getUser();
       const accessToken = cookies.get("access-token");
       const refreshToken = cookies.get("refresh-token");
-      const role = session.getRole();
-      const currentPath = window.location.pathname;
       // not only check existance but also validate token
       // make a call to validate the token to backend
       // if access token is valid, return true
@@ -59,12 +68,7 @@ export function getUserSession() {
       // if refresh token is invalid, return false
       // if  returned false logout, destroy the token
       return (
-        user !== null &&
-        accessToken !== undefined &&
-        refreshToken !== undefined &&
-        role !== undefined &&
-        role !== null &&
-        currentPath !== "/auth/signin"
+        user !== null && accessToken !== undefined && refreshToken !== undefined
       );
     },
     setUser: (user: User) =>
