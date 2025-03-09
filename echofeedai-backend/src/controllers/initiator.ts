@@ -14,7 +14,6 @@ import {
   createRefreshToken,
 } from "../utils/token/createToken";
 import { destroyCookie } from "../utils/cookie/destroyCookie";
-import { addSyntheticLeadingComment } from "typescript";
 import { getQuestionsFromTopics } from "./model";
 
 export const initiatorSignup = async (
@@ -795,6 +794,60 @@ export const getParticipants = async (
     console.error("Get participants error:", error);
     res.status(500).json({
       message: "An unexpected error occurred during get participants",
+    });
+  }
+};
+
+export const getGivenResponses = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    console.log("getGivenResponses");
+    const feedbackInitiateId = req.params.feedbackInitiateId;
+    if (!feedbackInitiateId) {
+      res.status(401).json({
+        message: "Unauthorized: No feedback initiate ID found",
+      });
+      return;
+    }
+
+    const feedbackInitiate = await client.feedbackInitiate.findUnique({
+      where: { id: feedbackInitiateId },
+    });
+
+    if (!feedbackInitiate) {
+      res.status(404).json({
+        message: "Feedback initiate not found",
+      });
+      return;
+    }
+
+    const feedbackResponses = await client.feedbackResponse.findMany({
+      where: { feedbackInitiateId: feedbackInitiateId },
+      select: {
+        id: true,
+        response: true,
+        responseScoreMap: true,
+        createdAt: true,
+        participant: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+    console.log("feedbackResponses", feedbackResponses);
+
+    res.status(200).json({
+      message: "Feedback responses fetched successfully",
+      payload: feedbackResponses,
+    });
+  } catch (error) {
+    console.error("Get given responses error:", error);
+    res.status(500).json({
+      message: "An unexpected error occurred during get given responses",
     });
   }
 };

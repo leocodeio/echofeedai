@@ -12,6 +12,7 @@ import {
   createRefreshToken,
 } from "../utils/token/createToken";
 import { destroyCookie } from "../utils/cookie/destroyCookie";
+import axios from "axios";
 
 export const participantSignup = async (
   req: Request,
@@ -283,5 +284,154 @@ export const getParticipantById = async (
     });
   } catch (error) {
     console.error("Get participant by id error:", error);
+  }
+};
+
+export const addFeedbackResponse = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const participantId = req.id;
+    if (!participantId) {
+      res.status(401).json({
+        message: "Unauthorized",
+      });
+      return;
+    }
+
+    const feedbackInitiateId = req.params.feedbackInitiateId;
+    if (!feedbackInitiateId) {
+      res.status(401).json({
+        message: "Unauthorized",
+      });
+      return;
+    }
+
+    const feedbackInitiate = await client.feedbackInitiate.findUnique({
+      where: { id: feedbackInitiateId },
+    });
+
+    if (!feedbackInitiate) {
+      res.status(404).json({
+        message: "Feedback initiate not found",
+      });
+      return;
+    }
+
+    const particiantIds = feedbackInitiate.participantIds;
+
+    if (!particiantIds.includes(participantId)) {
+      res.status(404).json({
+        message: "You are not a participant of this feedback initiate",
+      });
+      return;
+    }
+
+    // [TODO] safeparse?
+    const { response } = req.body;
+    // make call to model to get responseScoreMap
+    const questionMap: { [key: string]: string } = {};
+    for (let i = 0; i < feedbackInitiate.questions?.length; i++) {
+      if (feedbackInitiate.questions[i]) {
+        questionMap[feedbackInitiate.topics[i]] = feedbackInitiate.questions[i];
+      }
+    }
+
+    console.log("debug log 1: questionMap", questionMap);
+    console.log("debug log 2: response", response);
+    let responseScoreMap = {};
+    try {
+      const responseScoreMapResponse = await axios.post(
+        `${process.env.BACKEND_PYTHON_MODEL_API}/get-score-map/`,
+        {
+          question_map: questionMap,
+          employee_text: response,
+        }
+      );
+      responseScoreMap = responseScoreMapResponse.data.score_map;
+    } catch (error) {
+      console.error("Get score map error at python model:", error);
+    }
+
+    const feedbackResponse = await client.feedbackResponse.create({
+      data: { participantId, feedbackInitiateId, responseScoreMap, response },
+    });
+
+    res.status(201).json({
+      message: "Feedback response created successfully",
+      payload: {
+        feedbackResponse,
+      },
+    });
+  } catch (error) {
+    console.error("Add feedback response error:", error);
+  }
+};
+
+export const canRespond = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    console.log("canRespond");
+    const participantId = req.id;
+    console.log("participantId", participantId);
+    if (!participantId) {
+      res.status(401).json({
+        message: "Unauthorized",
+      });
+      return;
+    }
+
+    const feedbackInitiateId = req.params.feedbackInitiateId;
+    console.log("feedbackInitiateId", feedbackInitiateId);
+    if (!feedbackInitiateId) {
+      res.status(401).json({
+        message: "Unauthorized",
+      });
+      return;
+    }
+
+    const feedbackInitiate = await client.feedbackInitiate.findUnique({
+      where: { id: feedbackInitiateId },
+    });
+
+    if (!feedbackInitiate) {
+      res.status(404).json({
+        message: "Feedback initiate not found",
+      });
+      return;
+    }
+
+    const particiantIds = feedbackInitiate.participantIds;
+
+    if (!particiantIds.includes(participantId)) {
+      res.status(404).json({
+        message: "You are not a participant of this feedback initiate",
+      });
+      return;
+    }
+
+    const feedbackResponses = await client.feedbackResponse.findMany({
+      where: {
+        feedbackInitiateId: feedbackInitiateId,
+        participantId: participantId,
+      },
+    });
+    console.log("feedbackResponses", feedbackResponses);
+
+    if (feedbackResponses.length > 0) {
+      res.status(404).json({
+        message: "You have already responded to this feedback initiate",
+      });
+      return;
+    }
+    res.status(200).json({
+      message: "You can respond to this feedback initiate",
+      payload: {},
+    });
+  } catch (error) {
+    console.error("Can respond error:", error);
   }
 };

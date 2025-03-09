@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { loader as InitiateViewLoader } from "@/functions/loader/feature/source/view-initiate";
 import { action as SendEmailsAction } from "@/functions/action/feature/source/intitiate-send-emails.action";
-import { RefreshCw, List, ListChecks, Send } from "lucide-react";
+import { RefreshCw, List, ListChecks, Send, UserRoundIcon } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import {
   Dialog,
@@ -18,11 +18,14 @@ import { toast } from "@/hooks/use-toast";
 export const InitiateView = () => {
   // [TODO] - any?
   // loader
-  const { topics, questions } = useLoaderData<typeof InitiateViewLoader>() as {
+  const { topics, questions, responses } = useLoaderData<
+    typeof InitiateViewLoader
+  >() as {
     topics: any[];
     questions: any[];
+    responses: any[];
   };
-
+  console.log("responses", responses);
   //action
   const action = useActionData<typeof SendEmailsAction>();
   const navigate = useNavigate();
@@ -43,6 +46,7 @@ export const InitiateView = () => {
   const [error, setError] = useState<string | null>(null);
   const [showTopics, setShowTopics] = useState(false);
   const [showQuestions, setShowQuestions] = useState(false);
+  const [showResponses, setShowResponses] = useState(false);
 
   useEffect(() => {
     setLoading(false);
@@ -88,6 +92,41 @@ export const InitiateView = () => {
             {topics?.map((topic) => (
               <div key={topic.tid} className="py-2">
                 {topic.name}
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Topics Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        className="flex flex-col  justify-center items-center h-24 w-24 p-4"
+        onClick={() => setShowResponses(true)}
+      >
+        <List />
+        <p className="text-xs text-center">Responses</p>
+      </Button>
+
+      {/* Topics Dialog */}
+      <Dialog open={showResponses} onOpenChange={setShowResponses}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Responses</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            {responses?.map((response) => (
+              <div key={response.id} className="py-2">
+                <div className="flex flex-row justify-between">
+                <p className="text-xs flex flex-row items-center gap-2 mb-2 ">
+                  <UserRoundIcon className="w-4 h-4" /> {response.participant.name}
+                  </p>
+                  <p className="text-xs text-center">
+                    {new Date(response.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+                {response.response}
               </div>
             ))}
           </div>

@@ -87,6 +87,7 @@ model FeedbackResponse {
   participantId      String
   participant        Participant      @relation(fields: [participantId], references: [id])
   response           String
+  responseScoreMap   Json             @default("{}")
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
 }

@@ -1,4 +1,4 @@
-import { getFeedbackInitiative } from "@/services/source.server";
+import { getFeedbackInitiative, getFeedbackResponse } from "@/services/source.server";
 import { LoaderFunctionArgs, redirect } from "react-router-dom";
 import { ActionResultError } from "@/types/action-result";
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -23,6 +23,24 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   const feedbackInitiative = await getFeedbackInitiativesResponse.json();
   const feedbackInitiativeData = feedbackInitiative.payload as any;
 
+  // get responses
+  
+  const getFeedbackResponseResponse = await getFeedbackResponse(
+    feedbackInitiateId
+  );
+  if (!getFeedbackResponseResponse.ok) {
+    const result: ActionResultError<any> = {
+      success: false,
+      message: "Failed to get feedback responses",
+      data: null,
+      origin: "source",
+    };
+    return result;
+  }
+
+  const feedbackResponse = await getFeedbackResponseResponse.json();
+  const feedbackResponseData = feedbackResponse.payload as any;
+
   return {
     topics:
       feedbackInitiativeData.topics.map((topic: any) => ({
@@ -34,5 +52,6 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
         tid: Math.random().toString(36).substring(2, 15),
         name: question,
       })) || [],
+    responses: feedbackResponseData || [],
   };
 };

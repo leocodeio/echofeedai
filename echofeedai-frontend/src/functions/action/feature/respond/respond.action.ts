@@ -53,9 +53,20 @@ export async function action({
   if (coverageData.payload.all_topics_covered) {
     return redirect("/thankyou");
   }
+
+  // Ensure we're returning the payload in a consistent format
   return {
     success: true,
     message: "Feedback processed successfully",
-    data: coverageData.payload,
+    data: {
+      covered: coverageData.payload.covered.map((item: any) => ({
+        topic: item.topic,
+        question: item.question,
+      })),
+      not_covered: coverageData.payload.not_covered.map((item: any) => ({
+        topic: item.topic,
+        question: item.question,
+      })),
+    },
   };
 }

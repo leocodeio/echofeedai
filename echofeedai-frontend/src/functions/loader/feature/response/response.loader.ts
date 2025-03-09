@@ -1,7 +1,7 @@
 import { redirect } from "react-router-dom";
 import { getUserSession } from "@/services/sessions.server";
 import { NavLinks } from "@/models/navlinks";
-import { getFeedbackInitiative } from "@/services/source.server";
+import { getFeedbackInitiative, canRespond } from "@/services/source.server";
 interface QuestionCoverage {
   [key: string]: {
     covered: boolean;
@@ -28,11 +28,18 @@ export async function loader({ request }: { request: Request }): Promise<any> {
     return redirect("/home");
   }
 
+  const canRespondResponse = await canRespond(feedbackInitiateId);
+  if (!canRespondResponse.ok) {
+    return redirect("/home");
+  }
+
   // get feedback initiate
   const feedbackInitiative = await getFeedbackInitiative(feedbackInitiateId);
   if (!feedbackInitiative) {
     return redirect("/home");
   }
+
+
 
   // get feedback initiate questions
   const feedbackInitiativeData = await feedbackInitiative.json();

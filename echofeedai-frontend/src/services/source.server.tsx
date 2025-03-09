@@ -352,3 +352,77 @@ export const getParticipantById = async (id: string) => {
   }
 };
 // end ------------------------------ getParticipantById ------------------------------
+// start ------------------------------ canRespond ------------------------------
+export const canRespond = async (feedbackInitiateId: string) => {
+  try {
+    const canRespondUri = `${
+      import.meta.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL
+    }/can-respond/${feedbackInitiateId}`;
+    const canRespondResponse = await fetch(canRespondUri, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": import.meta.env.VITE_APP_API_KEY,
+      },
+      credentials: "include",
+      mode: "cors",
+    });
+    console.log("canRespondResponse", canRespondResponse);
+    return canRespondResponse;
+  } catch (error) {
+    console.error("Can respond error - source.server.tsx", error);
+    throw new Error("Backend Server did not respond correctly");
+  }
+};
+// end ------------------------------ canRespond ------------------------------
+// start ------------------------------ addFeedbackResponse ------------------------------
+export const addFeedbackResponse = async (
+  feedbackInitiateId: string,
+  response: string
+) => {
+  try {
+    const addFeedbackResponseUri = `${
+      import.meta.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL
+    }/add-response/${feedbackInitiateId}`;
+    const addFeedbackResponseResponse = await fetch(addFeedbackResponseUri, {
+      method: "POST",
+      body: JSON.stringify({ response }),
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": import.meta.env.VITE_APP_API_KEY,
+      },
+      credentials: "include",
+      mode: "cors",
+    });
+
+    return addFeedbackResponseResponse;
+  } catch (error) {
+    console.error("Add feedback response error - source.server.tsx", error);
+    throw new Error("Backend Server did not respond correctly");
+  }
+};
+// end ------------------------------ addFeedbackResponse ------------------------------
+// start ------------------------------ getFeedbackResponse ------------------------------
+export const getFeedbackResponse = async (feedbackInitiateId: string) => {
+  try {
+    const getFeedbackResponseUri = `${
+      import.meta.env.VITE_APP_INITIATOR_BACKEND_USER_URL
+    }/get-response/${feedbackInitiateId}`;
+    const getFeedbackResponseResponse = await fetch(getFeedbackResponseUri, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": import.meta.env.VITE_APP_API_KEY,
+      },
+      credentials: "include",
+      mode: "cors",
+    });
+    console.log("getFeedbackResponseResponse", getFeedbackResponseResponse);
+
+    return getFeedbackResponseResponse;
+  } catch (error) {
+    console.error("Get feedback response error - source.server.tsx", error);
+    throw new Error("Backend Server did not respond correctly");
+  }
+};
+// end ------------------------------ getFeedbackResponse ------------------------------

@@ -153,6 +153,66 @@ async def process_feedback(request: CoverageRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# Get Responses
+@app.post("/get-score-map/",
+         summary="Get Score Map",   
+         description="Get score map for a given feedback")
+async def get_score_map(request: CoverageRequest):
+    """Get score map for responses and questions"""
+    try:
+        generator = Generation()
+        processor = FeedbackProcessor()
+        
+        # Add error handling for empty inputs
+        if not request.question_map or not request.employee_text:
+            raise HTTPException(
+                status_code=400, 
+                detail="Question map and employee text are required"
+            )
+        
+        # Create feedback mapping using the provided questions
+        feedback_map = generator.generate_feedback_map(
+            list(request.question_map.values()), 
+            request.employee_text
+        )
+        
+        # Add validation for feedback map
+        if not feedback_map:
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to generate feedback map"
+            )
+        
+        # Process feedback results
+        analysis_results = processor.process_feedback(
+            list(request.question_map.values()), 
+            feedback_map
+        )
+        
+        # Validate analysis results
+        if not analysis_results or analysis_results.get("status") == "error":
+            raise HTTPException(
+                status_code=500,
+                detail=analysis_results.get("message", "Failed to process feedback")
+            )
+        
+        # Create score map with validation
+        score_map = {}
+        for topic, question in request.question_map.items():
+            if question in analysis_results['data']:
+                score_map[topic] = analysis_results['data'][question]['threshold']
+            else:
+                score_map[topic] = 0  # Default score for missing data
+        print("debug log 1", score_map)
+        return {"score_map": score_map}
+        
+    except HTTPException as he:
+        raise he
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"An unexpected error occurred: {str(e)}"
+        )
 
 if __name__ == "__main__":
     import uvicorn

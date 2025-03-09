@@ -16,6 +16,7 @@ import {
   getParticipants,
   removeParticipants,
   getFeedbackInitiate,
+  getGivenResponses
 } from "../../controllers/initiator";
 import {
   isApikeyAuthenticated,
@@ -141,5 +142,12 @@ initiatorRouter.delete(
   removeParticipants
 );
 
+initiatorRouter.get(
+  "/get-response/:feedbackInitiateId",
+  isApikeyAuthenticated,
+  isAuthenticated,
+  isInitiator,
+  getGivenResponses
+);
 
 export default initiatorRouter;

@@ -7,6 +7,8 @@ import {
   participantFeedbackResponse,
   getParticipantByName,
   getParticipantById,
+  addFeedbackResponse,
+  canRespond
 } from "../../controllers/participant";
 import {
   isApikeyAuthenticated,
@@ -59,6 +61,22 @@ participantRouter.get(
   isAuthenticated,
   isInitiator,
   getParticipantById
+);
+
+participantRouter.post(
+  "/add-response/:feedbackInitiateId",
+  isApikeyAuthenticated,
+  isAuthenticated,
+  isParticipant,
+  addFeedbackResponse
+);
+
+participantRouter.get(
+  "/can-respond/:feedbackInitiateId",
+  isApikeyAuthenticated,
+  isAuthenticated,
+  isParticipant,
+  canRespond
 );
 
 export default participantRouter;

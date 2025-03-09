@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import "regenerator-runtime/runtime";
-import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Mic, Square } from "lucide-react";
@@ -31,7 +33,8 @@ const Response = () => {
   const [questions, setQuestions] = useState<{ [key: string]: string }>({});
   const [coverage, setCoverage] = useState<QuestionCoverage>({});
 
-  const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+  const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
+    useSpeechRecognition();
 
   // Load initial questions and coverage
   useEffect(() => {
@@ -53,33 +56,28 @@ const Response = () => {
   // Process actionData updates
   useEffect(() => {
     if (actionData?.data) {
-      console.log("Coverage Data:", actionData.data);
       const coverageData = actionData.data;
-      const newCoverage: QuestionCoverage = {};
+      const newCoverage = { ...coverage }; // Create a copy of existing coverage
 
       // Mark covered topics
       coverageData.covered.forEach((item: any) => {
-        console.log("Marking covered topic:", item.topic);
         newCoverage[item.topic.toLowerCase()] = {
           covered: true,
-          question: item.question,
+          question: questions[item.topic.toLowerCase()],
         };
       });
 
       // Mark not covered topics
       coverageData.not_covered.forEach((item: any) => {
-        console.log("Marking not covered topic:", item.topic);
         newCoverage[item.topic.toLowerCase()] = {
           covered: false,
-          question: item.question,
+          question: questions[item.topic.toLowerCase()],
         };
       });
 
-      console.log("New Coverage State:", newCoverage);
       setCoverage(newCoverage);
-      console.log("Coverage State:", coverage);
     }
-  }, [actionData]);
+  }, [actionData, questions]);
 
   if (!browserSupportsSpeechRecognition) {
     return <span>Browser doesn't support speech recognition.</span>;
@@ -126,7 +124,9 @@ const Response = () => {
 
             {isRecording && (
               <div className="mb-4 p-4 border rounded-md">
-                <h3 className="text-sm font-medium mb-2">Real-time Transcription:</h3>
+                <h3 className="text-sm font-medium mb-2">
+                  Real-time Transcription:
+                </h3>
                 <p className="text-sm">{transcript}</p>
               </div>
             )}
@@ -138,15 +138,23 @@ const Response = () => {
                 </div>
               ) : (
                 <>
-                  <span className="text-sm font-bold text-gray-500 mb-4">Your feedback response:</span>
-                  <p id="outputMessage" className="text-sm my-4">{outputMessage}</p>
+                  <span className="text-sm font-bold text-gray-500 mb-4">
+                    Your feedback response:
+                  </span>
+                  <p id="outputMessage" className="text-sm my-4">
+                    {outputMessage}
+                  </p>
                 </>
               )}
             </ScrollArea>
 
             <Form method="post">
               <input type="hidden" name="feedback" value={outputMessage} />
-              <input type="hidden" name="questionsByTopic" value={JSON.stringify(questions)} />
+              <input
+                type="hidden"
+                name="questionsByTopic"
+                value={JSON.stringify(questions)}
+              />
               <Button disabled={!outputMessage} className="mt-4" type="submit">
                 Submit
               </Button>
@@ -161,14 +169,15 @@ const Response = () => {
               <h3 className="text-sm font-medium mb-2">Topics to Cover:</h3>
               <div className="space-y-2">
                 {Object.entries(questions).map(([topic, question]) => {
-                  const isCovered = coverage[topic.toLowerCase()]?.covered || false;
+                  const isCovered =
+                    coverage[topic.toLowerCase()]?.covered || false;
                   return (
                     <div
                       key={topic}
                       className={`p-3 rounded-md border transition-colors ${
                         isCovered
                           ? "border-green-500 bg-green-50 text-green-900 dark:bg-green-900/20 dark:border-green-500 dark:text-green-100"
-                          : "border-gray-200 bg-white text-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
+                          : "border-red-500 bg-red-50 text-red-900 dark:bg-red-900/20 dark:border-red-500 dark:text-red-100"
                       }`}
                     >
                       <p className="font-medium text-sm">{topic}</p>
@@ -176,7 +185,7 @@ const Response = () => {
                         className={`text-sm ${
                           isCovered
                             ? "text-green-700 dark:text-green-300"
-                            : "text-gray-500 dark:text-gray-400"
+                            : "text-red-700 dark:text-red-300"
                         }`}
                       >
                         {question}

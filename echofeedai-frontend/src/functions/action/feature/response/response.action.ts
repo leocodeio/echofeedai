@@ -1,10 +1,18 @@
 import { ActionFunctionArgs, redirect } from "react-router-dom";
 import { ActionResult } from "@/types/action-result";
+import { addFeedbackResponse } from "@/services/source.server";
 
 export async function action({
   request,
 }: ActionFunctionArgs): Promise<ActionResult<any> | Response> {
   const formData = await request.formData();
+  // query params to get feedback initiate id
+  const feedbackInitiateId = new URL(request.url).searchParams.get(
+    "feedbackInitiateId"
+  );
+  if (!feedbackInitiateId) {
+    return redirect("/home");
+  }
   const feedback = formData.get("feedback") as string;
   const questionsByTopic = formData.get("questionsByTopic") as string;
   // Get questions from session storage
@@ -54,6 +62,20 @@ export async function action({
 
   if (coverageData.payload.all_topics_covered) {
     // make a call to save the feedback in database
+    const saveFeedbackResponse = await addFeedbackResponse(
+      feedbackInitiateId,
+      feedback
+    );
+    if (!saveFeedbackResponse.ok) {
+      return {
+        success: false,
+        message: "Failed to save feedback",
+        data: null,
+        origin: "respond",
+      };
+    }
+    const saveFeedbackResponseData = await saveFeedbackResponse.json();
+    console.log("saveFeedbackResponseData", saveFeedbackResponseData);
     return redirect("/thankyou");
   }
   return {
