@@ -1,3 +1,10 @@
+## [1.4.7](https://github.com/leocodeio/echofeedai/compare/v1.4.6...v1.4.7) (2025-03-09)
+
+
+### Performance Improvements
+
+* **added demo:** added demo links ([7ecdbc2](https://github.com/leocodeio/echofeedai/commit/7ecdbc2f99f93ce900842f7e588b07cd5cd8d919))
+
 ## [1.4.6](https://github.com/leocodeio/echofeedai/compare/v1.4.5...v1.4.6) (2025-03-09)
 
 
