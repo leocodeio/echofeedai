@@ -1,3 +1,10 @@
+## [1.4.10](https://github.com/leocodeio/echofeedai/compare/v1.4.9...v1.4.10) (2025-03-09)
+
+
+### Bug Fixes
+
+* **done:** done ([33acfb1](https://github.com/leocodeio/echofeedai/commit/33acfb1d145c976e216ae79909acb9a957ca2322))
+
 ## [1.4.9](https://github.com/leocodeio/echofeedai/compare/v1.4.8...v1.4.9) (2025-03-09)
 
 
