@@ -1,4 +1,10 @@
-import { Form, useLoaderData, useNavigate, useSubmit } from "react-router-dom";
+import {
+  Form,
+  useLoaderData,
+  useNavigate,
+  useSubmit,
+  useActionData,
+} from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import {
@@ -31,12 +37,10 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { useParams } from "react-router-dom";
+import { action as SourceViewAction } from "@/functions/action/feature/source/create-feedback-initiate.action";
+import { toast } from "@/hooks/use-toast";
+
 export const SourceView = () => {
-  const params = useParams();
-  //   console.log(params);
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   // [TODO] - any?
   const { participants, feedbackInitiatives, mailTemplateIdentifiers } =
     useLoaderData<typeof SourceViewLoader>() as {
@@ -44,6 +48,27 @@ export const SourceView = () => {
       feedbackInitiatives: any[];
       mailTemplateIdentifiers: any[];
     };
+
+  //action
+  const action = useActionData<typeof SourceViewAction>();
+  useEffect(() => {
+    if (action?.success) {
+      toast({
+        title: "Success",
+        description: action.message,
+      });
+      setCreateInitiativeLoading(false);
+      setShowCreateFeedbackInitiative(false);
+    }
+  }, [action]);
+  // params
+  const params = useParams();
+  // navigate
+  const navigate = useNavigate();
+  // states
+  const [loading, setLoading] = useState(true);
+  const [createInitiativeLoading, setCreateInitiativeLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [showParticipants, setShowParticipants] = useState(false);
   const [topicTags, setTopicTags] = useState<Tag[]>([]);
   const [activeTopicIndex, setActiveTopicIndex] = useState<number | null>(null);
@@ -160,7 +185,7 @@ export const SourceView = () => {
             <Form
               method="post"
               onSubmit={() => {
-                setShowCreateFeedbackInitiative(false);
+                setCreateInitiativeLoading(true);
               }}
             >
               <div className="grid gap-4 py-4">
@@ -205,7 +230,14 @@ export const SourceView = () => {
                   ))}
                 </SelectContent>
               </Select>
-              <Button className="mt-4" type="submit">
+              <Button
+                className="mt-4"
+                type="submit"
+                disabled={createInitiativeLoading}
+              >
+                {createInitiativeLoading ? (
+                  <RefreshCw className="h-4 w-4 animate-spin mr-2" />
+                ) : null}
                 Create Initiative
               </Button>
               <input

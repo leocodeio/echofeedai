@@ -1,7 +1,8 @@
-import { Form, useLoaderData } from "react-router-dom";
+import { Form, useLoaderData, useActionData } from "react-router-dom";
 import { useState, useEffect } from "react";
-
+import { useNavigate } from "react-router-dom";
 import { loader as InitiateViewLoader } from "@/functions/loader/feature/source/view-initiate";
+import { action as SendEmailsAction } from "@/functions/action/feature/source/intitiate-send-emails.action";
 import { RefreshCw, List, ListChecks, Send } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import {
@@ -12,25 +13,43 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useParams } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
 
 export const InitiateView = () => {
-  const params = useParams();
-  //   console.log(params);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   // [TODO] - any?
+  // loader
   const { topics, questions } = useLoaderData<typeof InitiateViewLoader>() as {
     topics: any[];
     questions: any[];
   };
+
+  //action
+  const action = useActionData<typeof SendEmailsAction>();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (action?.success) {
+      toast({
+        title: "Success",
+        description: action.message,
+      });
+      navigate("/feature/source");
+    }
+  }, [action]);
+
+  // params
+  const params = useParams();
+  // state
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [showTopics, setShowTopics] = useState(false);
   const [showQuestions, setShowQuestions] = useState(false);
-//   console.log(topics, questions);
+
   useEffect(() => {
     setLoading(false);
     setError(null);
   }, []);
 
+  // loading
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -74,7 +93,6 @@ export const InitiateView = () => {
           </div>
         </DialogContent>
       </Dialog>
-
 
       {/* Questions Button */}
       <Button

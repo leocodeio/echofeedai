@@ -1,7 +1,11 @@
 import { ActionFunctionArgs, redirect } from "react-router-dom";
 import { createFeedbackInitiative } from "@/services/source.server";
 import { FeedbackInitiativePayload } from "@/types/initiate";
-import { ActionResult, ActionResultError } from "@/types/action-result";
+import {
+  ActionResult,
+  ActionResultError,
+  ActionResultSuccess,
+} from "@/types/action-result";
 export async function action({
   request,
 }: ActionFunctionArgs): Promise<ActionResult<any> | Response> {
@@ -22,5 +26,10 @@ export async function action({
     };
     return result;
   }
-  return redirect(`/feature/source/view/${feedbackInitiativePayload.sourceId}`);
+  const result: ActionResultSuccess<any> = {
+    success: true,
+    message: "Feedback initiative created successfully",
+    data: null,
+  };
+  return result;
 }

@@ -1,5 +1,9 @@
-import { ActionFunctionArgs, redirect } from "react-router-dom";
-import { ActionResult, ActionResultError } from "@/types/action-result";
+import { ActionFunctionArgs } from "react-router-dom";
+import {
+  ActionResult,
+  ActionResultError,
+  ActionResultSuccess,
+} from "@/types/action-result";
 import { sendMailPayloadSchema } from "@/services/schemas/source.schema";
 import { sendMail } from "@/services/nm.server";
 
@@ -36,19 +40,23 @@ export async function action({
     const response = await sendMail(parsedSourcePayload.data);
     console.log("mail response", response);
 
-    // if (!response.ok) {
-    //   const responseData = await response.json();
-    //   const result: ActionResultError<any> = {
-    //     success: false,
-    //     message: responseData.message,
-    //     origin: "source",
-    //     data: parsedSourcePayload.data,
-    //   };
-    //   return result;
-    // }
+    if (!response.ok) {
+      const responseData = await response.json();
+      const result: ActionResultError<any> = {
+        success: false,
+        message: responseData.message,
+        origin: "source",
+        data: parsedSourcePayload.data,
+      };
+      return result;
+    }
 
-    // return redirect("/feature/source");
-    return null;
+    const result: ActionResultSuccess<any> = {
+      success: true,
+      message: "Emails sent successfully",
+      data: parsedSourcePayload.data,
+    };
+    return result;
   } catch (error) {
     const result: ActionResultError<any> = {
       success: false,
