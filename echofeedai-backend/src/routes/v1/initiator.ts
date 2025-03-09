@@ -15,6 +15,7 @@ import {
   addParticipant,
   getParticipants,
   removeParticipants,
+  getFeedbackInitiate,
 } from "../../controllers/initiator";
 import {
   isApikeyAuthenticated,
@@ -90,6 +91,14 @@ initiatorRouter.post(
   isAuthenticated,
   isInitiator,
   initiateFeedback
+);
+
+initiatorRouter.get(
+  "/feedback-initiate/:id",
+  isApikeyAuthenticated,
+  isAuthenticated,
+  isInitiator,
+  getFeedbackInitiate
 );
 
 initiatorRouter.delete(

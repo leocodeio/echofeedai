@@ -61,6 +61,10 @@ import { loader as SourceViewLoader } from "@/functions/loader/feature/source/vi
 import { action as DeleteFeedbackInitiateAction } from "@/functions/action/feature/source/delete-feedback-initiate.action";
 // feature/source/create-feedback-initiate
 import { action as CreateFeedbackInitiateAction } from "@/functions/action/feature/source/create-feedback-initiate.action";
+// feature/source/initiate
+import { InitiateView } from "./routes/feature/source/Initiate.view";
+import { loader as FeedbackInitiativeViewLoader } from "@/functions/loader/feature/source/view-initiate";
+import { action as SendMailAction } from "@/functions/action/feature/source/intitiate-send-emails.action";
 
 const router = createBrowserRouter([
   {
@@ -157,6 +161,12 @@ const router = createBrowserRouter([
           {
             path: "delete-feedback-initiate/:id",
             action: DeleteFeedbackInitiateAction,
+          },
+          {
+            path: "initiative/view/:id",
+            element: <InitiateView />,
+            loader: FeedbackInitiativeViewLoader,
+            action: SendMailAction,
           },
         ],
       },

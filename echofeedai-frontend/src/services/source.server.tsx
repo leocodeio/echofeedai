@@ -283,3 +283,72 @@ export const createFeedbackInitiative = async (
   }
 };
 // end ------------------------------ createFeedbackInitiative ------------------------------
+// start ------------------------------ getFeedbackInitiative ------------------------------
+export const getFeedbackInitiative = async (id: string) => {
+  try {
+    const feedbackInitiativeUri = `${
+      import.meta.env.VITE_APP_INITIATOR_BACKEND_USER_URL
+    }/feedback-initiate/${id}`;
+    const feedbackInitiativeResponse = await fetch(feedbackInitiativeUri, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": import.meta.env.VITE_APP_API_KEY,
+      },
+      credentials: "include",
+      mode: "cors",
+    });
+
+    return feedbackInitiativeResponse;
+  } catch (error) {
+    console.error("Get feedback initiate error - source.server.tsx", error);
+    throw new Error("Backend Server did not respond correctly");
+  }
+};
+// end ------------------------------ getFeedbackInitiative ------------------------------
+// start ------------------------------ getTopics ------------------------------
+export const getTopics = async () => {
+  try {
+    const topicsUri = `${
+      import.meta.env.VITE_APP_INITIATOR_BACKEND_USER_URL
+    }/topics`;
+    const topicsResponse = await fetch(topicsUri, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": import.meta.env.VITE_APP_API_KEY,
+      },
+      credentials: "include",
+      mode: "cors",
+    });
+
+    return topicsResponse;
+  } catch (error) {
+    console.error("Get topics error - source.server.tsx", error);
+    throw new Error("Backend Server did not respond correctly");
+  }
+};
+// end ------------------------------ getTopics ------------------------------
+// start ------------------------------ getParticipantById ------------------------------
+export const getParticipantById = async (id: string) => {
+  try {
+    const participantUri = `${
+      import.meta.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL
+    }/byId/${id}`;
+    const participantResponse = await fetch(participantUri, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": import.meta.env.VITE_APP_API_KEY,
+      },
+      credentials: "include",
+      mode: "cors",
+    });
+
+    return participantResponse;
+  } catch (error) {
+    console.error("Get participant by id error - source.server.tsx", error);
+    throw new Error("Backend Server did not respond correctly");
+  }
+};
+// end ------------------------------ getParticipantById ------------------------------

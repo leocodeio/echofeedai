@@ -55,6 +55,18 @@ export const generateQuestions = async (req: Request, res: Response) => {
   }
 };
 
+export const getQuestionsFromTopics = async (topics: string[]) => {
+  const pythonModelApi = process.env.BACKEND_PYTHON_MODEL_API;
+  const response = await axios.post(`${pythonModelApi}/generate-questions`, {
+    topics,
+  });
+  // console.log("response", response.data.question_map);
+  const { question_map } = response.data as TopicToQuestionMap;
+  // console.log("topics", question_map);
+
+  return Object.values(question_map);
+};
+
 export const getCoverage = async (req: Request, res: Response) => {
   try {
     console.log("get coverage called");

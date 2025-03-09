@@ -6,6 +6,7 @@ import {
   participantSignup,
   participantFeedbackResponse,
   getParticipantByName,
+  getParticipantById,
 } from "../../controllers/participant";
 import {
   isApikeyAuthenticated,
@@ -51,4 +52,13 @@ participantRouter.get(
   isInitiator,
   getParticipantByName
 );
+
+participantRouter.get(
+  "/byId/:id",
+  isApikeyAuthenticated,
+  isAuthenticated,
+  isInitiator,
+  getParticipantById
+);
+
 export default participantRouter;

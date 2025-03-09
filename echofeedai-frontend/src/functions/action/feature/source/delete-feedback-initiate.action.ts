@@ -28,7 +28,7 @@ export async function action({
     }
 
     // This will cause React Router to reload all data on the target route
-    return redirect(`/feature/source/view/${params.id}`);
+    return redirect(`/feature/source`);
   } catch (error) {
     const result: ActionResultError<any> = {
       success: false,

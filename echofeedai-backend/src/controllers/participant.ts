@@ -258,3 +258,30 @@ export const getParticipantByName = async (
     console.error("Get participant by name error:", error);
   }
 };
+
+export const getParticipantById = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const participant = await client.participant.findUnique({
+      where: { id },
+      select: {
+        email: true,
+      },
+    });
+    if (!participant) {
+      res.status(404).json({
+        message: "Participant not found",
+      });
+      return;
+    }
+    res.status(200).json({
+      message: "Participant fetched successfully",
+      payload: participant,
+    });
+  } catch (error) {
+    console.error("Get participant by id error:", error);
+  }
+};

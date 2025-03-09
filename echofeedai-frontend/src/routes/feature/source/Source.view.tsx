@@ -1,4 +1,4 @@
-import { Form, useLoaderData, useSubmit } from "react-router-dom";
+import { Form, useLoaderData, useNavigate, useSubmit } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import {
@@ -34,6 +34,7 @@ import { useParams } from "react-router-dom";
 export const SourceView = () => {
   const params = useParams();
   //   console.log(params);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // [TODO] - any?
@@ -44,18 +45,14 @@ export const SourceView = () => {
       mailTemplateIdentifiers: any[];
     };
   const [showParticipants, setShowParticipants] = useState(false);
-  const [, setShowFeedbackInitiative] = useState(false);
   const [topicTags, setTopicTags] = useState<Tag[]>([]);
   const [activeTopicIndex, setActiveTopicIndex] = useState<number | null>(null);
-  const [feedbackInitiativeId, setFeedbackInitiativeId] = useState<
-    string | null
-  >(null);
   const submit = useSubmit();
   const [showCreateFeedbackInitiative, setShowCreateFeedbackInitiative] =
     useState(false);
-  console.log(participants);
-  console.log(feedbackInitiatives);
-  console.log(mailTemplateIdentifiers);
+  // console.log(participants);
+  // console.log(feedbackInitiatives);
+  // console.log(mailTemplateIdentifiers);
   useEffect(() => {
     setLoading(false);
     setError(null);
@@ -70,17 +67,10 @@ export const SourceView = () => {
   }
 
   const handleDeleteFeedbackInitiative = (id: string) => {
-    setFeedbackInitiativeId(id);
-    // setShowDeleteFeedbackInitiativeDialog(true);
     submit(null, {
       method: "DELETE",
       action: `/feature/source/delete-feedback-initiate/${id}`,
     });
-  };
-
-  const handleViewFeedbackInitiative = (id: string) => {
-    setFeedbackInitiativeId(id);
-    setShowFeedbackInitiative(true);
   };
 
   return (
@@ -118,6 +108,8 @@ export const SourceView = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Feedback Initiative Card */}
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {/* get already created feedback initiatives */}
         {feedbackInitiatives?.map((feedbackInitiative) => (
@@ -142,7 +134,9 @@ export const SourceView = () => {
                 variant="outline"
                 size="sm"
                 onClick={() =>
-                  handleViewFeedbackInitiative(feedbackInitiative.id)
+                  navigate(
+                    `/feature/source/initiative/view/${feedbackInitiative.id}`
+                  )
                 }
               >
                 <ArrowRight className="h-4 w-4" />
@@ -151,16 +145,16 @@ export const SourceView = () => {
           </Card>
         ))}
 
-        {/* Add Topic Dialog */}
+        {/* create Feedback Initiative Dialog */}
         <Dialog
           open={showCreateFeedbackInitiative}
           onOpenChange={setShowCreateFeedbackInitiative}
         >
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Add Participant</DialogTitle>
+              <DialogTitle>Add Topics</DialogTitle>
               <DialogDescription>
-                Enter participant names to add them to this source
+                Enter topic names to add them to this source
               </DialogDescription>
             </DialogHeader>
             <Form
@@ -171,9 +165,9 @@ export const SourceView = () => {
             >
               <div className="grid gap-4 py-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="participantName">Participant Names</Label>
+                  <Label htmlFor="topicName">Topic Names</Label>
                   <TagInput
-                    id="participantName"
+                    id="topicName"
                     tags={topicTags}
                     setTags={setTopicTags}
                     placeholder="Type a name and press Enter"

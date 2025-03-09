@@ -15,6 +15,7 @@ import {
 } from "../utils/token/createToken";
 import { destroyCookie } from "../utils/cookie/destroyCookie";
 import { addSyntheticLeadingComment } from "typescript";
+import { getQuestionsFromTopics } from "./model";
 
 export const initiatorSignup = async (
   req: Request,
@@ -545,6 +546,18 @@ export const initiateFeedback = async (
       },
     });
 
+    // make a call to model to get questions from topics
+    let questions: string[] = [];
+    try {
+      questions = await getQuestionsFromTopics(topics);
+    } catch (error) {
+      console.error("Get questions from topics error:", error);
+      res.status(500).json({
+        message:
+          "An unexpected error occurred at model during get questions from topics",
+      });
+      return;
+    }
     const feedback = await client.feedbackInitiate.create({
       data: {
         sourceId,
@@ -553,6 +566,7 @@ export const initiateFeedback = async (
         participantIds: sourceParticipantMap.map((map) => map.participant.id),
         feedbackResponseIds: [],
         topics,
+        questions,
       },
     });
     console.log("debug log 1: feedback initiated", feedback);
@@ -648,6 +662,42 @@ export const getFeedbackInitiates = async (
     console.error("Get feedback initiates error:", error);
     res.status(500).json({
       message: "An unexpected error occurred during get feedback initiates",
+    });
+  }
+};
+
+export const getFeedbackInitiate = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const feedbackInitiateId = req.params.id;
+    if (!feedbackInitiateId) {
+      res.status(401).json({
+        message: "Unauthorized: No feedback initiate ID found",
+      });
+      return;
+    }
+
+    const feedbackInitiate = await client.feedbackInitiate.findUnique({
+      where: { id: feedbackInitiateId },
+    });
+
+    if (!feedbackInitiate) {
+      res.status(404).json({
+        message: "Feedback initiate not found",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      message: "Feedback initiate fetched successfully",
+      payload: feedbackInitiate,
+    });
+  } catch (error) {
+    console.error("Get feedback initiate error:", error);
+    res.status(500).json({
+      message: "An unexpected error occurred during get feedback initiate",
     });
   }
 };
