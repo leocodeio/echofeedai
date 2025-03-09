@@ -1,3 +1,10 @@
+## [1.4.5](https://github.com/leocodeio/echofeedai/compare/v1.4.4...v1.4.5) (2025-03-09)
+
+
+### Performance Improvements
+
+* **view initiate:** added code for ivitiate to send emailafter giving and generatin topic questions ([09c23d6](https://github.com/leocodeio/echofeedai/commit/09c23d6e7e6aca98da4e700ccb9b3d11ca5e0009))
+
 ## [1.4.4](https://github.com/leocodeio/echofeedai/compare/v1.4.3...v1.4.4) (2025-03-08)
 
 
