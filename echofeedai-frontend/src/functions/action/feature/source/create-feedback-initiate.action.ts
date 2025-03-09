@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, redirect } from "react-router-dom";
+import { ActionFunctionArgs } from "react-router-dom";
 import { createFeedbackInitiative } from "@/services/source.server";
 import { FeedbackInitiativePayload } from "@/types/initiate";
 import {

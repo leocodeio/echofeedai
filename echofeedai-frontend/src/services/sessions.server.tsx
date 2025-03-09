@@ -49,6 +49,8 @@ export function getUserSession() {
       const user = session.getUser();
       const accessToken = cookies.get("access-token");
       const refreshToken = cookies.get("refresh-token");
+      const role = session.getRole();
+      const currentPath = window.location.pathname;
       // not only check existance but also validate token
       // make a call to validate the token to backend
       // if access token is valid, return true
@@ -57,7 +59,12 @@ export function getUserSession() {
       // if refresh token is invalid, return false
       // if  returned false logout, destroy the token
       return (
-        user !== null && accessToken !== undefined && refreshToken !== undefined
+        user !== null &&
+        accessToken !== undefined &&
+        refreshToken !== undefined &&
+        role !== undefined &&
+        role !== null &&
+        currentPath !== "/auth/signin"
       );
     },
     setUser: (user: User) =>

@@ -22,7 +22,7 @@ export async function action({
 
   // Call your backend API to process feedback and get coverage
   const response = await fetch(
-    `${import.meta.env.VITE_APP_USER_BACKEND_MODEL_URL}/get-coverage`,
+    `${import.meta.env.VITE_APP_MODEL_BACKEND_USER_URL}/get-coverage`,
     {
       method: "POST",
       headers: {

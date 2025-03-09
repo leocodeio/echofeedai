@@ -1,4 +1,4 @@
-import { getFeedbackInitiative, getParticipantById } from "./source.server";
+import { getFeedbackInitiative } from "./source.server";
 
 // start ------------------------------ getAllMailTemplateIdentifier ------------------------------
 export const getAllMailTemplateIdentifier = async () => {

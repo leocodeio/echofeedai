@@ -65,6 +65,10 @@ import { action as CreateFeedbackInitiateAction } from "@/functions/action/featu
 import { InitiateView } from "./routes/feature/source/Initiate.view";
 import { loader as FeedbackInitiativeViewLoader } from "@/functions/loader/feature/source/view-initiate";
 import { action as SendMailAction } from "@/functions/action/feature/source/intitiate-send-emails.action";
+// feature/response
+import Response from "./routes/feature/response/Response";
+import { loader as responseLoader } from "@/functions/loader/feature/respond/respond.loader";
+import { action as responseAction } from "@/functions/action/feature/respond/respond.action";
 
 const router = createBrowserRouter([
   {
@@ -170,6 +174,12 @@ const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: "response",
+        element: <Response />,
+        loader: responseLoader,
+        action: responseAction,
+      },
     ],
   },
   {
@@ -184,7 +194,7 @@ const router = createBrowserRouter([
   {
     path: "*",
     loader: () => {
-      throw new Response("Not found", { status: 404 });
+      throw new Error("Not found");
     },
     errorElement: <NotFound />,
   },

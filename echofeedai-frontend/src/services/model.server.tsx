@@ -3,7 +3,7 @@ import { TopicsPayload } from "@/types/topic";
 // start ------------------------------ generate ------------------------------
 export const generate = async (topicsPayload: TopicsPayload) => {
   try {
-    const generateUri = `${import.meta.env.VITE_APP_USER_BACKEND_MODEL_URL}/generate-questions`;
+    const generateUri = `${import.meta.env.VITE_APP_MODEL_BACKEND_USER_URL}/generate-questions`;
     console.log(generateUri);
     const generateResponse = await fetch(generateUri, {
       method: "POST",
