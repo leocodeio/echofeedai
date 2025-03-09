@@ -1,3 +1,10 @@
+## [1.4.8](https://github.com/leocodeio/echofeedai/compare/v1.4.7...v1.4.8) (2025-03-09)
+
+
+### Performance Improvements
+
+* **roles:** added role based access ([122f6c7](https://github.com/leocodeio/echofeedai/commit/122f6c7a215d5544a99a29634f4b9e9198b13782))
+
 ## [1.4.7](https://github.com/leocodeio/echofeedai/compare/v1.4.6...v1.4.7) (2025-03-09)
 
 
