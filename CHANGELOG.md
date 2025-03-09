@@ -1,3 +1,10 @@
+## [1.4.6](https://github.com/leocodeio/echofeedai/compare/v1.4.5...v1.4.6) (2025-03-09)
+
+
+### Performance Improvements
+
+* **path ciriteir:** added some logic for eff useage ([9013bdc](https://github.com/leocodeio/echofeedai/commit/9013bdc0e73bdb481f866b75394671aa28a6e55e))
+
 ## [1.4.5](https://github.com/leocodeio/echofeedai/compare/v1.4.4...v1.4.5) (2025-03-09)
 
 
