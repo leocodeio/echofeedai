@@ -1,40 +1,40 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Grid, Detailed } from "@react-three/drei";
+import { OrbitControls, Grid } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import CommonHeader from "@/components/common/CommonHeader";
 
-function SpinningLogo() {
-  const groupRef = useRef<THREE.Group>(null);
+// function SpinningLogo() {
+//   const groupRef = useRef<THREE.Group>(null);
 
-  useFrame((state, delta) => {
-    state;
-    if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.5;
-    }
-  });
+//   useFrame((state, delta) => {
+//     state;
+//     if (groupRef.current) {
+//       groupRef.current.rotation.y += delta * 0.5;
+//     }
+//   });
 
-  return (
-    <group ref={groupRef}>
-      <mesh position={[0, 0, 0]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#333333" />
-      </mesh>
-      <mesh position={[0.5, 0.5, 0.5]}>
-        <boxGeometry args={[0.5, 0.5, 0.5]} />
-        <meshStandardMaterial color="#666666" />
-      </mesh>
-      <mesh position={[-0.5, -0.5, -0.5]}>
-        <boxGeometry args={[0.5, 0.5, 0.5]} />
-        <meshStandardMaterial color="#999999" />
-      </mesh>
-    </group>
-  );
-}
+//   return (
+//     <group ref={groupRef}>
+//       <mesh position={[0, 0, 0]}>
+//         <boxGeometry args={[1, 1, 1]} />
+//         <meshStandardMaterial color="#333333" />
+//       </mesh>
+//       <mesh position={[0.5, 0.5, 0.5]}>
+//         <boxGeometry args={[0.5, 0.5, 0.5]} />
+//         <meshStandardMaterial color="#666666" />
+//       </mesh>
+//       <mesh position={[-0.5, -0.5, -0.5]}>
+//         <boxGeometry args={[0.5, 0.5, 0.5]} />
+//         <meshStandardMaterial color="#999999" />
+//       </mesh>
+//     </group>
+//   );
+// }
 
 function AnimatedBox({
   initialPosition,

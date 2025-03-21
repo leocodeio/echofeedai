@@ -1,0 +1,40 @@
+# Build Stage
+FROM node:20-alpine AS builder
+
+# Install build dependencies
+RUN apk add --no-cache openssl
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json ./
+
+# Install npm and dependencies with legacy-peer-deps flag to resolve conflicts
+RUN npm i
+
+# Copy source files
+COPY . .
+
+# build the application
+RUN npm run build
+
+# Prune development dependencies
+RUN npm prune --prod
+
+# Production Stage
+FROM node:20-alpine AS runner
+
+WORKDIR /app
+
+# Copy necessary files from builder
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./
+
+# Use non-root user for security
+USER node
+
+EXPOSE 3000
+
+# Use the start script from package.json
+CMD ["npm", "run", "preview"]

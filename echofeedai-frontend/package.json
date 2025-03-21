@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview --port 3000"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.2",
@@ -34,8 +34,6 @@
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.474.0",
     "react": "^18.3.1",
-    "react-audio-visualize": "^1.2.0",
-    "react-audio-visualizer": "^1.0.3",
     "react-cookie": "^7.2.2",
     "react-dom": "^18.3.1",
     "react-i18next": "^15.4.0",
