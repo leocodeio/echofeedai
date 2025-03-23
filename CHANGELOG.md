@@ -1,3 +1,10 @@
+## [1.4.13](https://github.com/leocodeio/echofeedai/compare/v1.4.12...v1.4.13) (2025-03-23)
+
+
+### Performance Improvements
+
+* **connection:** revisted code ([3443e1c](https://github.com/leocodeio/echofeedai/commit/3443e1c33bcbcbde2920fdc1baaff75dc886801b))
+
 ## [1.4.12](https://github.com/leocodeio/echofeedai/compare/v1.4.11...v1.4.12) (2025-03-21)
 
 ## [1.4.11](https://github.com/leocodeio/echofeedai/compare/v1.4.10...v1.4.11) (2025-03-09)
