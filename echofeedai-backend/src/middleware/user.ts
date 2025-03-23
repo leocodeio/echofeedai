@@ -42,7 +42,7 @@ export const isApikeyAuthenticated = async (
   const apiKeyAccepted = apiKey === process.env.API_KEY;
   if (!apiKeyAccepted) {
     res.status(403).json({
-      message: "You are not authorized to do this",
+      message: "Invalid api key authorization",
     });
     return;
   }

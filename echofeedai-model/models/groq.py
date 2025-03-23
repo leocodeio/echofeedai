@@ -8,10 +8,15 @@ load_dotenv()
 class GroqModel:
     def __init__(self):
         self.client = Groq(api_key=os.getenv("GROQ_API_KEY"))
-        self.model = "mixtral-8x7b-32768"
+        self.model = 'llama-3.3-70b-versatile'
 
     def generate_response(self, messages):
         try:
+            # Check if API key is available
+            if not os.getenv("GROQ_API_KEY"):
+                print("Warning: GROQ_API_KEY not found in environment variables")
+                return "Error: API key not configured"
+            
             chat_completion = self.client.chat.completions.create(
                 messages=messages,
                 model=self.model,

@@ -69,7 +69,7 @@ async def hello_world():
     return {"message": "Hello World"}
 
 # Generate Questions
-@app.post("/generate-questions/", 
+@app.post("/generate-questions", 
          summary="Generate Feedback Questions",
          description="Generates specific questions for given topics and maps them",
          response_description="Mapped questions with topics")
@@ -83,10 +83,10 @@ async def generate_questions(request: TopicRequest):
         Dict[str, str]: Mapping of topics to their corresponding questions
     """
     try:
-        print("debug log 0", request.topics)
+        print("-----------debug log 0------------\n", request.topics)
         generator = Generation()
         questions = generator.generate_questions(list(request.topics))
-        print("debug log 1", questions)
+        print("-----------debug log 1------------\n", questions)
         # Create topic to question mapping
         question_map = {}
         for topic, question in zip(request.topics, questions):
@@ -97,7 +97,7 @@ async def generate_questions(request: TopicRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 # Process Feedback
-@app.post("/process-feedback/",
+@app.post("/process-feedback",
          summary="Process Employee Feedback",
          description="Analyzes feedback text and checks topic coverage",
          response_description="Analysis results with coverage check")
@@ -112,20 +112,22 @@ async def process_feedback(request: CoverageRequest):
         Dict: Analysis results and coverage status
     """
     try:
+        print("app.py line: 115\n-----------debug log 0------------\n", request)
         generator = Generation()
         processor = FeedbackProcessor()
         
         # Create feedback mapping using the provided questions
         feedback_map = generator.generate_feedback_map(list(request.question_map.values()), request.employee_text)
-        
+        print("app.py line: 118\n-----------debug log 1------------\n", feedback_map)
         # Process feedback results
         analysis_results = processor.process_feedback(list(request.question_map.values()), feedback_map)
-        
+        print("app.py line: 120\n-----------debug log 2------------\n", analysis_results)
         # Check topic coverage
         covered = []
         not_covered = []
         for topic, question in request.question_map.items():
             # Check if topic exists in any question/answer
+            print("app.py line: 122\n-----------debug log 3------------\n", analysis_results['data'][question])
             if analysis_results['data'][question]['covered']:
                 covered.append({
                     "topic": topic,
@@ -138,12 +140,13 @@ async def process_feedback(request: CoverageRequest):
                     "question": question,
                     "feedback": analysis_results['data'][question]['feedback']
                 })
-
+        print("app.py line: 124\n-----------debug log 4------------\n", covered)
+        print("app.py line: 125\n-----------debug log 5------------\n", not_covered)
         if len(not_covered) == 0:
             all_covered = True
         else:
             all_covered = False
-
+        print("app.py line: 127\n-----------debug log 6------------\n", all_covered)
         return {
             "all_topics_covered": all_covered,
             "covered": covered,
@@ -154,7 +157,7 @@ async def process_feedback(request: CoverageRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 # Get Responses
-@app.post("/get-score-map/",
+@app.post("/get-score-map",
          summary="Get Score Map",   
          description="Get score map for a given feedback")
 async def get_score_map(request: CoverageRequest):
@@ -203,7 +206,7 @@ async def get_score_map(request: CoverageRequest):
                 score_map[topic] = analysis_results['data'][question]['threshold']
             else:
                 score_map[topic] = 0  # Default score for missing data
-        print("debug log 1", score_map)
+        print("app.py line: 149\n-----------debug log 1------------\n", score_map)
         return {"score_map": score_map}
         
     except HTTPException as he:
