@@ -34,7 +34,7 @@ export let handle = {
 export async function loader({ request }: LoaderFunctionArgs) {
   //-------------------------- i18n---------------------------------------
   const i18nSession = await getI18nSession(request);
-  let locale = i18nSession.getLocale();
+  let locale = i18nSession.getLanguage();
   const { getTheme } = await themeSessionResolver(request);
   //-------------------------- i18n---------------------------------------
   return {

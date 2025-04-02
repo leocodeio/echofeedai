@@ -1,4 +1,7 @@
 {
   "greeting": "Hola",
-  "welcome": "Bienvenido a Spectral"
+  "welcome": "Bienvenido a Spectral",
+  "hero": {
+    "description": "Habla con tu feedback"
+  }
 }

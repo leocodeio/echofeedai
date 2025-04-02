@@ -5,20 +5,21 @@
 // ensure the user gets the right status code and we can display a nicer error
 // message for them than the Remix and/or browser default.
 
-import { Link, useLoaderData, useLocation } from "@remix-run/react";
-import { GeneralErrorBoundary } from "~/components/error-boundary";
+import { Link, useLocation } from "@remix-run/react";
+import { LoaderFunctionArgs } from "@remix-run/node";
+import { GeneralErrorBoundary } from "@/components/error-boundary";
 import { Home, AlertCircle } from "lucide-react";
-import { json, LoaderFunctionArgs, redirect } from "@remix-run/node";
-import { Button } from "~/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
-} from "~/components/ui/card";
+} from "@/components/ui/card";
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  console.log("request", request);
   throw new Response("Not found", { status: 404 });
 }
 
@@ -55,7 +56,7 @@ export function ErrorBoundary() {
 
               <CardFooter>
                 <Button asChild variant="default" className="w-full">
-                  <Link to="/" className="flex items-center gap-2">
+                  <Link to="/home" className="flex items-center gap-2">
                     <Home className="h-4 w-4" />
                     Back to Home
                   </Link>

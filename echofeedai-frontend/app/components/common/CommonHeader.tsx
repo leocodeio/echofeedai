@@ -3,17 +3,16 @@ import {
   SheetTrigger,
   SheetContent,
   SheetTitle,
-} from "~/components/ui/sheet";
-import { Button } from "~/components/ui/button";
-import { Link } from "@remix-run/react";
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Form, Link } from "@remix-run/react";
 import {
   NavigationMenu,
   NavigationMenuList,
   NavigationMenuLink,
-} from "~/components/ui/navigation-menu";
-import { ModeToggle } from "../mode-toggle";
-import { NavLinks } from "~/models/navlinks";
-import { useFetcher } from "@remix-run/react";
+} from "@/components/ui/navigation-menu";
+import { ModeToggle } from "@/components/mode-toggle";
+import { NavLinks } from "@/models/navlinks";
 import { useTranslation } from "react-i18next";
 import {
   Select,
@@ -21,17 +20,21 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-} from "~/components/ui/select";
+} from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { language } from "@/utils/language";
 
-export default function Header() {
+export default function CommonHeader() {
   const { i18n } = useTranslation();
-  const fetcher = useFetcher();
-
   const handleLanguageChange = (value: string) => {
-    fetcher.submit(
-      { locale: value },
-      { method: "POST", action: "/action/set-language" }
-    );
     i18n.changeLanguage(value);
   };
 
@@ -50,7 +53,7 @@ export default function Header() {
             Navigation menu for mobile devices
           </div>
           <Button variant="link" asChild>
-            <Link to="/">
+            <Link to="/home">
               <ShirtIcon className="h-6 w-6" />
               <span className="sr-only">ShadCN</span>
             </Link>
@@ -65,7 +68,7 @@ export default function Header() {
         </SheetContent>
       </Sheet>
       <Button variant="link" asChild>
-        <Link to="/" className="mr-6 hidden lg:flex">
+        <Link to="/home" className="mr-6 hidden lg:flex">
           <ShirtIcon className="h-6 w-6" />
           <span className="sr-only">ShadCN</span>
         </Link>
@@ -93,18 +96,60 @@ export default function Header() {
             <SelectValue placeholder="Language" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="en">English</SelectItem>
-            <SelectItem value="es">Español</SelectItem>
+            {Object.entries(language).map(([key, value]) => (
+              <SelectItem key={key} value={key}>
+                {value}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
-        <Button variant="outline" asChild>
-          <Link to="/auth/signin">Sign in</Link>
-        </Button>
-        <Button asChild>
-          <Link to="/auth/signup">Sign Up</Link>
-        </Button>
+        <ModeToggle />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild className="cursor-pointer">
+            <div className="flex items-center gap-2 rounded-md border border-input px-2">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src="/logo.png" alt="@shadcn" />
+                <AvatarFallback>JP</AvatarFallback>
+              </Avatar>
+              <div className="text-sm font-medium">John Doe</div>
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-[200px]">
+            <DropdownMenuLabel>
+              <div className="flex items-center gap-2">
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src="/logo.png" alt="@shadcn" />
+                  <AvatarFallback>JP</AvatarFallback>
+                </Avatar>
+                <div className="grid gap-0.5">
+                  <div className="text-sm font-medium">John Doe</div>
+                  <div className="text-xs text-muted-foreground">
+                    john@acme.inc
+                  </div>
+                </div>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link to="/profile" className="w-full cursor-pointer">
+                Profile
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild className="p-0">
+              <Form method="post" action="/logout" className="p-0 m-0">
+              
+                <Button
+                  type="submit"
+                  variant="ghost"
+                  className="w-full px-2 justify-start font-normal hover:bg-red-100 dark:hover:bg-red-100/10 dark:hover:text-red-400"
+                >
+                  Logout
+                </Button>
+              </Form>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
-      <ModeToggle />
     </header>
   );
 }

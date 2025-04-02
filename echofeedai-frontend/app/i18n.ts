@@ -1,11 +1,24 @@
-export default {
-  // This is the list of languages your application supports
-  supportedLngs: ["en", "es"],
-  // This is the language you want to use in case
-  // if the user language is not in the supportedLngs
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+import { getLocaleResources } from "./functions/i18n.load-locales";
+
+// Since getI18nSession is now async and requires a Request object,
+// we'll need to initialize with a default language first
+const defaultLanguage = "en";
+
+const resources = await getLocaleResources("public/locales");
+
+i18n.use(initReactI18next).init({
+  resources,
+  lng: defaultLanguage,
   fallbackLng: "en",
-  // The default namespace of i18next is "translation", but you can customize it here
   defaultNS: "common",
-  ns: ["common"],
-  fallbackNS: "common",
-};
+  interpolation: {
+    escapeValue: false,
+  },
+});
+
+// Language changes will need to be handled in your routes/components
+// where you have access to the Request object and can use getI18nSession
+
+export default i18n;

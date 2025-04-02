@@ -1,19 +1,18 @@
 import { createCookieSessionStorage } from "@remix-run/node";
 import { createThemeSessionResolver } from "remix-themes";
-import { User } from "~/types/user";
+import { User } from "@/types/user";
 
 // You can default to 'development' if process.env.NODE_ENV is not set
 const isProduction = process.env.NODE_ENV === "production";
 
-// ------------------------------ theme session storage ------------------------------
+// ------------------------------ theme session ------------------------------
 const themeSessionStorage = createCookieSessionStorage({
   cookie: {
-    name: "theme",
+    name: "spectral-theme",
     path: "/",
     httpOnly: true,
     sameSite: "lax",
     secrets: ["s3cr3t"],
-    // Set domain and secure only if in production
     ...(isProduction
       ? { domain: "your-production-domain.com", secure: true }
       : {}),
@@ -23,10 +22,10 @@ const themeSessionStorage = createCookieSessionStorage({
 export const themeSessionResolver =
   createThemeSessionResolver(themeSessionStorage);
 
-// ------------------------------ i18n session storage ------------------------------
+// ------------------------------ i18n session ------------------------------
 const i18nSessionStorage = createCookieSessionStorage({
   cookie: {
-    name: "i18n",
+    name: "spectral-language",
     path: "/",
     httpOnly: true,
     sameSite: "lax",
@@ -42,38 +41,13 @@ export async function getI18nSession(request: Request) {
     request.headers.get("Cookie")
   );
   return {
-    getLocale: () => session.get("locale") || "en",
-    setLocale: (locale: string) => session.set("locale", locale),
+    getLanguage: () => session.get("language") || "en",
+    setLanguage: (language: string) => session.set("language", language),
     commitI18nSession: () => i18nSessionStorage.commitSession(session),
   };
 }
 
-// ------------------------------ auth session storage ------------------------------
-
-const authSessionStorage = createCookieSessionStorage({
-  cookie: {
-    name: "auth",
-    path: "/",
-    httpOnly: true,
-    sameSite: "lax",
-    secrets: ["s3cr3t"],
-  },
-});
-
-export async function getAuthSession(request: Request) {
-  const session = await authSessionStorage.getSession(
-    request.headers.get("Cookie")
-  );
-  return {
-    getIsAuthenticated: () => session.get("isAuthenticated") || false,
-    setIsAuthenticated: (isAuthenticated: boolean) =>
-      session.set("isAuthenticated", isAuthenticated),
-    commitAuthSession: () => authSessionStorage.commitSession(session),
-  };
-}
-
-// ------------------------------ user session storage ------------------------------
-
+// ------------------------------ user session ------------------------------
 const userSessionStorage = createCookieSessionStorage({
   cookie: {
     name: "user",
@@ -81,17 +55,31 @@ const userSessionStorage = createCookieSessionStorage({
     httpOnly: true,
     sameSite: "lax",
     secrets: ["s3cr3t"],
+    maxAge: 60 * 60 * 24 * 30, // 30 days
+    ...(isProduction
+      ? { domain: "your-production-domain.com", secure: true }
+      : {}),
   },
 });
 
-export async function userSession(request: Request) {
+export async function getUserSession(request: Request) {
   const session = await userSessionStorage.getSession(
     request.headers.get("Cookie")
   );
   return {
-    getUserSession: () => session.get("user") || null,
-    setUserSession: (user: User) => session.set("user", user),
-    clearUserSession: () => userSessionStorage.destroySession(session),
+    getUser: () => session.get("user") || null,
+    getRole: () => session.get("role") || null,
+    getIsRole: (roles: string[]): boolean => {
+      const userRole = session.get("role");
+      if (roles.length === 0) return true;
+      return roles.includes(userRole);
+    },
+    getIsAuthenticated: () => session.get("isAuthenticated") || false,
+    setUser: (user: User) => {
+      session.set("user", user);
+      session.set("isAuthenticated", true);
+    },
     commitUserSession: () => userSessionStorage.commitSession(session),
+    destroyUserSession: () => userSessionStorage.destroySession(session),
   };
 }
