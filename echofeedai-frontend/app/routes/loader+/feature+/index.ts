@@ -6,7 +6,7 @@ export async function loader({
 }: LoaderFunctionArgs): Promise<Response | null> {
   // If user is not authenticated, redirect to signin
   const session = await userSession(request);
-  const isAuthenticated = session.getUserSession().isAuthenticated;
+  const isAuthenticated = session.isAuthenticated();
   if (!isAuthenticated) {
     return redirect("/auth/signin");
   }

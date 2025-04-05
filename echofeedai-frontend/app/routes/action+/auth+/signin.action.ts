@@ -32,13 +32,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   // signin
   const signinResult = await signin(parsedSigninPayload.data);
-
-  const cookies = document.cookie.split(";").reduce((acc, cookie) => {
-    const [key, value] = cookie.trim().split("=");
-    acc[key] = value;
-    return acc;
-  }, {} as { [key: string]: string });
-  console.log("debug log 0 - signin.action.ts", cookies);
+  console.log("debug log 0 - signin.action.ts", signinResult);
 
   if (!signinResult.ok) {
     // 404
@@ -86,15 +80,38 @@ export async function action({ request }: ActionFunctionArgs) {
   // we will set the access token in the cookie
   // we will set the refresh token in the cookie
   // we will redirect to the home page
-
+  const cookies = signinResult.headers
+    .get("set-cookie")
+    ?.split(",") as string[];
+  console.log("debug log 0 - signin.action.ts", cookies);
+  if (cookies.length !== 4) {
+    const result: ActionResultError<SigninPayload> = {
+      success: false,
+      origin: "email",
+      message: "Failed to signin",
+      data: parsedSigninPayload.data,
+    };
+    return Response.json(result, { status: 500 });
+  }
   const signinData = await signinResult.json();
+  console.log("debug log 1 - signin.action.ts", signinData);
   const session = await userSession(request);
-  session.setUserSession(signinData);
-
+  console.log("debug log 2 - signin.action.ts", session);
+  session.setUser(cookies[0], cookies[2]);
+  console.log(
+    "debug log 3 - signin.action.ts",
+    session.getUser(),
+    session.getIsRole(["initiator", "participant"])
+  );
   const result: ActionResultSuccess<User> = {
     success: true,
     message: "Signin successful",
-    data: { id: signinData.id, email: signinData.email },
+    data: null,
   };
-  return Response.json(result, { status: 200 });
+  return Response.json(result, {
+    status: 200,
+    headers: {
+      "Set-Cookie": await session.commitSession(),
+    },
+  });
 }

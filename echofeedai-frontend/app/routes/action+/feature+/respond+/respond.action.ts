@@ -22,12 +22,12 @@ export async function action({
 
   // Call your backend API to process feedback and get coverage
   const response = await fetch(
-    `${import.meta.env.VITE_APP_MODEL_BACKEND_USER_URL}/get-coverage`,
+    `${process.env.VITE_APP_MODEL_BACKEND_USER_URL}/get-coverage`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": import.meta.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY,
       },
       body: JSON.stringify({
         question_map: questions,

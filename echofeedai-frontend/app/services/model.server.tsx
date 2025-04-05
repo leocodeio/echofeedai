@@ -3,14 +3,14 @@ import { TopicsPayload } from "@/types/topic";
 // start ------------------------------ generate ------------------------------
 export const generate = async (topicsPayload: TopicsPayload) => {
   try {
-    const generateUri = `${import.meta.env.VITE_APP_MODEL_BACKEND_USER_URL}/generate-questions`;
+    const generateUri = `${process.env.VITE_APP_MODEL_BACKEND_USER_URL}/generate-questions`;
     console.log(generateUri);
     const generateResponse = await fetch(generateUri, {
       method: "POST",
       body: JSON.stringify(topicsPayload),
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": import.meta.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY,
       },
       credentials: "include",
       mode: "cors",

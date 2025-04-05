@@ -8,15 +8,15 @@ export const signup = async (signupPayload: SignupPayload) => {
     console.log(signupPayloadWithoutRole);
     const signupUri =
       role === "initiator"
-        ? `${import.meta.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/signup`
-        : `${import.meta.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL}/signup`;
+        ? `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/signup`
+        : `${process.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL}/signup`;
     console.log(signupUri);
     const signupResponse = await fetch(signupUri, {
       method: "POST",
       body: JSON.stringify(signupPayloadWithoutRole),
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": import.meta.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY!,
       },
       credentials: "include",
       mode: "cors",
@@ -36,14 +36,14 @@ export const signin = async (signinPayload: SigninPayload) => {
     const { role, ...signinPayloadWithoutRole } = signinPayload;
     const signinUri =
       role === "initiator"
-        ? `${import.meta.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/signin`
-        : `${import.meta.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL}/signin`;
+        ? `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/signin`
+        : `${process.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL}/signin`;
     const signinResponse = await fetch(signinUri, {
       method: "POST",
       body: JSON.stringify(signinPayloadWithoutRole),
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": import.meta.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY!,
       },
       credentials: "include",
       mode: "cors",
@@ -59,13 +59,13 @@ export const signin = async (signinPayload: SigninPayload) => {
 export const logout = async (role: string) => {
   const logoutUri =
     role === "initiator"
-      ? `${import.meta.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/signout`
-      : `${import.meta.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL}/signout`;
+      ? `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/signout`
+      : `${process.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL}/signout`;
   const logoutResponse = await fetch(logoutUri, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "x-api-key": import.meta.env.VITE_APP_API_KEY,
+      "x-api-key": process.env.VITE_APP_API_KEY!,
     },
     credentials: "include",
     mode: "cors",
@@ -77,13 +77,13 @@ export const logout = async (role: string) => {
 export const me = async (role: string) => {
   const meUri =
     role === "initiator"
-      ? `${import.meta.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/me`
-      : `${import.meta.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL}/me`;
+      ? `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/me`
+      : `${process.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL}/me`;
   const meResponse = await fetch(meUri, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "x-api-key": import.meta.env.VITE_APP_API_KEY,
+      "x-api-key": process.env.VITE_APP_API_KEY!,
     },
     credentials: "include",
     mode: "cors",

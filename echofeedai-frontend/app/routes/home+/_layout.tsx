@@ -1,5 +1,5 @@
 import CommonHeader from "@/components/common/CommonHeader";
-import { Outlet } from "react-router-dom";
+import { Outlet } from "@remix-run/react";
 
 export default function HomeLayout() {
   return (

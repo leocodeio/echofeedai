@@ -3,11 +3,11 @@ import { getFeedbackInitiative } from "./source.server";
 // start ------------------------------ getAllMailTemplateIdentifier ------------------------------
 export const getAllMailTemplateIdentifier = async () => {
   const response = await fetch(
-    `${import.meta.env.VITE_APP_NM_BACKEND_USER_URL}/template/get-all`,
+    `${process.env.VITE_APP_NM_BACKEND_USER_URL}/template/get-all`,
     {
       method: "GET",
       headers: {
-        "x-api-key": import.meta.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY!,
         "Content-Type": "application/json",
       },
       credentials: "include",
@@ -30,11 +30,11 @@ export const sendMail = async (mailPayload: { feedbackInitiateId: string }) => {
   console.log("templateIdentifier", templateIdentifier);
   // promise all
   const response = await fetch(
-    `${import.meta.env.VITE_APP_NM_BACKEND_USER_URL}/participants/send-mail`,
+    `${process.env.VITE_APP_NM_BACKEND_USER_URL}/participants/send-mail`,
     {
       method: "POST",
       headers: {
-        "x-api-key": import.meta.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY!,
         "Content-Type": "application/json",
       },
       credentials: "include",

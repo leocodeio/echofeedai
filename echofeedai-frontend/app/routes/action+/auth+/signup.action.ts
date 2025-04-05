@@ -13,7 +13,7 @@ import { signinPayloadSchema } from "@/services/schemas/signin.schema";
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
-  console.log(data);  
+  console.log(data);
   const signupPayload = {
     email: data.email,
     password: data.password,
@@ -156,15 +156,38 @@ export async function action({ request }: ActionFunctionArgs) {
   // we will set the access token in the cookie
   // we will set the refresh token in the cookie
   // we will redirect to the home page
-
+  const cookies = signinResult.headers
+    .get("set-cookie")
+    ?.split(",") as string[];
+  console.log("debug log 0 - signin.action.ts", cookies);
+  if (cookies.length !== 4) {
+    const result: ActionResultError<SigninPayload> = {
+      success: false,
+      origin: "email",
+      message: "Failed to signin",
+      data: parsedSigninPayload.data,
+    };
+    return Response.json(result, { status: 500 });
+  }
   const signinData = await signinResult.json();
+  console.log("debug log 1 - signin.action.ts", signinData);
   const session = await userSession(request);
-  session.setUserSession(signinData);
-
+  console.log("debug log 2 - signin.action.ts", session);
+  session.setUser(cookies[0], cookies[2]);
+  console.log(
+    "debug log 3 - signin.action.ts",
+    session.getUser(),
+    session.getIsRole(["initiator", "participant"])
+  );
   const result: ActionResultSuccess<User> = {
     success: true,
-    message: "Signed Up and Signed In successfully",
-    data: { id: signinData.id, email: signinData.email },
+    message: "Signin successful",
+    data: null,
   };
-  return Response.json(result, { status: 200 });
+  return Response.json(result, {
+    status: 200,
+    headers: {
+      "Set-Cookie": await session.commitSession(),
+    },
+  });
 }
