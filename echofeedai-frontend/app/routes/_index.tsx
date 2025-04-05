@@ -1,5 +1,5 @@
 import type { MetaFunction } from "@remix-run/node";
-import Header from "~/components/landing/header";
+import LandingHeader from "~/components/landing/LandingHeader";
 import { useTranslation } from "react-i18next";
 
 export const meta: MetaFunction = () => {
@@ -14,7 +14,7 @@ export default function Index() {
 
   return (
     <div className="flex h-screen items-center justify-center">
-      <Header />
+      <LandingHeader />
       <h1 className="text-4xl font-bold">{t("welcome")}</h1>
     </div>
   );

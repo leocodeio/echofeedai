@@ -24,12 +24,6 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
-  /* shadcn */
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
-  },
   server: {
     hmr: {
       overlay: true,
