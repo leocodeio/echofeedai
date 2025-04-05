@@ -24,6 +24,9 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
+  ssr: {
+    noExternal: ["react-easy-sort", "tslib", "emblor"],
+  },
   server: {
     hmr: {
       overlay: true,
