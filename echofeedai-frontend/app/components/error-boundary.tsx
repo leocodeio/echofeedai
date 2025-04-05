@@ -4,10 +4,10 @@ import {
   useParams,
   useRouteError,
 } from "@remix-run/react";
-import { getErrorMessage } from "@/utils/misc";
+import { getErrorMessage } from "~/utils/misc";
 import { AlertCircle, Ban, Bug } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { Card, CardContent, CardHeader } from "~/components/ui/card";
 
 type StatusHandler = (info: {
   error: ErrorResponse;

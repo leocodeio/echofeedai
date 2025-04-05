@@ -1,5 +1,13 @@
 import { Link } from "@remix-run/react";
-import { Button } from "@/components/ui/button";
+import { MetaFunction } from "@remix-run/node";
+import { Button } from "~/components/ui/button";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Spectral Auth" },
+    { name: "description", content: "Authentication for Spectral" },
+  ];
+};
 
 export default function AuthIndex() {
   return (

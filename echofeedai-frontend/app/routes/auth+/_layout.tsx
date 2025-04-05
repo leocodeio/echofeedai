@@ -1,5 +1,5 @@
 import { Outlet } from "@remix-run/react";
-import { Banner } from "@/components/common/banner";
+import { Banner } from "~/components/common/banner";
 
 export default function AuthLayout() {
   return (

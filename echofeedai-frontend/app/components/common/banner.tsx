@@ -1,5 +1,5 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { banner } from "@/components/common/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { banner } from "./utils";
 
 export function Banner() {
   return (

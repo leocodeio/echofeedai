@@ -1,6 +1,6 @@
-import { LandingHero } from "@/components/landing/LandingHero";
-import LandingHeader from "@/components/landing/LandingHeader";
-import { MetaFunction } from "@remix-run/node";
+import type { MetaFunction } from "@remix-run/node";
+import Header from "~/components/landing/header";
+import { useTranslation } from "react-i18next";
 
 export const meta: MetaFunction = () => {
   return [
@@ -10,10 +10,12 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
+  const { t } = useTranslation();
+
   return (
     <div className="flex h-screen items-center justify-center">
-      <LandingHeader />
-      <LandingHero />
+      <Header />
+      <h1 className="text-4xl font-bold">{t("welcome")}</h1>
     </div>
   );
 }
