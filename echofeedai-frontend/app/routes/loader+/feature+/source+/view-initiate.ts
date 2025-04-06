@@ -4,14 +4,15 @@ import {
 } from "@/services/source.server";
 import { redirect, type LoaderFunctionArgs } from "@remix-run/node";
 import { ActionResultError } from "@/types/action-result";
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const feedbackInitiateId = params.id;
   if (!feedbackInitiateId) {
     return redirect("/feature/source");
   }
   // get feedback initiative
   const getFeedbackInitiativesResponse = await getFeedbackInitiative(
-    feedbackInitiateId
+    feedbackInitiateId,
+    request
   );
   if (!getFeedbackInitiativesResponse.ok) {
     const result: ActionResultError<any> = {
@@ -27,9 +28,10 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   const feedbackInitiativeData = feedbackInitiative.payload as any;
 
   // get responses
-  
+
   const getFeedbackResponseResponse = await getFeedbackResponse(
-    feedbackInitiateId
+    feedbackInitiateId,
+    request
   );
   if (!getFeedbackResponseResponse.ok) {
     const result: ActionResultError<any> = {

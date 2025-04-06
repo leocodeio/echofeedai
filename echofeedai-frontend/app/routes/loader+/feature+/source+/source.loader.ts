@@ -20,14 +20,14 @@ export async function loader({ request }: LoaderFunctionArgs): Promise<any> {
   }
 
   try {
-    const response = await getSources();
+    const response = await getSources(request);
 
     if (!response.ok) {
       throw new Error("Failed to fetch sources");
     }
 
     const data = await response.json();
-    return { sources: data.payload };
+    return { sources: data.payload || [] };
   } catch (error) {
     return {
       error: error instanceof Error ? error.message : "An error occurred",

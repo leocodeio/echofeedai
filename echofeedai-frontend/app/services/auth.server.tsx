@@ -1,4 +1,5 @@
 import { SignupPayload, SigninPayload } from "@/types/user";
+import { userSession } from "./sessions.server";
 
 // start ------------------------------ signup ------------------------------
 export const signup = async (signupPayload: SignupPayload) => {
@@ -56,11 +57,9 @@ export const signin = async (signinPayload: SigninPayload) => {
 };
 // end ------------------------------ signin ------------------------------
 // start ------------------------------ logout ------------------------------
-export const logout = async (
-  role: string,
-  accessToken: string,
-  refreshToken: string
-) => {
+export const logout = async (role: string, request: Request) => {
+  const session = await userSession(request);
+  const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   const logoutUri =
     role === "initiator"
       ? `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/signout`
@@ -79,7 +78,9 @@ export const logout = async (
 };
 // end ------------------------------ logout ------------------------------
 // start ------------------------------ me ------------------------------
-export const me = async (role: string) => {
+export const me = async (role: string, request: Request) => {
+  const session = await userSession(request);
+  const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   const meUri =
     role === "initiator"
       ? `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/me`
@@ -89,6 +90,7 @@ export const me = async (role: string) => {
     headers: {
       "Content-Type": "application/json",
       "x-api-key": process.env.VITE_APP_API_KEY!,
+      Cookie: `access-token=${accessToken}; refresh-token=${refreshToken};`,
     },
     credentials: "include",
     mode: "cors",

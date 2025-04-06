@@ -15,7 +15,10 @@ import { Button } from "@/components/ui/button";
 import { useParams } from "@remix-run/react";
 import { toast } from "@/hooks/use-toast";
 
-export const InitiateView = () => {
+export const loader = InitiateViewLoader;
+export const action = SendEmailsAction;
+
+const InitiateView = () => {
   // [TODO] - any?
   // loader
   const { topics, questions, responses } = useLoaderData<
@@ -228,3 +231,5 @@ export const InitiateView = () => {
     </div>
   );
 };
+
+export default InitiateView;

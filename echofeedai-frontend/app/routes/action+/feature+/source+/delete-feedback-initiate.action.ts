@@ -3,6 +3,7 @@ import { deleteFeedbackInitiate } from "@/services/source.server";
 import { ActionResult, ActionResultError } from "@/types/action-result";
 export async function action({
   params,
+  request,
 }: ActionFunctionArgs): Promise<ActionResult<any> | Response> {
   if (!params.id) {
     const result: ActionResultError<any> = {
@@ -15,7 +16,7 @@ export async function action({
   }
 
   try {
-    const response = await deleteFeedbackInitiate(params.id);
+    const response = await deleteFeedbackInitiate(params.id, request);
 
     if (!response.ok) {
       const result: ActionResultError<any> = {

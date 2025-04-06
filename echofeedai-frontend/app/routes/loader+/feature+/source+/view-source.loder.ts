@@ -5,13 +5,13 @@ import {
 import { getAllMailTemplateIdentifier } from "@/services/nm.server";
 import { redirect, type LoaderFunctionArgs } from "@remix-run/node";
 import { ActionResultError } from "@/types/action-result";
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const sourceId = params.id;
   if (!sourceId) {
     return redirect("/feature/source");
   }
   // get participants for the source
-  const getParticipantsResponse = await getParticipants(sourceId);
+  const getParticipantsResponse = await getParticipants(sourceId, request);
   if (!getParticipantsResponse.ok) {
     const result: ActionResultError<any> = {
       success: false,
@@ -25,7 +25,10 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   const participantsData = participants.payload;
 
   // get feedback initiators for the source
-  const getFeedbackInitiativesResponse = await getFeedbackInitiatives(sourceId);
+  const getFeedbackInitiativesResponse = await getFeedbackInitiatives(
+    sourceId,
+    request
+  );
   if (!getFeedbackInitiativesResponse.ok) {
     const result: ActionResultError<any> = {
       success: false,
@@ -39,9 +42,10 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   const feedbackInitiativesData = feedbackInitiatives.payload;
 
   // get mail template identifier for the source
-  const getMailTemplateIdentifierResponse =
-    await getAllMailTemplateIdentifier();
-    
+  const getMailTemplateIdentifierResponse = await getAllMailTemplateIdentifier(
+    request
+  );
+
   if (!getMailTemplateIdentifierResponse.ok) {
     const result: ActionResultError<any> = {
       success: false,

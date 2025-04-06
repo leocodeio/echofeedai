@@ -1,9 +1,12 @@
 import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import { deleteSource } from "@/services/source.server";
 import { ActionResult, ActionResultError } from "@/types/action-result";
+
 export async function action({
   params,
+  request,
 }: ActionFunctionArgs): Promise<ActionResult<any> | Response> {
+  console.log("deleteSourceAction", params);
   if (!params.id) {
     const result: ActionResultError<any> = {
       success: false,
@@ -11,12 +14,13 @@ export async function action({
       origin: "source",
       data: null,
     };
+    console.log("Source ID is required", result);
     return result;
   }
 
   try {
-    const response = await deleteSource(params.id);
-
+    const response = await deleteSource(params.id, request);
+    console.log("deleteSourceResponse", response);
     if (!response.ok) {
       const result: ActionResultError<any> = {
         success: false,

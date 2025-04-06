@@ -87,7 +87,7 @@ const SourceList = () => {
 
   const handleDeleteSource = (id: string) => {
     submit(null, {
-      method: "POST",
+      method: "post",
       action: `/feature/source/delete/${id}`,
     });
   };
@@ -277,6 +277,4 @@ const SourceList = () => {
   );
 };
 
-export default function Source() {
-  return <SourceList />;
-}
+export default SourceList;

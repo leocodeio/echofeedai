@@ -1,7 +1,10 @@
 import { FeedbackInitiativePayload } from "@/types/initiate";
 import { SourcePayload } from "@/types/source";
+import { userSession } from "@/services/sessions.server";
 // start ------------------------------ getSources ------------------------------
-export const getSources = async () => {
+export const getSources = async (request: Request) => {
+  const session = await userSession(request);
+  const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   try {
     const sourcesUri = `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/sources`;
     const sourcesResponse = await fetch(sourcesUri, {
@@ -9,6 +12,7 @@ export const getSources = async () => {
       headers: {
         "Content-Type": "application/json",
         "x-api-key": process.env.VITE_APP_API_KEY!,
+        Cookie: `access-token=${accessToken}; refresh-token=${refreshToken};`,
       },
       credentials: "include",
       mode: "cors",
@@ -23,7 +27,9 @@ export const getSources = async () => {
 // end ------------------------------ getSources ------------------------------
 
 // start ------------------------------ getSource ------------------------------
-export const getSource = async (id: string) => {
+export const getSource = async (id: string, request: Request) => {
+  const session = await userSession(request);
+  const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   try {
     const sourceUri = `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/source/${id}`;
     const sourceResponse = await fetch(sourceUri, {
@@ -31,6 +37,7 @@ export const getSource = async (id: string) => {
       headers: {
         "Content-Type": "application/json",
         "x-api-key": process.env.VITE_APP_API_KEY!,
+        Cookie: `access-token=${accessToken}; refresh-token=${refreshToken};`,
       },
       credentials: "include",
       mode: "cors",
@@ -46,7 +53,12 @@ export const getSource = async (id: string) => {
 // end ------------------------------ getSource ------------------------------
 
 // start ------------------------------ createSource ------------------------------
-export const createSource = async (sourcePayload: SourcePayload) => {
+export const createSource = async (
+  sourcePayload: SourcePayload,
+  request: Request
+) => {
+  const session = await userSession(request);
+  const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   try {
     const createSourceUri = `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/add-source`;
     const createSourceResponse = await fetch(createSourceUri, {
@@ -55,6 +67,7 @@ export const createSource = async (sourcePayload: SourcePayload) => {
       headers: {
         "Content-Type": "application/json",
         "x-api-key": process.env.VITE_APP_API_KEY!,
+        Cookie: `access-token=${accessToken}; refresh-token=${refreshToken};`,
       },
       credentials: "include",
       mode: "cors",
@@ -71,8 +84,11 @@ export const createSource = async (sourcePayload: SourcePayload) => {
 // start ------------------------------ updateSource ------------------------------
 export const updateSource = async (
   id: string,
-  sourcePayload: SourcePayload
+  sourcePayload: SourcePayload,
+  request: Request
 ) => {
+  const session = await userSession(request);
+  const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   try {
     const updateSourceUri = `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/update-source/${id}`;
     const updateSourceResponse = await fetch(updateSourceUri, {
@@ -81,6 +97,7 @@ export const updateSource = async (
       headers: {
         "Content-Type": "application/json",
         "x-api-key": process.env.VITE_APP_API_KEY!,
+        Cookie: `access-token=${accessToken}; refresh-token=${refreshToken};`,
       },
       credentials: "include",
       mode: "cors",
@@ -92,10 +109,13 @@ export const updateSource = async (
     throw new Error("Backend Server did not respond correctly");
   }
 };
-// end ------------------------------ updateSource ------------------------------
+//   end ------------------------------ updateSource ------------------------------
 
 // start ------------------------------ deleteSource ------------------------------
-export const deleteSource = async (id: string) => {
+export const deleteSource = async (id: string, request: Request) => {
+  console.log("deleteSource", id);
+  const session = await userSession(request);
+  const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   try {
     const deleteSourceUri = `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/delete-source/${id}`;
     const deleteSourceResponse = await fetch(deleteSourceUri, {
@@ -103,6 +123,7 @@ export const deleteSource = async (id: string) => {
       headers: {
         "Content-Type": "application/json",
         "x-api-key": process.env.VITE_APP_API_KEY!,
+        Cookie: `access-token=${accessToken}; refresh-token=${refreshToken};`,
       },
       credentials: "include",
       mode: "cors",
@@ -117,7 +138,9 @@ export const deleteSource = async (id: string) => {
 // end ------------------------------ deleteSource ------------------------------
 
 // start ------------------------------ getParticipantByName ------------------------------
-export const getParticipantByName = async (name: string) => {
+export const getParticipantByName = async (name: string, request: Request) => {
+  const session = await userSession(request);
+  const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   try {
     const participantUri = `${process.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL}/byName/${name}`;
     const participantResponse = await fetch(participantUri, {
@@ -125,6 +148,7 @@ export const getParticipantByName = async (name: string) => {
       headers: {
         "Content-Type": "application/json",
         "x-api-key": process.env.VITE_APP_API_KEY!,
+        Cookie: `access-token=${accessToken}; refresh-token=${refreshToken};`,
       },
       credentials: "include",
       mode: "cors",
@@ -140,8 +164,11 @@ export const getParticipantByName = async (name: string) => {
 // start ------------------------------ addParticipantToSource ------------------------------
 export const addParticipantToSource = async (
   sourceId: string,
-  participantId: string
+  participantId: string,
+  request: Request
 ) => {
+  const session = await userSession(request);
+  const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   try {
     const addParticipantUri = `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/add-participant`;
     const addParticipantResponse = await fetch(addParticipantUri, {
@@ -150,6 +177,7 @@ export const addParticipantToSource = async (
       headers: {
         "Content-Type": "application/json",
         "x-api-key": process.env.VITE_APP_API_KEY!,
+        Cookie: `access-token=${accessToken}; refresh-token=${refreshToken};`,
       },
       credentials: "include",
       mode: "cors",
@@ -164,7 +192,9 @@ export const addParticipantToSource = async (
 // end ------------------------------ addParticipantToSource ------------------------------
 
 // start ------------------------------ getParticipants ------------------------------
-export const getParticipants = async (sourceId: string) => {
+export const getParticipants = async (sourceId: string, request: Request) => {
+  const session = await userSession(request);
+  const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   try {
     const participantsUri = `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/source/participants/${sourceId}`;
     const participantsResponse = await fetch(participantsUri, {
@@ -172,6 +202,7 @@ export const getParticipants = async (sourceId: string) => {
       headers: {
         "Content-Type": "application/json",
         "x-api-key": process.env.VITE_APP_API_KEY!,
+        Cookie: `access-token=${accessToken}; refresh-token=${refreshToken};`,
       },
       credentials: "include",
       mode: "cors",
@@ -186,7 +217,12 @@ export const getParticipants = async (sourceId: string) => {
 // end ------------------------------ getParticipants ------------------------------
 
 // start ------------------------------ getFeedbackInitiatives ------------------------------
-export const getFeedbackInitiatives = async (sourceId: string) => {
+export const getFeedbackInitiatives = async (
+  sourceId: string,
+  request: Request
+) => {
+  const session = await userSession(request);
+  const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   try {
     const feedbackInitiatorsUri = `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/feedback-initiates/${sourceId}`;
     const feedbackInitiatorsResponse = await fetch(feedbackInitiatorsUri, {
@@ -194,6 +230,7 @@ export const getFeedbackInitiatives = async (sourceId: string) => {
       headers: {
         "Content-Type": "application/json",
         "x-api-key": process.env.VITE_APP_API_KEY!,
+        Cookie: `access-token=${accessToken}; refresh-token=${refreshToken};`,
       },
       credentials: "include",
       mode: "cors",
@@ -208,7 +245,9 @@ export const getFeedbackInitiatives = async (sourceId: string) => {
 // end ------------------------------ getFeedbackInitiatives ------------------------------
 
 // start ------------------------------ deleteFeedbackInitiate ------------------------------
-export const deleteFeedbackInitiate = async (id: string) => {
+export const deleteFeedbackInitiate = async (id: string, request: Request) => {
+  const session = await userSession(request);
+  const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   try {
     const deleteFeedbackInitiateUri = `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/delete-feedback-initiate/${id}`;
     const deleteFeedbackInitiateResponse = await fetch(
@@ -218,6 +257,7 @@ export const deleteFeedbackInitiate = async (id: string) => {
         headers: {
           "Content-Type": "application/json",
           "x-api-key": process.env.VITE_APP_API_KEY!,
+          Cookie: `access-token=${accessToken}; refresh-token=${refreshToken};`,
         },
         credentials: "include",
         mode: "cors",
@@ -233,8 +273,11 @@ export const deleteFeedbackInitiate = async (id: string) => {
 // end ------------------------------ deleteFeedbackInitiate ------------------------------
 // start ------------------------------ createFeedbackInitiative ------------------------------
 export const createFeedbackInitiative = async (
-  feedbackInitiativePayload: FeedbackInitiativePayload
+  feedbackInitiativePayload: FeedbackInitiativePayload,
+  request: Request
 ) => {
+  const session = await userSession(request);
+  const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   try {
     const createFeedbackInitiativeUri = `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/initiate-feedback`;
     const createFeedbackInitiativeResponse = await fetch(
@@ -245,6 +288,7 @@ export const createFeedbackInitiative = async (
         headers: {
           "Content-Type": "application/json",
           "x-api-key": process.env.VITE_APP_API_KEY!,
+          Cookie: `access-token=${accessToken}; refresh-token=${refreshToken};`,
         },
         credentials: "include",
         mode: "cors",
@@ -262,7 +306,9 @@ export const createFeedbackInitiative = async (
 };
 // end ------------------------------ createFeedbackInitiative ------------------------------
 // start ------------------------------ getFeedbackInitiative ------------------------------
-export const getFeedbackInitiative = async (id: string) => {
+export const getFeedbackInitiative = async (id: string, request: Request) => {
+  const session = await userSession(request);
+  const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   try {
     const feedbackInitiativeUri = `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/feedback-initiate/${id}`;
     const feedbackInitiativeResponse = await fetch(feedbackInitiativeUri, {
@@ -270,6 +316,7 @@ export const getFeedbackInitiative = async (id: string) => {
       headers: {
         "Content-Type": "application/json",
         "x-api-key": process.env.VITE_APP_API_KEY!,
+        Cookie: `access-token=${accessToken}; refresh-token=${refreshToken};`,
       },
       credentials: "include",
       mode: "cors",
@@ -283,7 +330,9 @@ export const getFeedbackInitiative = async (id: string) => {
 };
 // end ------------------------------ getFeedbackInitiative ------------------------------
 // start ------------------------------ getTopics ------------------------------
-export const getTopics = async () => {
+export const getTopics = async (request: Request) => {
+  const session = await userSession(request);
+  const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   try {
     const topicsUri = `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/topics`;
     const topicsResponse = await fetch(topicsUri, {
@@ -291,6 +340,7 @@ export const getTopics = async () => {
       headers: {
         "Content-Type": "application/json",
         "x-api-key": process.env.VITE_APP_API_KEY!,
+        Cookie: `access-token=${accessToken}; refresh-token=${refreshToken};`,
       },
       credentials: "include",
       mode: "cors",
@@ -304,7 +354,9 @@ export const getTopics = async () => {
 };
 // end ------------------------------ getTopics ------------------------------
 // start ------------------------------ getParticipantById ------------------------------
-export const getParticipantById = async (id: string) => {
+export const getParticipantById = async (id: string, request: Request) => {
+  const session = await userSession(request);
+  const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   try {
     const participantUri = `${process.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL}/byId/${id}`;
     const participantResponse = await fetch(participantUri, {
@@ -312,6 +364,7 @@ export const getParticipantById = async (id: string) => {
       headers: {
         "Content-Type": "application/json",
         "x-api-key": process.env.VITE_APP_API_KEY!,
+        Cookie: `access-token=${accessToken}; refresh-token=${refreshToken};`,
       },
       credentials: "include",
       mode: "cors",
@@ -325,7 +378,12 @@ export const getParticipantById = async (id: string) => {
 };
 // end ------------------------------ getParticipantById ------------------------------
 // start ------------------------------ canRespond ------------------------------
-export const canRespond = async (feedbackInitiateId: string) => {
+export const canRespond = async (
+  feedbackInitiateId: string,
+  request: Request
+) => {
+  const session = await userSession(request);
+  const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   try {
     const canRespondUri = `${process.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL}/can-respond/${feedbackInitiateId}`;
     const canRespondResponse = await fetch(canRespondUri, {
@@ -333,6 +391,7 @@ export const canRespond = async (feedbackInitiateId: string) => {
       headers: {
         "Content-Type": "application/json",
         "x-api-key": process.env.VITE_APP_API_KEY!,
+        Cookie: `access-token=${accessToken}; refresh-token=${refreshToken};`,
       },
       credentials: "include",
       mode: "cors",
@@ -348,8 +407,11 @@ export const canRespond = async (feedbackInitiateId: string) => {
 // start ------------------------------ addFeedbackResponse ------------------------------
 export const addFeedbackResponse = async (
   feedbackInitiateId: string,
-  response: string
+  response: string,
+  request: Request
 ) => {
+  const session = await userSession(request);
+  const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   try {
     const addFeedbackResponseUri = `${process.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL}/add-response/${feedbackInitiateId}`;
     const addFeedbackResponseResponse = await fetch(addFeedbackResponseUri, {
@@ -358,6 +420,7 @@ export const addFeedbackResponse = async (
       headers: {
         "Content-Type": "application/json",
         "x-api-key": process.env.VITE_APP_API_KEY!,
+        Cookie: `access-token=${accessToken}; refresh-token=${refreshToken};`,
       },
       credentials: "include",
       mode: "cors",
@@ -371,7 +434,12 @@ export const addFeedbackResponse = async (
 };
 // end ------------------------------ addFeedbackResponse ------------------------------
 // start ------------------------------ getFeedbackResponse ------------------------------
-export const getFeedbackResponse = async (feedbackInitiateId: string) => {
+export const getFeedbackResponse = async (
+  feedbackInitiateId: string,
+  request: Request
+) => {
+  const session = await userSession(request);
+  const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   try {
     const getFeedbackResponseUri = `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/get-response/${feedbackInitiateId}`;
     const getFeedbackResponseResponse = await fetch(getFeedbackResponseUri, {
@@ -379,6 +447,7 @@ export const getFeedbackResponse = async (feedbackInitiateId: string) => {
       headers: {
         "Content-Type": "application/json",
         "x-api-key": process.env.VITE_APP_API_KEY!,
+        Cookie: `access-token=${accessToken}; refresh-token=${refreshToken};`,
       },
       credentials: "include",
       mode: "cors",
@@ -390,5 +459,5 @@ export const getFeedbackResponse = async (feedbackInitiateId: string) => {
     console.error("Get feedback response error - source.server.tsx", error);
     throw new Error("Backend Server did not respond correctly");
   }
-};  
+};
 // end ------------------------------ getFeedbackResponse ------------------------------

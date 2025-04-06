@@ -40,7 +40,10 @@ import { action as SourceViewAction } from "@/routes/action+/feature+/source+/cr
 import { toast } from "@/hooks/use-toast";
 import { Tag, TagInput } from "emblor";
 
-export const SourceView = () => {
+export const loader = SourceViewLoader;
+export const action = SourceViewAction;
+
+const SourceView = () => {
   // [TODO] - any?
   const { participants, feedbackInitiatives, mailTemplateIdentifiers } =
     useLoaderData<typeof SourceViewLoader>() as {
@@ -93,13 +96,13 @@ export const SourceView = () => {
 
   const handleDeleteFeedbackInitiative = (id: string) => {
     submit(null, {
-      method: "DELETE",
+      method: "post",
       action: `/feature/source/delete-feedback-initiate/${id}`,
     });
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="container mx-auto flex flex-col gap-6">
       {/* Error */}
       {error && (
         <Alert variant="destructive" className="mb-6">
@@ -263,3 +266,5 @@ export const SourceView = () => {
     </div>
   );
 };
+
+export default SourceView;

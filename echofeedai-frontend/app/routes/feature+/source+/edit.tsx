@@ -18,7 +18,10 @@ import { loader as EditSourceLoader } from "@/routes/loader+/feature+/source+/ed
 import { action as EditSourceAction } from "@/routes/action+/feature+/source+/edit-source.action";
 import { Form } from "@remix-run/react";
 
-export const EditSource = () => {
+export const loader = EditSourceLoader;
+export const action = EditSourceAction;
+
+const EditSource = () => {
   const [source, setSource] = useState<SourceType | null>(null);
   const [companyName, setCompanyName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -114,3 +117,5 @@ export const EditSource = () => {
     </div>
   );
 };
+
+export default EditSource;
