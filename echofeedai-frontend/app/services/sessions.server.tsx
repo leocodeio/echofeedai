@@ -1,6 +1,5 @@
 import { createCookie, createCookieSessionStorage } from "@remix-run/node";
 import { createThemeSessionResolver } from "remix-themes";
-import { User } from "~/types/user";
 import { jwtDecode } from "jwt-decode";
 
 // You can default to 'development' if process.env.NODE_ENV is not set
@@ -120,6 +119,14 @@ export async function userSession(request: Request) {
     getUserSession: () => session.get("user") || null,
     setUser: (accessToken: string, refreshToken: string) => {
       session.set("user", { accessToken, refreshToken });
+      session.set("accessToken", accessToken);
+      session.set("refreshToken", refreshToken);
+    },
+    getAcessAndRefreshToken: () => {
+      return {
+        accessToken: session.get("accessToken")?.split("=")[1],
+        refreshToken: session.get("refreshToken")?.split("=")[1],
+      };
     },
     removeUser: () => userSessionStorage.destroySession(session),
     commitSession: () => userSessionStorage.commitSession(session),

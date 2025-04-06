@@ -10,8 +10,7 @@ export async function action({ request }: ActionFunctionArgs) {
     return redirect("/");
   }
   console.log("debug log 2 - logout.action.ts", role);
-  const accessToken = session.getUser()?.accessToken;
-  const refreshToken = session.getUser()?.refreshToken;
+  const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   const logoutResponse = await logout(role, accessToken, refreshToken);
   console.log("debug log 3 - logout.action.ts", logoutResponse);
   console.log("debug log 4 - logout.action.ts", role);

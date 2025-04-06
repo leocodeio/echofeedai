@@ -97,7 +97,8 @@ export async function action({ request }: ActionFunctionArgs) {
   console.log("debug log 1 - signin.action.ts", signinData);
   const session = await userSession(request);
   console.log("debug log 2 - signin.action.ts", session);
-  session.setUser(cookies[0], cookies[2]);
+  session.setUser(cookies[0] + "," + cookies[1], cookies[2] + "," + cookies[3]);
+  console.log("debug log 3 - signin.action.ts", session.getUser());
   const result: ActionResultSuccess<User> = {
     success: true,
     message: "Signin successful",
