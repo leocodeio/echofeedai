@@ -1,3 +1,5 @@
+## [1.4.14](https://github.com/leocodeio/echofeedai/compare/v1.4.13...v1.4.14) (2025-04-06)
+
 ## [1.4.13](https://github.com/leocodeio/echofeedai/compare/v1.4.12...v1.4.13) (2025-03-23)
 
 
