@@ -19,7 +19,7 @@ export default function LandingHeader() {
   };
 
   return (
-    <header className="flex h-20 w-full shrink-0 items-center px-4 md:px-6 fixed top-0 left-0 right-0   ">
+    <header className="flex h-20 w-full shrink-0 items-center px-4 md:px-6 fixed top-0 left-0 right-0  z-50 ">
       <div className="ml-auto flex gap-2">
         <Select
           onValueChange={handleLanguageChange}

@@ -174,11 +174,6 @@ export async function action({ request }: ActionFunctionArgs) {
   const session = await userSession(request);
   console.log("debug log 2 - signin.action.ts", session);
   session.setUser(cookies[0], cookies[2]);
-  console.log(
-    "debug log 3 - signin.action.ts",
-    session.getUser(),
-    session.getIsRole(["initiator", "participant"])
-  );
   const result: ActionResultSuccess<User> = {
     success: true,
     message: "Signin successful",

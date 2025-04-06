@@ -112,3 +112,7 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.container {
+  @apply mx-auto py-8 relative w-full h-screen flex flex-col justify-center items-center;
+}

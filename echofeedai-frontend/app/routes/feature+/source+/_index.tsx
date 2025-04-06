@@ -39,6 +39,8 @@ import { ActionResult } from "@/types/action-result";
 import { toast } from "@/hooks/use-toast";
 import { Tag, TagInput } from "emblor";
 
+export const loader = SourceListLoader;
+
 const SourceList = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -128,7 +130,7 @@ const SourceList = () => {
   }
 
   return (
-    <div className="container mx-auto py-8 relative w-full">
+    <div className="container mx-auto py-8 relative w-full h-full">
       <div className="flex justify-between items-center mb-6 w-full">
         <h1 className="text-2xl font-bold text-center w-full">
           Feedback Sources

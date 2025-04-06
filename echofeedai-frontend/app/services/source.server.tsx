@@ -8,7 +8,7 @@ export const getSources = async () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY!,
       },
       credentials: "include",
       mode: "cors",
@@ -30,7 +30,7 @@ export const getSource = async (id: string) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY!,
       },
       credentials: "include",
       mode: "cors",
@@ -54,7 +54,7 @@ export const createSource = async (sourcePayload: SourcePayload) => {
       body: JSON.stringify(sourcePayload),
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY!,
       },
       credentials: "include",
       mode: "cors",
@@ -80,7 +80,7 @@ export const updateSource = async (
       body: JSON.stringify(sourcePayload),
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY!,
       },
       credentials: "include",
       mode: "cors",
@@ -102,7 +102,7 @@ export const deleteSource = async (id: string) => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY!,
       },
       credentials: "include",
       mode: "cors",
@@ -124,7 +124,7 @@ export const getParticipantByName = async (name: string) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY!,
       },
       credentials: "include",
       mode: "cors",
@@ -149,7 +149,7 @@ export const addParticipantToSource = async (
       body: JSON.stringify({ sourceId, participantId }),
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY!,
       },
       credentials: "include",
       mode: "cors",
@@ -171,7 +171,7 @@ export const getParticipants = async (sourceId: string) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY!,
       },
       credentials: "include",
       mode: "cors",
@@ -193,7 +193,7 @@ export const getFeedbackInitiatives = async (sourceId: string) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY!,
       },
       credentials: "include",
       mode: "cors",
@@ -217,7 +217,7 @@ export const deleteFeedbackInitiate = async (id: string) => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": process.env.VITE_APP_API_KEY,
+          "x-api-key": process.env.VITE_APP_API_KEY!,
         },
         credentials: "include",
         mode: "cors",
@@ -244,7 +244,7 @@ export const createFeedbackInitiative = async (
         body: JSON.stringify(feedbackInitiativePayload),
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": process.env.VITE_APP_API_KEY,
+          "x-api-key": process.env.VITE_APP_API_KEY!,
         },
         credentials: "include",
         mode: "cors",
@@ -269,7 +269,7 @@ export const getFeedbackInitiative = async (id: string) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY!,
       },
       credentials: "include",
       mode: "cors",
@@ -290,7 +290,7 @@ export const getTopics = async () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY!,
       },
       credentials: "include",
       mode: "cors",
@@ -311,7 +311,7 @@ export const getParticipantById = async (id: string) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY!,
       },
       credentials: "include",
       mode: "cors",
@@ -332,7 +332,7 @@ export const canRespond = async (feedbackInitiateId: string) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY!,
       },
       credentials: "include",
       mode: "cors",
@@ -357,7 +357,7 @@ export const addFeedbackResponse = async (
       body: JSON.stringify({ response }),
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY!,
       },
       credentials: "include",
       mode: "cors",
@@ -378,7 +378,7 @@ export const getFeedbackResponse = async (feedbackInitiateId: string) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY!,
       },
       credentials: "include",
       mode: "cors",
@@ -390,5 +390,5 @@ export const getFeedbackResponse = async (feedbackInitiateId: string) => {
     console.error("Get feedback response error - source.server.tsx", error);
     throw new Error("Backend Server did not respond correctly");
   }
-};
+};  
 // end ------------------------------ getFeedbackResponse ------------------------------

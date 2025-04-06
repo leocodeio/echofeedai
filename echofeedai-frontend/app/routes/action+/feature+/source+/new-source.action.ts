@@ -27,7 +27,7 @@ export async function action({
 
   try {
     const response = await createSource(parsedSourcePayload.data);
-
+    console.log("Response", response);
     if (!response.ok) {
       const responseData = await response.json();
       const result: ActionResultError<any> = {

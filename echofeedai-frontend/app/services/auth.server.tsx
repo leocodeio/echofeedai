@@ -56,7 +56,11 @@ export const signin = async (signinPayload: SigninPayload) => {
 };
 // end ------------------------------ signin ------------------------------
 // start ------------------------------ logout ------------------------------
-export const logout = async (role: string) => {
+export const logout = async (
+  role: string,
+  accessToken: string,
+  refreshToken: string
+) => {
   const logoutUri =
     role === "initiator"
       ? `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/signout`
@@ -66,6 +70,7 @@ export const logout = async (role: string) => {
     headers: {
       "Content-Type": "application/json",
       "x-api-key": process.env.VITE_APP_API_KEY!,
+      Cookie: `access-token=${accessToken}; refresh-token=${refreshToken};`,
     },
     credentials: "include",
     mode: "cors",

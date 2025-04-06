@@ -6,9 +6,11 @@ export async function loader({
 }: LoaderFunctionArgs): Promise<Response | null> {
   // If user is not authenticated, redirect to signin
   const session = await userSession(request);
-  const isAuthenticated = session.getUserSession().isAuthenticated;
+  const isAuthenticated = session.isAuthenticated();
+  console.log("start home/index.ts", isAuthenticated);
   if (!isAuthenticated) {
     return redirect("/auth/signin");
   }
+  console.log("end home/index.ts", isAuthenticated);
   return null;
 }

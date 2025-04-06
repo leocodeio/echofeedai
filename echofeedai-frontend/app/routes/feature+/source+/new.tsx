@@ -16,7 +16,13 @@ import { RefreshCw, Plus } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { action as NewSourceAction } from "@/routes/action+/feature+/source+/new-source.action";
 
-export const NewSource = () => {
+// action
+export const action = NewSourceAction;
+export const loader = () => {
+  return null;
+};
+// components
+const NewSource = () => {
   const [companyName, setCompanyName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -95,3 +101,5 @@ export const NewSource = () => {
     </div>
   );
 };
+
+export default NewSource;

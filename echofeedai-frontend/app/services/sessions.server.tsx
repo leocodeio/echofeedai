@@ -1,4 +1,4 @@
-import { createCookieSessionStorage } from "@remix-run/node";
+import { createCookie, createCookieSessionStorage } from "@remix-run/node";
 import { createThemeSessionResolver } from "remix-themes";
 import { User } from "~/types/user";
 import { jwtDecode } from "jwt-decode";
@@ -49,30 +49,6 @@ export async function getI18nSession(request: Request) {
   };
 }
 
-// ------------------------------ auth session storage ------------------------------
-
-const authSessionStorage = createCookieSessionStorage({
-  cookie: {
-    name: "auth",
-    path: "/",
-    httpOnly: true,
-    sameSite: "lax",
-    secrets: ["s3cr3t"],
-  },
-});
-
-export async function getAuthSession(request: Request) {
-  const session = await authSessionStorage.getSession(
-    request.headers.get("Cookie")
-  );
-  return {
-    getIsAuthenticated: () => session.get("isAuthenticated") || false,
-    setIsAuthenticated: (isAuthenticated: boolean) =>
-      session.set("isAuthenticated", isAuthenticated),
-    commitAuthSession: () => authSessionStorage.commitSession(session),
-  };
-}
-
 // ------------------------------ user session storage ------------------------------
 
 const userSessionStorage = createCookieSessionStorage({
@@ -109,6 +85,19 @@ export async function userSession(request: Request) {
       }
       return null;
     },
+    getRole: () => {
+      const user = session.get("user");
+      if (user) {
+        const { role } = jwtDecode(user.accessToken) as {
+          role: string;
+          any: any;
+        };
+        console.log("debug log 4 - userSession.ts", role);
+        return role;
+      }
+      return null;
+    },
+
     getIsRole: (roles: string[]): boolean => {
       const user = session.get("user");
       if (user) {
@@ -129,8 +118,9 @@ export async function userSession(request: Request) {
     },
     isAuthenticated: () => (session.get("user") ? true : false),
     getUserSession: () => session.get("user") || null,
-    setUser: (accessToken: string, refreshToken: string) =>
-      session.set("user", { accessToken, refreshToken }),
+    setUser: (accessToken: string, refreshToken: string) => {
+      session.set("user", { accessToken, refreshToken });
+    },
     removeUser: () => userSessionStorage.destroySession(session),
     commitSession: () => userSessionStorage.commitSession(session),
   };

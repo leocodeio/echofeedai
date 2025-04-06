@@ -3,16 +3,14 @@ import { userSession } from "@/services/sessions.server";
 import { getSources } from "@/services/source.server";
 import { NavLinks } from "@/models/navlinks";
 
-export async function loader({
-  request,
-}: LoaderFunctionArgs): Promise<any> {
+export async function loader({ request }: LoaderFunctionArgs): Promise<any> {
   // Check authentication
   const session = await userSession(request);
-  const isAuthenticated = session.getUserSession().isAuthenticated;
+  const isAuthenticated = session.isAuthenticated();
 
   const pathname = new URL(request.url).pathname;
   const neededRoles = NavLinks.find((link) => pathname.includes(link.to))?.role;
-  const isRole = session.getUserSession().isRole(neededRoles || []);
+  const isRole = session.getIsRole(neededRoles || []);
   if (!isRole) {
     return redirect("/home");
   }
