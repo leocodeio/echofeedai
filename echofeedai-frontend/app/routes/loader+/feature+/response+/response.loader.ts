@@ -15,7 +15,7 @@ export async function loader({ request }: LoaderFunctionArgs): Promise<any> {
   console.log("pathname", pathname);
   const neededRoles = NavLinks.find((link) => pathname.includes(link.to))?.role;
   console.log("neededRoles", neededRoles);
-  const isRole = session.getUserSession().isRole(neededRoles || []);
+  const isRole = session.getIsRole(neededRoles || []);
   console.log("isRole", isRole);
   if (!isRole) {
     return redirect("/home");
@@ -28,13 +28,16 @@ export async function loader({ request }: LoaderFunctionArgs): Promise<any> {
     return redirect("/home");
   }
 
-  const canRespondResponse = await canRespond(feedbackInitiateId);
+  const canRespondResponse = await canRespond(feedbackInitiateId, request);
   if (!canRespondResponse.ok) {
     return redirect("/home");
   }
 
   // get feedback initiate
-  const feedbackInitiative = await getFeedbackInitiative(feedbackInitiateId);
+  const feedbackInitiative = await getFeedbackInitiative(
+    feedbackInitiateId,
+    request
+  );
   if (!feedbackInitiative) {
     return redirect("/home");
   }

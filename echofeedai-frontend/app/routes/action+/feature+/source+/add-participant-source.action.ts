@@ -9,6 +9,7 @@ export async function action({
   request,
   params,
 }: ActionFunctionArgs): Promise<ActionResult<any> | Response> {
+  console.log("request", request);
   const formData = await request.formData();
   const participantName = formData.get("participantName") as string;
   const sourceId = params.id;
@@ -30,7 +31,10 @@ export async function action({
   for (const participant of participants) {
     try {
       // First get participant by name
-      const participantResponse = await getParticipantByName(participant);
+      const participantResponse = await getParticipantByName(
+        participant,
+        request
+      );
 
       if (!participantResponse.ok) {
         const responseData = await participantResponse.json();
@@ -51,7 +55,8 @@ export async function action({
       // Then add participant to source
       const addParticipantToSourceResponse = await addParticipantToSource(
         sourceId,
-        participantData.payload.id
+        participantData.payload.id,
+        request
       );
 
       if (!addParticipantToSourceResponse.ok) {

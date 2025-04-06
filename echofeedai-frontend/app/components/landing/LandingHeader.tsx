@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Link } from "@remix-run/react";
-import { ModeToggle } from "@/components/mode-toggle"
+import { Link, useSubmit } from "@remix-run/react";
+import { ModeToggle } from "@/components/mode-toggle";
 
 import { useTranslation } from "react-i18next";
 import {
@@ -14,8 +14,12 @@ import { language } from "@/utils/language";
 
 export default function LandingHeader() {
   const { i18n } = useTranslation();
+  const submit = useSubmit();
   const handleLanguageChange = (value: string) => {
-    i18n.changeLanguage(value);
+    submit(
+      { locale: value },
+      { method: "post", action: "/action/set-language" }
+    );
   };
 
   return (

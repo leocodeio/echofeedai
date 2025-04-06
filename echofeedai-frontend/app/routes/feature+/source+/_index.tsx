@@ -101,8 +101,9 @@ const SourceList = () => {
     navigate(`/feature/source/view/${id}`);
   };
 
-  const handleParticipantSubmit = (e: React.FormEvent) => {
+  const handleParticipantSubmit = (e: React.FormEvent) => { 
     e.preventDefault();
+    console.log("participantTags", participantTags);
     if (participantTags.length === 0) {
       toast({
         title: "Error",

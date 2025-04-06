@@ -1,10 +1,12 @@
 import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import { ActionResult } from "@/types/action-result";
 import { addFeedbackResponse } from "@/services/source.server";
-
+import { userSession } from "@/services/sessions.server";
 export async function action({
   request,
 }: ActionFunctionArgs): Promise<ActionResult<any> | Response> {
+  const session = await userSession(request);
+  const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   const formData = await request.formData();
   // query params to get feedback initiate id
   const feedbackInitiateId = new URL(request.url).searchParams.get(
@@ -28,7 +30,7 @@ export async function action({
   console.log("questionsByTopic in action", questionsByTopic);
   const storedQuestions = questionsByTopic;
   const questions = JSON.parse(storedQuestions);
-
+  // [TODO] - add questions to the database
   // Call your backend API to process feedback and get coverage
   const response = await fetch(
     `${process.env.VITE_APP_MODEL_BACKEND_USER_URL}/get-coverage`,
@@ -36,7 +38,8 @@ export async function action({
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.VITE_APP_API_KEY,
+        "x-api-key": process.env.VITE_APP_API_KEY!,
+        Cookie: `access-token=${accessToken}; refresh-token=${refreshToken};`,
       },
       body: JSON.stringify({
         question_map: questions,
@@ -64,7 +67,8 @@ export async function action({
     // make a call to save the feedback in database
     const saveFeedbackResponse = await addFeedbackResponse(
       feedbackInitiateId,
-      feedback
+      feedback,
+      request
     );
     if (!saveFeedbackResponse.ok) {
       return {

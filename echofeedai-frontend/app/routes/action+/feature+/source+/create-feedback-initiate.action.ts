@@ -16,7 +16,10 @@ export async function action({
     mailTemplateIdentifier: formData.get("mailTemplateIdentifier") as string,
   };
   console.log("payload", feedbackInitiativePayload);
-  const response = await createFeedbackInitiative(feedbackInitiativePayload);
+  const response = await createFeedbackInitiative(
+    feedbackInitiativePayload,
+    request
+  );
   if (!response.ok) {
     const result: ActionResultError<any> = {
       success: false,

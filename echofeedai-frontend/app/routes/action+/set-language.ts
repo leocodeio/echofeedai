@@ -1,4 +1,9 @@
-import { json, type ActionFunctionArgs } from "@remix-run/node";
+import {
+  json,
+  LoaderFunctionArgs,
+  redirect,
+  type ActionFunctionArgs,
+} from "@remix-run/node";
 
 import { getI18nSession } from "~/services/sessions.server";
 
@@ -21,4 +26,10 @@ export async function action({ request }: ActionFunctionArgs) {
       },
     }
   );
+}
+// [TODO]
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const previousUrl = request.headers.get("Referer");
+  return redirect(previousUrl || "/");
 }

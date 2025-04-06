@@ -9,6 +9,8 @@ import { Mic, Square } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { ActionResult } from "@/types/action-result";
+import { loader as ResponseLoader } from "@/routes/loader+/feature+/response+/response.loader";
+import { action as ResponseAction } from "@/routes/action+/feature+/response+/response.action";
 
 interface Message {
   content: string;
@@ -21,6 +23,9 @@ interface QuestionCoverage {
     question: string;
   };
 }
+
+export const loader = ResponseLoader;
+export const action = ResponseAction;
 
 const Response = () => {
   const actionData = useActionData<ActionResult<any>>();

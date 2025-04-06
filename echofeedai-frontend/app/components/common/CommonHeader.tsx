@@ -5,7 +5,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Form, Link } from "@remix-run/react";
+import { Form, Link, useSubmit } from "@remix-run/react";
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -34,8 +34,12 @@ import { language } from "@/utils/language";
 
 export default function CommonHeader() {
   const { i18n } = useTranslation();
+  const submit = useSubmit();
   const handleLanguageChange = (value: string) => {
-    i18n.changeLanguage(value);
+    submit(
+      { locale: value },
+      { method: "post", action: "/action/set-language" }
+    );
   };
 
   return (
