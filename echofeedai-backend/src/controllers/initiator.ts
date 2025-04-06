@@ -598,6 +598,23 @@ export const deleteFeedbackInitiate = async (
       return;
     }
 
+    // check if the feedback initiate is associated with a source
+    const feedbackInitiate = await client.feedbackInitiate.findUnique({
+      where: { id: feedbackInitiateId },
+    });
+    if (!feedbackInitiate) {
+      res.status(404).json({
+        message: "Feedback initiate not found",
+      });
+      return;
+    }
+
+    // delete responses
+    await client.feedbackResponse.deleteMany({
+      where: { feedbackInitiateId: feedbackInitiateId },
+    });
+
+    // delete feedback initiate
     await client.feedbackInitiate.delete({
       where: { id: feedbackInitiateId },
     });
