@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/leocodeio/echofeedai/compare/v1.5.0...v1.5.1) (2025-04-09)
+
+
+### Performance Improvements
+
+* **email logic added:** email logic added ([9c08977](https://github.com/leocodeio/echofeedai/commit/9c08977e783c176cc21e5156f777d88e6da59595))
+
 # [1.5.0](https://github.com/leocodeio/echofeedai/compare/v1.4.19...v1.5.0) (2025-04-09)
 
 
