@@ -42,11 +42,11 @@ export default function Signup() {
   useEffect(() => {
     if (actionData?.success) {
       toast({
-        title: "Signup",
+        title: "Sign",
         description: actionData.message,
         variant: "default",
       });
-      navigate("/auth/signin");
+      navigate("/");
     } else if (actionData?.success === false) {
       if (actionData.origin === "email") {
         setError({ type: "email", message: actionData.message });

@@ -283,16 +283,21 @@ const sendMail = async (
     if (!template) {
       throw new Error("Template not found");
     }
-    
+
+    // feed variable values into template body
+    const bodyWithVariables = template.body.replace(
+      /{{(.*?)}}/g,
+      (match, p1) => variableValues[p1] || match
+    );
 
     const mailTransporter = transporter;
     const mailOptions = {
       from: "noreply@echo.com",
       to: recipientEmail,
       subject: template.subject,
-      html: template.body,
+      html: bodyWithVariables,
     };
-    
+
     const mailResult = await mailTransporter.sendMail(mailOptions);
     console.log("mail sent", mailResult);
     console.log(
@@ -331,7 +336,8 @@ export const sendMailToParticipants = async (req: Request, res: Response) => {
       return;
     }
 
-    const { templateIdentifier, participantIds } = parsedSendMail.data;
+      const { templateIdentifier, participantIds, feedbackInitiateId } =
+      parsedSendMail.data;
 
     // Get the template
     const template = await client.mailTemplate.findUnique({
@@ -359,10 +365,28 @@ export const sendMailToParticipants = async (req: Request, res: Response) => {
       return;
     }
 
+    let variableValues = {};
     // Send the email to the participants
     for (const participant of participants) {
+      if (templateIdentifier === "feedback2") {
+        const company = "echofeedai";
+        // feedbackInitiateId;
+        const name = participant.name;
+        const link = `http://localhost:5173/feature/response?feedbackInitiateId=${feedbackInitiateId}&name=${name}`;
+        const mail = participant.email;
+        const hash = crypto.randomUUID();
+        variableValues = {
+          company: company,
+          name: name,
+          link: link,
+          mail: mail,
+          hash: hash,
+        };
+      }
+
+      //localhost:5173/feature/response?feedbackInitiateId=cm99io955000bd3w1wjb9uuto
       // [TODO]: Think of better way to handle variable values
-      await sendMail(template.identifier, participant.email, {});
+      await sendMail(template.identifier, participant.email, variableValues);
     }
 
     res.status(200).json({

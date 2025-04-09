@@ -52,7 +52,7 @@ export const sendMail = async (
       },
       credentials: "include",
       mode: "cors",
-      body: JSON.stringify({ participantIds, templateIdentifier }),
+      body: JSON.stringify({ participantIds, templateIdentifier, feedbackInitiateId }),
     }
   );
   const responseData = await response.json();

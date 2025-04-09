@@ -76,6 +76,7 @@ export const sendMailSchema = z.object({
 export const sendMailToParticipantsSchema = z.object({
   participantIds: z.array(z.string()),
   templateIdentifier: z.string(),
+  feedbackInitiateId: z.string(),
 });
 
 // feedback initiate
