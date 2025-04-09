@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLoaderData, Form } from "@remix-run/react";
+import { useLoaderData, Form, Link } from "@remix-run/react";
 import {
   Card,
   CardContent,
@@ -96,6 +96,9 @@ export default function Profile() {
               <Button disabled type="submit" className="w-full">
                 Save Changes
               </Button>
+              <Link to="/home" className="w-full text-center outline outline-1 outline-gray-300 rounded-md p-2 hover:bg-gray-900">
+                Home
+              </Link>
             </Form>
           </div>
         </CardContent>

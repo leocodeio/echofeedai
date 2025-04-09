@@ -70,6 +70,8 @@ export const links: LinksFunction = () => [
   },
 ];
 
+import { Toaster } from "@/components/ui/toaster";
+
 export function App() {
   const data = useLoaderData<typeof loader>();
   //-------------------------- i18n---------------------------------------
@@ -94,6 +96,7 @@ export function App() {
       </head>
       <body>
         <Outlet />
+        <Toaster />
         <ScrollRestoration />
         <Scripts />
       </body>

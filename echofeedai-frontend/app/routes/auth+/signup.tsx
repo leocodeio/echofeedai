@@ -18,6 +18,12 @@ import { toast } from "@/hooks/use-toast";
 import { UserCircle2Icon, UserRoundIcon } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
+import { action as signupAction } from "@/routes/action+/auth+/signup.action";
+import { loader as signupLoader } from "@/routes/loader+/auth+/signup";
+
+export const action = signupAction;
+export const loader = signupLoader;
+
 export default function Signup() {
   // Reorder state declarations to match Signin.tsx
   const [email, setEmail] = useState("");

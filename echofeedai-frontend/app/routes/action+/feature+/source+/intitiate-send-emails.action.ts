@@ -9,6 +9,7 @@ import { sendMail } from "@/services/nm.server";
 
 export async function action({
   params,
+  request,
 }: ActionFunctionArgs): Promise<ActionResult<any> | Response | null> {
   // Handle create action
   const feedbackInitiateId = params.id;
@@ -37,7 +38,7 @@ export async function action({
   }
 
   try {
-    const response = await sendMail(parsedSourcePayload.data);
+    const response = await sendMail(parsedSourcePayload.data, request);
     console.log("mail response", response);
 
     if (!response.ok) {
