@@ -83,8 +83,8 @@ export const me = async (role: string, request: Request) => {
   const { accessToken, refreshToken } = session.getAcessAndRefreshToken();
   const meUri =
     role === "initiator"
-      ? `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/me`
-      : `${process.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL}/me`;
+      ? `${process.env.VITE_APP_INITIATOR_BACKEND_USER_URL}/profile`
+      : `${process.env.VITE_APP_PARTICIPANT_BACKEND_USER_URL}/profile`;
   const meResponse = await fetch(meUri, {
     method: "GET",
     headers: {
@@ -95,6 +95,7 @@ export const me = async (role: string, request: Request) => {
     credentials: "include",
     mode: "cors",
   });
+  console.log("meResponse", meResponse);
   return meResponse;
 };
 // end ------------------------------ me ------------------------------

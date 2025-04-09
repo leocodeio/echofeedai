@@ -110,16 +110,16 @@ export default function CommonHeader() {
         <ModeToggle />
         <DropdownMenu>
           <DropdownMenuTrigger asChild className="cursor-pointer">
-            <div className="flex items-center gap-2 rounded-md border border-input px-2">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src="/logo.png" alt="@shadcn" />
-                <AvatarFallback>JP</AvatarFallback>
-              </Avatar>
-              <div className="text-sm font-medium">John Doe</div>
-            </div>
+            {/* <div className="flex items-center gap-2 rounded-md border border-input px-2"> */}
+            <Avatar className="h-8 w-8">
+              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              {/* <AvatarFallback>JP</AvatarFallback> */}
+            </Avatar>
+            {/* <div className="text-sm font-medium">John Doe</div> */}
+            {/* </div> */}
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-[200px]">
-            <DropdownMenuLabel>
+          <DropdownMenuContent align="end" className="w-[150px]">
+            {/* <DropdownMenuLabel>
               <div className="flex items-center gap-2">
                 <Avatar className="h-8 w-8">
                   <AvatarImage src="/logo.png" alt="@shadcn" />
@@ -133,9 +133,9 @@ export default function CommonHeader() {
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator /> */}
             <DropdownMenuItem asChild>
-              <Link to="/profile" className="w-full cursor-pointer">
+              <Link to="/home/profile" className="w-full cursor-pointer">
                 Profile
               </Link>
             </DropdownMenuItem>

@@ -2,6 +2,7 @@ import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import { ActionResult } from "@/types/action-result";
 import { addFeedbackResponse } from "@/services/source.server";
 import { userSession } from "@/services/sessions.server";
+import { getCoverage } from "~/services/model.server";
 export async function action({
   request,
 }: ActionFunctionArgs): Promise<ActionResult<any> | Response> {
@@ -32,26 +33,8 @@ export async function action({
   const questions = JSON.parse(storedQuestions);
   // [TODO] - add questions to the database
   // Call your backend API to process feedback and get coverage
-  const response = await fetch(
-    `${process.env.VITE_APP_MODEL_BACKEND_USER_URL}/get-coverage`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": process.env.VITE_APP_API_KEY!,
-        Cookie: `access-token=${accessToken}; refresh-token=${refreshToken};`,
-      },
-      body: JSON.stringify({
-        question_map: questions,
-        employee_text: feedback,
-      }),
-      credentials: "include",
-      mode: "cors",
-    }
-  );
-  console.log("response", response);
-
-  if (!response.ok) {
+  const getCoverageResponse = await getCoverage(request, questions, feedback);
+  if (!getCoverageResponse.ok) {
     return {
       success: false,
       message: "Failed to process feedback",
@@ -60,7 +43,7 @@ export async function action({
     };
   }
 
-  const coverageData = await response.json();
+  const coverageData = await getCoverageResponse.json();
   console.log("coverageData", coverageData.payload);
 
   if (coverageData.payload.all_topics_covered) {
