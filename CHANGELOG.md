@@ -1,3 +1,10 @@
+## [1.4.19](https://github.com/leocodeio/echofeedai/compare/v1.4.18...v1.4.19) (2025-04-09)
+
+
+### Performance Improvements
+
+* **added profile:** added profile ([1380683](https://github.com/leocodeio/echofeedai/commit/13806830b7cf5e80c2e97a04d685ea61389f75c6))
+
 ## [1.4.18](https://github.com/leocodeio/echofeedai/compare/v1.4.17...v1.4.18) (2025-04-06)
 
 
