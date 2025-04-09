@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/leocodeio/echofeedai/compare/v1.4.19...v1.5.0) (2025-04-09)
+
+
+### Features
+
+* **mail:** basic mail system implemented ([98c4479](https://github.com/leocodeio/echofeedai/commit/98c447979520cb1b5ca85e3953a9882d98baf186))
+
 ## [1.4.19](https://github.com/leocodeio/echofeedai/compare/v1.4.18...v1.4.19) (2025-04-09)
 
 
